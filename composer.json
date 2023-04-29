@@ -6,7 +6,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.1",
-        "andrewdwallo/filament-companies": "^1.2",
+        "andrewdwallo/filament-companies": "^2.0",
         "filament/filament": "^2.0",
         "guzzlehttp/guzzle": "^7.2",
         "laravel/framework": "^10.8",

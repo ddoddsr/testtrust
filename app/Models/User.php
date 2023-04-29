@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Filament\Models\Contracts\FilamentUser;
+use Filament\Models\Contracts\HasName;
 use Filament\Models\Contracts\HasAvatar;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -14,7 +15,7 @@ use Wallo\FilamentCompanies\HasConnectedAccounts;
 use Wallo\FilamentCompanies\HasProfilePhoto;
 use Wallo\FilamentCompanies\SetsProfilePhotoFromUrl;
 
-class User extends Authenticatable implements FilamentUser, HasAvatar
+class User extends Authenticatable implements FilamentUser, HasAvatar, HasName
 {
     use HasApiTokens;
     use HasFactory;
@@ -41,7 +42,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
      * @var array<int, string>
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'first_name', 'last_name', 'email', 'password',
     ];
 
     /**
@@ -73,4 +74,12 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
     protected $appends = [
         'profile_photo_url',
     ];
+    public function fullName()
+    {
+        return $this->first_name .' ' . $this->last_name;
+    }
+    public function getFilamentName(): string
+    {
+        return "{$this->first_name} {$this->last_name}";
+    }
 }
