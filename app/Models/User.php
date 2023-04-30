@@ -74,6 +74,12 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName
     protected $appends = [
         'profile_photo_url',
     ];
+
+    public function schedules()
+    {
+        return $this->hasMany(Schedule::class);
+    }
+    
     public function fullName()
     {
         return $this->first_name .' ' . $this->last_name;

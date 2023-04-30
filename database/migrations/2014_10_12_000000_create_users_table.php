@@ -25,7 +25,20 @@ return new class extends Migration
             $table->foreignId('current_company_id')->nullable();
             $table->foreignId('current_connected_account_id')->nullable();
             $table->string('profile_photo_path')->nullable();
+
             $table->timestamps();
+
+            $table->boolean('active')->default(1);
+            $table->bigInteger('resultId')->nullable();
+            $table->dateTime('startDate')->nullable();
+            $table->dateTime('finishDate')->nullable();
+            $table->dateTime('updateDate')->nullable();
+            $table->char('resultStatus', 100)->nullable();
+            $table->char('designation', 100)->nullable();
+            $table->unsignedBigInteger('supervisorId')->nullable();
+            $table->char('supervisor', 100)->nullable();
+            $table->char('superEmail1', 100)->nullable();
+            $table->date('effectiveDate')->nullable();
         });
     }
 
