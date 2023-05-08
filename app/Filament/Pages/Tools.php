@@ -6,7 +6,7 @@ use App\Models\Schedule;
 use Filament\Pages\Page;
 use Filament\Pages\Actions\Action;
 // use App\Http\Controllers\StaffController;
-
+// use Illuminate\Support\Facades\DB;
 use Illuminate\Support\HtmlString;
 use App\Http\Controllers\PdfController;
 use Filament\Notifications\Notification;
@@ -17,6 +17,7 @@ class Tools extends Page
 {
     // use HasPageShield;
     
+    protected array $duplicateNames = [];
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
     protected static string $view = 'filament.pages.tools';
@@ -101,6 +102,11 @@ class Tools extends Page
             Action::make('testme')
             ->label('Test Me')
             ->action('testMe'),
+            //
+            Action::make('duplicateNameCheck')
+            ->label('duplicateNameCheck')
+            ->action('duplicateNameCheck'),
+
             Action::make('newest')
                 ->action('newResults'),
             Action::make('genPdf')
@@ -130,5 +136,23 @@ class Tools extends Page
             ->title('TestMe complete')
             ->success()
             ->send(); 
+    }
+    public function duplicateNameCheck()
+    {
+        $collection = \App\Models\User::all();
+
+        // Group models by sub_id and name
+        $collection
+        ->groupBy(function ($item) { return $item->first_name.'_'.$item->last_name; })
+        // Filter to remove non-duplicates
+        ->filter(function ($arr) { return $arr->count()>1; })
+        // Collect duplicates groups
+        ->each(function ($arr) {
+            $arr->each(function ($model) {
+                $this->duplicateNames[] = [$model->first_name, $model->last_name, $model->email, $model->supervisor];
+            });
+        });
+        logger($this->duplicateNames);
+        dd($this->duplicateNames);
     }
 }

@@ -61,8 +61,8 @@ class StaffController extends Controller
        foreach($formData as $form) {
 
            if( $form->resultStatus == 'Complete' && $form->superEmail1 != '') {
-                $first_name = substr($form->supervisor, 0, strpos($form->supervisor, ' '));
-                $last_name = substr($form->supervisor, strlen($first_name));
+                $first_name = trim(substr($form->supervisor, 0, strpos($form->supervisor, ' ')));
+                $last_name = trim(substr($form->supervisor, strlen($first_name)));
                 
                 $this->superRecord = tap(
                     User::firstOrCreate(
@@ -75,6 +75,8 @@ class StaffController extends Controller
                             // 'password' => Str::password(),
                             //TODO Not asdf
                             'password' => Hash::make("asdf"),
+                            'active' => true,
+                            'isSupervisor' => true,
                         ]
                     ), function (User $user) {
                         $this->createCompany($user);

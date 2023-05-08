@@ -77,7 +77,7 @@ return [
         Features::termsAndPrivacyPolicy(),
         Features::profilePhotos(),
         Features::api(),
-        Features::companies(['invitations' => true]),
+        // Features::companies(['invitations' => true]),
         Features::accountDeletion(),
         Features::socialite(['rememberSession' => true, 'providerAvatars' => true]),
     ],

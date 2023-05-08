@@ -28,12 +28,18 @@ return new class extends Migration
 
             $table->timestamps();
 
-            $table->boolean('active')->default(1);
+            $table->boolean('active')->default(0);
+            $table->boolean('isSupervisor')->default(0);
+            $table->boolean('isWorshipLeader')->default(0);
+            $table->boolean('isAssociateWorshipLeader')->default(0);
+            $table->boolean('isPrayerLeader')->default(0);
+            $table->boolean('isSectionLeader')->default(0);
             $table->bigInteger('resultId')->nullable();
             $table->dateTime('startDate')->nullable();
             $table->dateTime('finishDate')->nullable();
             $table->dateTime('updateDate')->nullable();
             $table->char('resultStatus', 100)->nullable();
+            $table->unsignedBigInteger('designationId')->nullable();
             $table->char('designation', 100)->nullable();
             $table->unsignedBigInteger('supervisorId')->nullable();
             $table->char('supervisor', 100)->nullable();

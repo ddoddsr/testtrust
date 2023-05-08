@@ -2,18 +2,19 @@
 
 namespace App\Models;
 
-use Filament\Models\Contracts\FilamentUser;
+use App\Events\UserDeleting;
+use Laravel\Sanctum\HasApiTokens;
 use Filament\Models\Contracts\HasName;
 use Filament\Models\Contracts\HasAvatar;
+use Illuminate\Notifications\Notifiable;
+use Wallo\FilamentCompanies\HasCompanies;
+use Filament\Models\Contracts\FilamentUser;
+use Wallo\FilamentCompanies\HasProfilePhoto;
+use Laravel\Fortify\TwoFactorAuthenticatable;
+use Wallo\FilamentCompanies\HasConnectedAccounts;
+use Wallo\FilamentCompanies\SetsProfilePhotoFromUrl;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Fortify\TwoFactorAuthenticatable;
-use Laravel\Sanctum\HasApiTokens;
-use Wallo\FilamentCompanies\HasCompanies;
-use Wallo\FilamentCompanies\HasConnectedAccounts;
-use Wallo\FilamentCompanies\HasProfilePhoto;
-use Wallo\FilamentCompanies\SetsProfilePhotoFromUrl;
 
 class User extends Authenticatable implements FilamentUser, HasAvatar, HasName
 {
@@ -43,6 +44,11 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName
      */
     protected $fillable = [
         'first_name', 'last_name', 'email', 'password',
+        'profile_photo_path',
+        'supervisorId', 'designation', 'active',
+        'isSupervisor',
+        'isWorshipLeader',// 'isAssociateWorshipLeader',
+        'isPrayerLeader', 'isSectionLeader',
     ];
 
     /**
@@ -84,8 +90,41 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName
     {
         return $this->first_name .' ' . $this->last_name;
     }
+    public function getFullNameAttribute()
+    {
+        return $this->first_name .' ' . $this->last_name;
+    }
+    // protected function title(): Attribute
+    // {
+    //     return Attribute::make(
+    //         get: function () {
+    //             return $this->Library->Book->name . ' at ' . $this->Library->name;
+    //         }
+    //     );
+    // }
+    
+
     public function getFilamentName(): string
     {
         return "{$this->first_name} {$this->last_name}";
+    }
+    public function supervisor()
+    {
+        return $this->belongsTo(User::class, 'supervisorId');
+    }
+
+    public function supervising()
+    {
+        return $this->hasMany(User::class, 'supervisorId');
+    }
+    public static function designations() {
+        return [
+            'full' => 'Full Time Staff Prayer (12 prayer meetings/week), Service (24 hours/week)',
+            'part' => 'Part Time Staff Prayer (6 prayer meetings/week), Service (12 hours/week)',
+            'forerunner' => 'Forerunner Church Prayer Ministry* - 1+ prayer meetings/week',
+            'interccessory_team' => 'Intercessory Ministry Team* - 3 prayer meetings/week',
+            'prayerroom' => 'Prayer Room Staff* - 6 prayer meetings/week (without committing to service hours)',
+            'ihopu' => 'Student Staff - see IHOPU commitments',
+        ];
     }
 }
