@@ -164,21 +164,21 @@ class FormsiteController
 
                 $formData[] =
                     (object)[
-                        'resultId' => $result->id,
-                        'startDate' => $result->date_start,
-                        'finishDate' => $result->date_finish,
-                        'updateDate' => $result->date_update,
-                        'resultStatus' => $result->result_status,
-                        'firstName' => trim($firstName),
-                        'lastName' => trim($lastName),
+                        'result_id' => $result->id,
+                        'start_date' => $result->date_start,
+                        'finish_date' => $result->date_finish,
+                        'update_date' => $result->date_update,
+                        'result_status' => $result->result_status,
+                        'first_name' => trim($firstName),
+                        'last_name' => trim($lastName),
                         'email' => $emailAddress,
                         'designation' => $result->items[3]->values[0]->value,
                         'department' => $result->items[4]->value,
                         'supervisor' => $result->items[5]->value,
-                        'superEmail1' => $result->items[6]->value,
-                        'superEmail2' => $result->items[7]->value,
+                        'super_email1' => $result->items[6]->value,
+                        'super_email2' => $result->items[7]->value,
                         // 'pipetosomewhere' => $result->items[8]->value,
-                        'effectiveDate' => $result->items[9]->value,
+                        'effective_date' => $result->items[9]->value,
                         'sched' => $scheds ?? (object)[],
                     ];
             }

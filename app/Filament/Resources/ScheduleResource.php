@@ -19,6 +19,9 @@ class ScheduleResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-collection';
 
+    // TODO show for super_admin Hides from admin menu 
+    protected static bool $shouldRegisterNavigation = false;
+
     public static function form(Form $form): Form
     {
         return $form

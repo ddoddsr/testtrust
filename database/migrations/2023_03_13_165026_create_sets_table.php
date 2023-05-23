@@ -17,9 +17,9 @@ return new class extends Migration
             $table->char('dayOfWeek', 10)->nullable();
             $table->char('setOfDay', 10)->nullable();
             $table->char('location', 24)->nullable();
-            $table->char('sectionLeader', 24)->nullable();
-            $table->char('worshipLeader', 24)->nullable();
-            $table->char('prayerLeader', 24)->nullable();
+            $table->unsignedBigInteger('section_leader_id')->nullable();
+            $table->unsignedBigInteger('worship_leader_id')->nullable();
+            $table->unsignedBigInteger('prayer_leader_id')->nullable();
             $table->char('title', 24)->nullable();
             $table->boolean('active')->default(1);
             $table->timestamps();

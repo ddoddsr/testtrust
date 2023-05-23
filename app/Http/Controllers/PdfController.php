@@ -3,11 +3,9 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
-use App\Models\Set;
 use App\Models\Schedule;
-// use Illuminate\Http\Request;
-// use Codedge\Fpdf\Facades\Fpdf;
-
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 
 class PdfController extends Controller
 {
@@ -28,31 +26,46 @@ class PdfController extends Controller
         $taglinePos =  - 20 ;
         $tagline = env('FOOTER_STATEMENT','Set FOOTER_STATEMENT in .env');
         $topOfColumns = 80;
-        $postionColumn = 0; // index of name column
+        $postionColumn = 0; 
 
-        $namesPerColumn = 48;
-        $maxColumns = 6;
         foreach($setWithScheds as $set) {
-            $maxNamesOnPage = $namesPerColumn * $maxColumns ; // start with 6 columns
-            if ( $maxNamesOnPage  < 22) {
-                $nameFontSize = 10;
-                $rowHeight = 12;
+            $schedCnt = count($set['scheds']);
+            // Adlust schedCnt per page count
+            if( $schedCnt < 180 ) {
+                $nameFontSize = 12;
+                $rowHeight = 16;
                 $maxColumns = 6;
-            } else {
-                $nameFontSize = 8;
-                $rowHeight = 10;
+                $columnSpacing = ( $fpdf->GetPageWidth() / $maxColumns ) - 7 ;
+                $namesPerColumn = 30;
+            } elseif ( $schedCnt < 210 ) {
+                $nameFontSize = 10;
+                $rowHeight = 14;
                 $maxColumns = 7;
+                $columnSpacing = ( $fpdf->GetPageWidth() / $maxColumns ) - 5 ;
+                $namesPerColumn = 30;
+            } else {  // Up to 280 per page
+                $nameFontSize = 8;
+                $rowHeight = 12;
+                $maxColumns = 7;
+                $columnSpacing = ( $fpdf->GetPageWidth() / $maxColumns ) - 5 ;
+                $namesPerColumn = 40;
             }
-            $columnSpacing = $fpdf->GetPageWidth() / $maxColumns -5;
-
+            
             $fpdf->AddPage();
             $fpdf->SetFont('Arial', 'B', 24);
             $fpdf->Cell(0,0, $set['title'], 0, 1, 'C');
             $fpdf->Ln(32);
             $fpdf->SetFont('Arial', 'B', 10);
-            $fpdf->Cell($leaderWidth,0, "Worship Leader" .$set['worshipLeader']  , 0, 1, 'L');
-            $fpdf->Cell($leaderWidth,0, "Prayer Leader" . $set['prayerLeader'], 0, 1, 'C');
-            $fpdf->Cell($leaderWidth,0, "Section Leader" . $set['sectionLeader']  , 0, 1, 'R');
+            if ($set['worshipLeader']) {
+                $fpdf->Cell($leaderWidth,0, "Worship Leader " .$set['worshipLeader']  , 0, 1, 'L');
+            } 
+            if ($set['prayerLeader']){
+                $fpdf->Cell($leaderWidth,0, "Prayer Leader " . $set['prayerLeader'], 0, 1, 'C');
+            }
+            if ($set['sectionLeader']) {
+                $fpdf->Cell($leaderWidth,0, "Section Leader " . $set['sectionLeader']  , 0, 1, 'R');
+            }
+            
             $fpdf->Ln(32);
             $fpdf->SetFont('Arial', '', $nameFontSize);
 
@@ -90,7 +103,15 @@ class PdfController extends Controller
     public function setSchedule($location='GPR')
     {
         // get staff sched into sets
-        $setRecords = Set::all();
+        $setRecords = DB::table('sets')
+        ->leftJoin('users as pluser', 'sets.prayer_leader_id', '=', 'pluser.id') 
+        ->leftJoin('users as wluser', 'sets.worship_leader_id', '=', 'wluser.id') 
+        ->leftJoin('users as sluser', 'sets.section_leader_id', '=', 'sluser.id') 
+        ->select('sets.*',
+            'pluser.first_name as pl_first_name',  'pluser.last_name as pl_last_name',
+            'wluser.first_name as wl_first_name',  'wluser.last_name as wl_last_name',
+            'sluser.first_name as sl_first_name',  'sluser.last_name as sl_last_name')
+        ->get();
         $setWithScheds = [];
 
         foreach ($setRecords as $setData ) {
@@ -99,12 +120,12 @@ class PdfController extends Controller
                 'sequence' => $setData->sequence,
                 'dayOfWeek' => $setData->dayOfWeek,
                 'setOfDay' => $setData->setOfDay,
-                'location' => $setData->location ,
-                'sectionLeader' => $setData->sectionLeader ,
-                'worshipLeader' => $setData->worshipLeader ,
-                'prayerLeader' => $setData->prayerLeader ,
-                'title' => $setData->title ,
-                'scheds' =>  $this->collectSchedSets($setData->dayOfWeek, $setData->setOfDay, $location) ,
+                'location' => $setData->location,
+                'prayerLeader' => trim($setData->pl_first_name . ' ' . $setData->pl_last_name ),
+                'worshipLeader' => trim($setData->wl_first_name . ' ' . $setData->wl_last_name ),
+                'sectionLeader' => trim($setData->sl_first_name . ' ' . $setData->sl_last_name ),
+                'title' => $setData->title,
+                'scheds' =>  $this->collectSchedSets($setData->dayOfWeek, $setData->setOfDay, $location),
             ];
         }
         return $setWithScheds;
@@ -138,7 +159,7 @@ class PdfController extends Controller
 
         // check for duration >= 60 min
         if ($isStart && $isEnd && $schedDuration >= 60 ) {
-            return (trim($schedule->user->first_name). ' ' . trim($schedule->user->lastn_ame)); 
+            return Str::title((trim($schedule->user->first_name). ' ' . trim($schedule->user->last_name))); 
         } else {
             return ;
         }

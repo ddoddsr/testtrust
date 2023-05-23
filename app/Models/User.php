@@ -11,7 +11,9 @@ use Wallo\FilamentCompanies\HasCompanies;
 use Filament\Models\Contracts\FilamentUser;
 use Wallo\FilamentCompanies\HasProfilePhoto;
 use Laravel\Fortify\TwoFactorAuthenticatable;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Wallo\FilamentCompanies\HasConnectedAccounts;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Wallo\FilamentCompanies\SetsProfilePhotoFromUrl;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -45,10 +47,10 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName
     protected $fillable = [
         'first_name', 'last_name', 'email', 'password',
         'profile_photo_path',
-        'supervisorId', 'designation', 'active',
-        'isSupervisor',
-        'isWorshipLeader',// 'isAssociateWorshipLeader',
-        'isPrayerLeader', 'isSectionLeader',
+        'supervisor_id', 'designation', 'active',
+        'is_supervisor', 'section',
+        'is_worship_leader',// 'isAssociateWorshipLeader',
+        'is_prayerLeader', 'is_sectionLeader',
     ];
 
     /**
@@ -86,22 +88,14 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName
         return $this->hasMany(Schedule::class);
     }
     
-    public function fullName()
+    protected function fullName(): Attribute
     {
-        return $this->first_name .' ' . $this->last_name;
+        return Attribute::make(
+            get: fn (mixed $value, array $attributes) => 
+                $attributes['first_name'] . ' ' .
+                $attributes['last_name']
+        );
     }
-    public function getFullNameAttribute()
-    {
-        return $this->first_name .' ' . $this->last_name;
-    }
-    // protected function title(): Attribute
-    // {
-    //     return Attribute::make(
-    //         get: function () {
-    //             return $this->Library->Book->name . ' at ' . $this->Library->name;
-    //         }
-    //     );
-    // }
     
 
     public function getFilamentName(): string
@@ -110,13 +104,14 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName
     }
     public function supervisor()
     {
-        return $this->belongsTo(User::class, 'supervisorId');
+        return $this->belongsTo(User::class, 'supervisor_id');
     }
 
     public function supervising()
     {
-        return $this->hasMany(User::class, 'supervisorId');
+        return $this->hasMany(User::class, 'supervisor_id');
     }
+
     public static function designations() {
         return [
             'full' => 'Full Time Staff Prayer (12 prayer meetings/week), Service (24 hours/week)',

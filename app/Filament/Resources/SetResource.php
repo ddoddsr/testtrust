@@ -2,16 +2,19 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\SetResource\Pages;
-use App\Filament\Resources\SetResource\RelationManagers;
 use App\Models\Set;
 use Filament\Forms;
-use Filament\Resources\Form;
-use Filament\Resources\Resource;
-use Filament\Resources\Table;
+use App\Models\User;
 use Filament\Tables;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Resources\Form;
+use Filament\Resources\Table;
+use Filament\Resources\Resource;
+use Filament\Forms\Components\Select;
+use Filament\Tables\Columns\TextColumn;
+// use Illuminate\Database\Eloquent\Builder;
+use App\Filament\Resources\SetResource\Pages;
+// use Illuminate\Database\Eloquent\SoftDeletingScope;
+// use App\Filament\Resources\SetResource\RelationManagers;
 
 class SetResource extends Resource
 {
@@ -22,24 +25,36 @@ class SetResource extends Resource
     public static function form(Form $form): Form
     {
         return $form
+        ->columns(3)
         ->schema([
-            Forms\Components\TextInput::make('sequence')->disabled()->dehydrated(false),
+            // Forms\Components\TextInput::make('sequence')->disabled()->dehydrated(false),
             Forms\Components\TextInput::make('dayOfWeek')->disabled()->dehydrated(false)
                 ->maxLength(10),
             Forms\Components\TextInput::make('setOfDay')->disabled()->dehydrated(false)
                 ->maxLength(10),
             Forms\Components\TextInput::make('location')->disabled()->dehydrated(false)
                 ->maxLength(24),
-            Forms\Components\TextInput::make('sectionLeader')->autofocus()
-                ->maxLength(24),
-            Forms\Components\TextInput::make('worshipLeader')
-                ->maxLength(24),
-            Forms\Components\TextInput::make('prayerLeader')
-                ->maxLength(24),
+            
+            Select::make('section_leader_id')
+                ->label('Section Leader')
+                ->relationship('sectionLeader', 'first_name')
+                // ->options(User::all()
+                // ->pluck('full_name', 'id'))
+                ->searchable(),
+            Select::make('worship_leader_id')
+                ->label('Worship Leader')
+                ->options(User::all()
+                ->pluck('full_name', 'id'))
+                ->searchable(),
+            Select::make('prayer_leader_id')
+                ->label('Prayer Leader')
+                ->options(User::all()
+                ->pluck('full_name', 'id'))
+                ->searchable(),
             Forms\Components\TextInput::make('title')
                 ->maxLength(24),
-            Forms\Components\Toggle::make('active')->disabled()->dehydrated(false)
-                ->required(),
+            // Forms\Components\Toggle::make('active')->disabled()->dehydrated(false)
+            //     ->required(),
         ]);
     }
 
@@ -51,12 +66,12 @@ class SetResource extends Resource
             Tables\Columns\TextColumn::make('dayOfWeek')->sortable(),
             Tables\Columns\TextColumn::make('setOfDay')->sortable(),
             Tables\Columns\TextColumn::make('location')->sortable(),
-            Tables\Columns\TextColumn::make('sectionLeader')->sortable(),
-            Tables\Columns\TextColumn::make('worshipLeader')->sortable(),
-            Tables\Columns\TextColumn::make('prayerLeader')->sortable(),
+            TextColumn::make('sectionLeader.full_name')->searchable(),
+            TextColumn::make('worshipLeader.full_name')->searchable(),
+            TextColumn::make('prayerLeader.full_name')->searchable(),
             Tables\Columns\TextColumn::make('title')->sortable(),
-            Tables\Columns\IconColumn::make('active')
-                ->boolean()->sortable(),
+            // Tables\Columns\IconColumn::make('active')
+            //     ->boolean()->sortable(),
             // Tables\Columns\TextColumn::make('created_at')
                 // ->dateTime(),
             // Tables\Columns\TextColumn::make('updated_at')

@@ -16,8 +16,8 @@ class StaffController extends Controller
     {
        foreach($formData as $form) {
 
-           if( $form->resultStatus == 'Complete') {
-                $this->superRecord = User::where( 'email' ,  $form->superEmail1 )->first() ;   
+           if( $form->result_status == 'Complete') {
+                $this->superRecord = User::where( 'email' ,  $form->super_email1 )->first() ;   
                 $staffRecord = tap(
                     User::firstOrCreate(
                         [  'email' => $form->email  ], // search params
@@ -32,20 +32,20 @@ class StaffController extends Controller
                 if( ! $staffRecord->wasRecentlyCreated ) {
                 
                 // We found an existing record
-                    if ( $staffRecord->resultId < (int)$form->resultId ) {
+                    if ( $staffRecord->result_id < (int)$form->result_id ) {
                         // replace data in DB with new record
-                        $staffRecord->first_name = $form->firstName;
-                        $staffRecord->last_name = $form->lastName;
-                        $staffRecord->resultId = $form->resultId ;
-                        $staffRecord->startDate = \Carbon\Carbon::parse($form->startDate)->format('Y-m-d H:i:s');
-                        $staffRecord->finishDate = \Carbon\Carbon::parse($form->finishDate) ->format('Y-m-d H:i:s');
-                        $staffRecord->updateDate = \Carbon\Carbon::parse($form->updateDate)->format('Y-m-d H:i:s');
-                        $staffRecord->resultStatus = $form->resultStatus;
+                        $staffRecord->first_name = $form->first_name;
+                        $staffRecord->last_name = $form->last_name;
+                        $staffRecord->result_id = $form->result_id ;
+                        $staffRecord->start_date = \Carbon\Carbon::parse($form->start_date)->format('Y-m-d H:i:s');
+                        $staffRecord->finish_date = \Carbon\Carbon::parse($form->finish_date) ->format('Y-m-d H:i:s');
+                        $staffRecord->update_date = \Carbon\Carbon::parse($form->update_date)->format('Y-m-d H:i:s');
+                        $staffRecord->result_status = $form->result_status;
                         $staffRecord->designation = $form->designation;
                         $staffRecord->supervisor = $form->supervisor;
-                        $staffRecord->superEmail1 = $form->superEmail1;
-                        $staffRecord->supervisorId = $this->superRecord->id ?? null;
-                        $staffRecord->effectiveDate = \Carbon\Carbon::parse($form->effectiveDate)->format('Y-m-d');
+                        $staffRecord->super_email1 = $form->super_email1;
+                        $staffRecord->supervisor_id = $this->superRecord->id ?? null;
+                        $staffRecord->effective_date = \Carbon\Carbon::parse($form->effective_date)->format('Y-m-d');
                         $staffRecord->save();
                     }
                 }
@@ -60,13 +60,13 @@ class StaffController extends Controller
     {
        foreach($formData as $form) {
 
-           if( $form->resultStatus == 'Complete' && $form->superEmail1 != '') {
+           if( $form->result_status == 'Complete' && $form->super_email1 != '') {
                 $first_name = trim(substr($form->supervisor, 0, strpos($form->supervisor, ' ')));
                 $last_name = trim(substr($form->supervisor, strlen($first_name)));
                 
                 $this->superRecord = tap(
                     User::firstOrCreate(
-                        [  'email' => $form->superEmail1  ], // search params
+                        [  'email' => $form->super_email1  ], // search params
                         // of any additional data to add to record
                         [ 
                             'first_name' => $first_name,
@@ -76,7 +76,7 @@ class StaffController extends Controller
                             //TODO Not asdf
                             'password' => Hash::make("asdf"),
                             'active' => true,
-                            'isSupervisor' => true,
+                            'is_supervisor' => true,
                         ]
                     ), function (User $user) {
                         $this->createCompany($user);
@@ -87,26 +87,26 @@ class StaffController extends Controller
     }  
    
     public function formPrep($form) {
-        $this->superRecord = User::where( 'email' ,  $form->superEmail1 )->first() ;
+        $this->superRecord = User::where( 'email' ,  $form->super_email1 )->first() ;
 
         return [
-            'first_name' => $form->firstName,
-            'last_name' => $form->lastName,
+            'first_name' => $form->first_name,
+            'last_name' => $form->last_name,
             //TODO use random password 
             // 'password' => Str::password(),
             //TODO Not asdf
             'password' => Hash::make("asdf"),
             
-            'resultId' => $form->resultId ,
-            'startDate' => \Carbon\Carbon::parse($form->startDate)->format('Y-m-d H:i:s'),
-            'finishDate' => \Carbon\Carbon::parse($form->finishDate) ->format('Y-m-d H:i:s'),
-            'updateDate' => \Carbon\Carbon::parse($form->updateDate)->format('Y-m-d H:i:s'),
-            'resultStatus' => $form->resultStatus,
+            'result_id' => $form->result_id ,
+            'start_date' => \Carbon\Carbon::parse($form->start_date)->format('Y-m-d H:i:s'),
+            'finish_date' => \Carbon\Carbon::parse($form->finish_date) ->format('Y-m-d H:i:s'),
+            'update_date' => \Carbon\Carbon::parse($form->update_date)->format('Y-m-d H:i:s'),
+            'result_status' => $form->result_status,
             'designation' => $form->designation,
-            'supervisorId' => $this->superRecord->id ?? null,
+            'supervisor_id' => $this->superRecord->id ?? null,
             'supervisor' => $form->supervisor,
-            'superEmail1' => $form->superEmail1,
-            'effectiveDate' => \Carbon\Carbon::parse($form->effectiveDate)->format('Y-m-d'),
+            'super_email1' => $form->super_email1,
+            'effective_date' => \Carbon\Carbon::parse($form->effective_date)->format('Y-m-d'),
         ];
     }
 
@@ -141,7 +141,7 @@ class StaffController extends Controller
     {
         $user->ownedCompanies()->save(Company::forceCreate([
             'user_id' => $user->id,
-            'name' => $user->fullName() ." 's Company",
+            'name' => $user->full_name ." 's Company",
             'personal_company' => true,
         ]));
     }

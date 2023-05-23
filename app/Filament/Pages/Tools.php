@@ -17,7 +17,7 @@ class Tools extends Page
 {
     // use HasPageShield;
     
-    protected array $duplicateNames = [];
+    public array $duplicateNames = []; 
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
     protected static string $view = 'filament.pages.tools';
@@ -39,15 +39,11 @@ class Tools extends Page
     //     abort_unless(auth()->user()->canManageSettings(), 403);
     // }
 
-    /*
-    What are the steps to protect a filimant Page?
-    I created the page 
-    */
     public function newResults()
     {
         $formSite = new FormsiteController;
         // get highest result_id in schedules table
-        $latest = User::max('resultId'); 
+        $latest = User::max('result_id'); 
         $formSite->storeForms($latest);
         
         Notification::make() 
@@ -104,7 +100,7 @@ class Tools extends Page
             ->action('testMe'),
             //
             Action::make('duplicateNameCheck')
-            ->label('duplicateNameCheck')
+            ->label('Duplicate Name Check')
             ->action('duplicateNameCheck'),
 
             Action::make('newest')
@@ -139,6 +135,7 @@ class Tools extends Page
     }
     public function duplicateNameCheck()
     {
+        $this->duplicateNames = [];
         $collection = \App\Models\User::all();
 
         // Group models by sub_id and name
@@ -149,10 +146,15 @@ class Tools extends Page
         // Collect duplicates groups
         ->each(function ($arr) {
             $arr->each(function ($model) {
-                $this->duplicateNames[] = [$model->first_name, $model->last_name, $model->email, $model->supervisor];
+                $this->duplicateNames[] = [
+                    'user_id' => $model->id, 
+                    'user_name' => $model->full_name,
+                    'email' => $model->email, 
+                    'super' => $model->supervisor,
+                    'effective' => $model->effective_date,
+                ];
             });
         });
-        logger($this->duplicateNames);
-        dd($this->duplicateNames);
+        
     }
 }
