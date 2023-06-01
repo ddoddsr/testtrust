@@ -7,17 +7,17 @@ use App\Models\Schedule;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 
-class PdfController extends Controller
+class WallPdfController extends Controller
 {
-
-    public function generatePdf(string $filePath)
+    public $dateTime; 
+    public function generatePdf(string $filePath, string $location = 'GPR')
     {
-        $setWithScheds = $this->setSchedule();
+        $setWithScheds = $this->setSchedule($location);
 
         $fpdf = new \Codedge\Fpdf\Fpdf\Fpdf('L','pt','Letter') ;
         
         // get todays date time
-        $dateTime = 'Updated: ' . Carbon::now()->format('M d Y');
+        $this->dateTime = 'Updated: ' . Carbon::now()->format('M d Y');
 
         $fpdf->SetTitle('Sacred Trust');
         $fpdf->SetAutoPageBreak(true,5);
@@ -56,25 +56,28 @@ class PdfController extends Controller
             $fpdf->Cell(0,0, $set['title'], 0, 1, 'C');
             $fpdf->Ln(32);
             $fpdf->SetFont('Arial', 'B', 10);
+            
             if ($set['worshipLeader']) {
-                $fpdf->Cell($leaderWidth,0, "Worship Leader " .$set['worshipLeader']  , 0, 1, 'L');
+                $fpdf->Cell($leaderWidth,0, "Worship Leader: " .$set['worshipLeader']  , 0, 1, 'L');
             } 
             if ($set['prayerLeader']){
-                $fpdf->Cell($leaderWidth,0, "Prayer Leader " . $set['prayerLeader'], 0, 1, 'C');
+                $fpdf->Cell($leaderWidth,0, "Prayer Leader: " . $set['prayerLeader'], 0, 1, 'C');
             }
             if ($set['sectionLeader']) {
-                $fpdf->Cell($leaderWidth,0, "Section Leader " . $set['sectionLeader']  , 0, 1, 'R');
+                $fpdf->Cell($leaderWidth,0, "Section Leader: " . $set['sectionLeader']  , 0, 1, 'R');
             }
             
             $fpdf->Ln(32);
             $fpdf->SetFont('Arial', '', $nameFontSize);
-
+            
             $rowCount = 0;
             $postionColumn = 0;
 
             foreach($set['scheds'] as $name ) {
                 if ($name != '' ) {
                     $rowCount++;
+                    
+                    $name = iconv('UTF-8', 'windows-1252', $name);
 
                     $fpdf->Text( 50 +($columnSpacing * $postionColumn),
                         $topOfColumns + ( $rowCount * $rowHeight), $name );
@@ -86,13 +89,11 @@ class PdfController extends Controller
                 }
             }
 
-            $fpdf->SetFont('Arial', 'B', 12);
+            $fpdf->SetFont('Arial', 'B', 10);
             $fpdf->SetY( $taglinePos );
             $fpdf->Cell( $leaderWidth, 0, $set['dayOfWeek'] . ' ' . $set['setOfDay'], 0, 1, 'L');
-            $fpdf->SetFont('Arial', 'B', 10);
             $fpdf->Cell( $leaderWidth, 0, $tagline, 0, 1, 'C');
-            $fpdf->SetFont('Arial', 'B', 12);
-            $fpdf->Cell( $leaderWidth ,0, $dateTime, 0, 1, 'R');
+            $fpdf->Cell( $leaderWidth ,0, $this->dateTime, 0, 1, 'R');
         }
         $fpdf->Output('F', $filePath);
         return;     
@@ -111,6 +112,7 @@ class PdfController extends Controller
             'pluser.first_name as pl_first_name',  'pluser.last_name as pl_last_name',
             'wluser.first_name as wl_first_name',  'wluser.last_name as wl_last_name',
             'sluser.first_name as sl_first_name',  'sluser.last_name as sl_last_name')
+        ->where('location',$location )
         ->get();
         $setWithScheds = [];
 
@@ -156,9 +158,16 @@ class PdfController extends Controller
         $isEnd   = $scheduleEndM->gte($setTimeEndM);
 
         $schedDuration = $scheduleStartM->diffInMinutes($schedule->end);
-
+logger($schedule->user->exit_date );
+// logger( $this->dateTime);
         // check for duration >= 60 min
-        if ($isStart && $isEnd && $schedDuration >= 60 ) {
+        if ($isStart && $isEnd 
+        && $schedDuration >= 60
+        && (  $schedule->user->exit_date == null
+            ||
+            Carbon::parse($schedule->user->exit_date) > Carbon::parse($this->dateTime)
+            )
+         ) {
             return Str::title((trim($schedule->user->first_name). ' ' . trim($schedule->user->last_name))); 
         } else {
             return ;

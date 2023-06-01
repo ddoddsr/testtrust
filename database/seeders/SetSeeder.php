@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Set;
 use Illuminate\Database\Seeder;
+use Faker\Generator as Faker;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class SetSeeder extends Seeder
@@ -52,15 +53,17 @@ class SetSeeder extends Seeder
 
         //  $sets = [];
          $sequence=1;
+         $faker = new FAKER;
          foreach ($dayOfWeek as $day) {
              foreach ($setOfDay as $set) {
                  $set = [
                      'dayOfWeek' => $day,
                      'setOfDay' => $set,
                      'location' => 'GPR',
-                    //  'worshipLeader' => '',
-                    //  'prayerLeader' => '',
-                    //  'sectionLeader' => '',
+                     'worship_leader_id' => $faker->numberBetween(30, 50),
+                     'associate_worship_leader_id' => $faker->numberBetween(51, 75),
+                     'prayer_leader_id' => $faker->numberBetween(76, 100),
+                     'section_leader_id' => $faker->numberBetween(3, 29),
                      'title' => in_array($set, $intercessionSets)  ? 'Intercession' : 'Worship with the Word',
                      'sequence' => $sequence++,
                      'active' => true,

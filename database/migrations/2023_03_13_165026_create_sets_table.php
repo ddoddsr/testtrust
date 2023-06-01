@@ -19,6 +19,7 @@ return new class extends Migration
             $table->char('location', 24)->nullable();
             $table->unsignedBigInteger('section_leader_id')->nullable();
             $table->unsignedBigInteger('worship_leader_id')->nullable();
+            $table->unsignedBigInteger('associate_worship_leader_id')->nullable();
             $table->unsignedBigInteger('prayer_leader_id')->nullable();
             $table->char('title', 24)->nullable();
             $table->boolean('active')->default(1);

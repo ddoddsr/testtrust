@@ -51,6 +51,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName
         'is_supervisor', 'section',
         'is_worship_leader',// 'isAssociateWorshipLeader',
         'is_prayerLeader', 'is_sectionLeader',
+        'exit_date',
     ];
 
     /**

@@ -37,12 +37,16 @@ class SetResource extends Resource
             
             Select::make('section_leader_id')
                 ->label('Section Leader')
-                ->relationship('sectionLeader', 'first_name')
-                // ->options(User::all()
-                // ->pluck('full_name', 'id'))
+                ->options(User::all()
+                 ->pluck('full_name', 'id'))
                 ->searchable(),
             Select::make('worship_leader_id')
                 ->label('Worship Leader')
+                ->options(User::all()
+                ->pluck('full_name', 'id'))
+                ->searchable(),
+            Select::make('associate_worship_leader_id')
+                ->label('Associate Worship Leader')
                 ->options(User::all()
                 ->pluck('full_name', 'id'))
                 ->searchable(),
@@ -68,6 +72,7 @@ class SetResource extends Resource
             Tables\Columns\TextColumn::make('location')->sortable(),
             TextColumn::make('sectionLeader.full_name')->searchable(),
             TextColumn::make('worshipLeader.full_name')->searchable(),
+            TextColumn::make('associateWorshipLeader.full_name')->searchable(),
             TextColumn::make('prayerLeader.full_name')->searchable(),
             Tables\Columns\TextColumn::make('title')->sortable(),
             // Tables\Columns\IconColumn::make('active')

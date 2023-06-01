@@ -46,6 +46,7 @@ return new class extends Migration
             $table->char('supervisor', 100)->nullable();
             $table->char('super_email1', 100)->nullable();
             $table->date('effective_date')->nullable();
+            $table->date('exit_date')->nullable();
         });
     }
 

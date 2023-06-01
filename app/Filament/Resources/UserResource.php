@@ -78,10 +78,11 @@ class UserResource extends Resource
                     Tabs\Tab::make('User Data')
                     ->schema([
                         // photo 
-                        Forms\Components\Toggle::make('active')
-                            ->required(),
+                        // Forms\Components\Toggle::make('active')
+                        //     ->required(),
                         Forms\Components\Toggle::make('is_supervisor')
                             ->label('Is Supervisor')->default('false'),
+                            Forms\Components\DateTimePicker::make('exit_date'),
                         // Select::make('section')
                         // ->options(['various', 'morning', 'afternoon', 'evening','nightwatch']),
                         // Forms\Components\Toggle::make('isSectionLeader')
@@ -152,8 +153,8 @@ class UserResource extends Resource
                 //     ->dateTime(),
                 // Tables\Columns\TextColumn::make('updated_at')
                 //     ->dateTime(),
-                Tables\Columns\IconColumn::make('active')
-                    ->boolean()->sortable(),
+                // Tables\Columns\IconColumn::make('active')
+                //     ->boolean()->sortable(),
                 Tables\Columns\IconColumn::make('is_supervisor')
                     ->boolean(),
                     
@@ -176,17 +177,20 @@ class UserResource extends Resource
                 Tables\Columns\TextColumn::make('super_email1')->sortable(),
                 Tables\Columns\TextColumn::make('effective_date')
                     ->date()->sortable(),
+                Tables\Columns\TextColumn::make('exit_date')
+                    ->date()->sortable(),
+                
                 //Tables\Columns\TextColumn::make('section')
             ])
             ->filters([
-                Tables\Filters\Filter::make('verified')
-                    ->label(trans('filament-user::user.resource.verified'))
-                    ->query(fn (Builder $query): Builder => $query->whereNotNull('email_verified_at')),
-                Tables\Filters\Filter::make('unverified')
-                    ->label(trans('filament-user::user.resource.unverified'))
-                    ->query(fn (Builder $query): Builder => $query->whereNull('email_verified_at')),
+                // Tables\Filters\Filter::make('verified')
+                //     ->label(trans('filament-user::user.resource.verified'))
+                //     ->query(fn (Builder $query): Builder => $query->whereNotNull('email_verified_at')),
+                // Tables\Filters\Filter::make('unverified')
+                //     ->label(trans('filament-user::user.resource.unverified'))
+                //     ->query(fn (Builder $query): Builder => $query->whereNull('email_verified_at')),
                 Tables\Filters\Filter::make('is_supervisor')
-                    ->label(trans('filament-user::user.resource.supervisor'))
+                    ->label(trans('Is supervisor'))
                     ->query(fn (Builder $query): Builder => $query->where('is_supervisor', true)),
             ])
             ->actions([

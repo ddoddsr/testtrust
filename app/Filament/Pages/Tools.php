@@ -8,8 +8,9 @@ use Filament\Pages\Actions\Action;
 // use App\Http\Controllers\StaffController;
 // use Illuminate\Support\Facades\DB;
 use Illuminate\Support\HtmlString;
-use App\Http\Controllers\PdfController;
+use App\Http\Controllers\SchedPdfController;
 use Filament\Notifications\Notification;
+use App\Http\Controllers\WallPdfController;
 use App\Http\Controllers\FormsiteController;
 // use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 
@@ -23,7 +24,7 @@ class Tools extends Page
     protected static string $view = 'filament.pages.tools';
 
     // https://github.com/filamentphp/filament/discussions/6275
-    // protected static bool $shouldRegisterNavigation = false;
+    protected static bool $shouldRegisterNavigation = true;
     // protected static bool $shouldRegisterNavigation = false;
     // https://filamentphp.com/docs/2.x/admin/navigation#disabling-resource-or-page-navigation-items
 
@@ -37,8 +38,45 @@ class Tools extends Page
     // public function mount(): void
     // {
     //     abort_unless(auth()->user()->canManageSettings(), 403);
+    
+    //     abort_unless(Auth::user()->currentCompany->id === 3, 403);
     // }
 
+    protected function getActions(): array
+    {
+        return [
+            Action::make('newest')
+                ->action('newResults'),
+
+            Action::make('genWallPdf')
+            ->label('Generate Wall PDF')
+                ->action('genWallPdf'),
+
+            Action::make('genSchedPdf')
+            ->label('Generate Schedule PDF')
+                ->action('genSchedPdf'),
+
+            Action::make('duplicateNameCheck')
+                ->label('Duplicate Name Check')
+                ->action('duplicateNameCheck'),
+            Action::make('Re-import all Results')
+                ->action('allResults')
+                ->requiresConfirmation()
+                    ->modalHeading('Re-import all Results')
+                    ->modalSubheading('Are you sure you want to Drop Schedule data and re-import?')
+                    ->modalContent(new HtmlString('<div class="text-center">FormSite Data.<br>from {date} .</div>'))
+                    ->modalButton('Get All Results')
+                    ->visible(env('FORMSITE_IMPORT', 'false')),
+            //
+            Action::make('Re-import supers')
+                ->action('allSupers')
+                // ->visible(fn (Post $record): bool => auth()->user()->can('update', $record))
+                ->visible(env('FORMSITE_IMPORT', 'false')),
+            Action::make('testme')
+                ->label('Test Me')
+                ->action('testMe'),
+        ];
+    }
     public function newResults()
     {
         $formSite = new FormsiteController;
@@ -77,10 +115,10 @@ class Tools extends Page
         ->send(); 
         return $this->redirect('/admin/tools');
     }
-    public function genPdf()
+    public function genWallPdf()
     {
-        $filePath = 'storage/sacred_trust.pdf';
-        $pdf = new PdfController;
+        $filePath = 'storage/sacred_trust_wall.pdf';
+        $pdf = new WallPdfController;
         $pdf->generatePdf($filePath);
 
         Notification::make() 
@@ -91,40 +129,19 @@ class Tools extends Page
         return response()->download($filePath);
     }
 
-    
-    protected function getActions(): array
+    public function genSchedPdf()
     {
-        return [
-            Action::make('testme')
-            ->label('Test Me')
-            ->action('testMe'),
-            //
-            Action::make('duplicateNameCheck')
-            ->label('Duplicate Name Check')
-            ->action('duplicateNameCheck'),
+        $filePath = 'storage/sacred_trust_schedule.pdf';
+        $pdf = new SchedPdfController;
+        $pdf->generatePdf($filePath);
 
-            Action::make('newest')
-                ->action('newResults'),
-            Action::make('genPdf')
-                ->action('genPdf'),
-            Action::make('Re-import all Results')
-                ->action('allResults')
-                ->requiresConfirmation()
-                    ->modalHeading('Re-import all Results')
-                    ->modalSubheading('Are you sure you want to Drop Schedule data and re-import?')
-                    ->modalContent(new HtmlString('<div class="text-center">FormSite Data.<br>from {date} .</div>'))
-                    ->modalButton('Get All Results'),
-            //
-            Action::make('Re-import supers')
-                ->action('allSupers')
-                // ->hidden(true),
-                // ->requiresConfirmation()
-                //     ->modalHeading('Re-import all Supers')
-                //     ->modalSubheading('Are you sure you want to Drop Schedule data and re-import?')
-                //     ->modalButton('Get All Supers'),
-        ];
+        Notification::make() 
+            ->title('Generation complete.')
+            ->success()
+            ->send(); 
+        
+        return response()->download($filePath);
     }
-    
 
     public function testMe($name = 'testMe')
     {
