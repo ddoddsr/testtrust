@@ -2,14 +2,16 @@
 
 namespace App\Filament\Resources;
 
+use Carbon\Carbon;
 use Filament\Forms;
-use Filament\Tables;
 use App\Models\User;
+use Filament\Tables;
 use Filament\Resources\Form;
 use Filament\Resources\Table;
 use Filament\Resources\Resource;
 use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\Select;
+use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\UserResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -36,10 +38,10 @@ class UserResource extends Resource
                 ->email()
                 ->required()
                 ->maxLength(255),
-            Forms\Components\DatePicker::make('effective_date'),
+            // Forms\Components\DatePicker::make('effective_date'),
             
             Select::make('designation_id')
-                ->label('DesignationID')
+                ->label('Designation')
                 ->options(User::designations()),
                 
             Select::make('department_id')
@@ -56,7 +58,7 @@ class UserResource extends Resource
             Select::make('supervisor_id')
                 ->label('Supervisor lookup')
                 ->options(User::all()
-                ->pluck('full_name', 'id'))
+                ->pluck('name_and_email', 'id'))
                 ->searchable(),
             // Forms\Components\TextInput::make('designation')
             //     ->maxLength(100),
@@ -80,9 +82,11 @@ class UserResource extends Resource
                         // photo 
                         // Forms\Components\Toggle::make('active')
                         //     ->required(),
+                        Forms\Components\DatePicker::make('effective_date'),
+                        Forms\Components\DateTimePicker::make('exit_date'),
                         Forms\Components\Toggle::make('is_supervisor')
-                            ->label('Is Supervisor')->default('false'),
-                            Forms\Components\DateTimePicker::make('exit_date'),
+                        ->label('Is Supervisor')->default('false'),
+
                         // Select::make('section')
                         // ->options(['various', 'morning', 'afternoon', 'evening','nightwatch']),
                         // Forms\Components\Toggle::make('isSectionLeader')
@@ -172,7 +176,10 @@ class UserResource extends Resource
                 // Tables\Columns\TextColumn::make('updateDate')
                 //     ->dateTime(),
                 // Tables\Columns\TextColumn::make('result_status')->sortable(),
-                Tables\Columns\TextColumn::make('designation')->sortable(),
+                Tables\Columns\SelectColumn::make('designation_id')
+                ->options(fn () => User::designations_short())
+                ->sortable(),
+                // Tables\Columns\TextColumn::make('designation')->sortable(),
                 Tables\Columns\TextColumn::make('supervisor')->sortable()->searchable(isIndividual: true),
                 Tables\Columns\TextColumn::make('super_email1')->sortable(),
                 Tables\Columns\TextColumn::make('effective_date')
@@ -189,9 +196,31 @@ class UserResource extends Resource
                 // Tables\Filters\Filter::make('unverified')
                 //     ->label(trans('filament-user::user.resource.unverified'))
                 //     ->query(fn (Builder $query): Builder => $query->whereNull('email_verified_at')),
+
+                SelectFilter::make('designation_id')
+                ->multiple()
+                ->options(User::designations_short()),
+
+                // Add to above options?
+                Tables\Filters\Filter::make('no_designation')
+                ->label(trans('No Designation'))
+                ->query(fn (Builder $query): Builder => $query->where('designation_id', null)),
+
+                Tables\Filters\Filter::make('effective_date')
+                ->label(trans('Old Effective Date'))
+                ->query(fn (Builder $query): Builder => 
+                    $query->where('effective_date', '<', Carbon::now()->addYears(1))
+                    ->where('exit_date', null)
+                ),
+
                 Tables\Filters\Filter::make('is_supervisor')
-                    ->label(trans('Is supervisor'))
-                    ->query(fn (Builder $query): Builder => $query->where('is_supervisor', true)),
+                ->label(trans('Is supervisor'))
+                ->query(fn (Builder $query): Builder => $query->where('is_supervisor', true)),
+                
+                Tables\Filters\Filter::make('not_supervisor')
+                ->label(trans('Not supervisor'))
+                ->query(fn (Builder $query): Builder => $query->where('is_supervisor', false)),
+
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
@@ -205,7 +234,8 @@ class UserResource extends Resource
     {
         return [
             RelationManagers\SchedulesRelationManager::class,
-            UserResource\RelationManagers\UserRelationManager::class
+            UserResource\RelationManagers\UserRelationManager::class,
+            UserAliasManagerResource\RelationManagers\EmailAliasRelationManager::class,
         ];
     }
     

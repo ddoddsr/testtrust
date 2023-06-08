@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 // use App\Models\Schedule;
 // use Illuminate\Support\Str;
+use App\Models\Set;
 use Illuminate\Support\Facades\DB;
 
 class SchedPdfController extends Controller
@@ -63,10 +64,8 @@ class SchedPdfController extends Controller
         $fpdf->SetXY( $left  , $top,);
         $fpdf->SetFont('Arial', 'B', 10);
         $fpdf->Cell( 60, 16, "Day", '', 0, 'C');
-        foreach (['Sunday', 'Monday', 'Tuesday', 
-                'Wednesday', 'Thursdday', 
-                'Friday', 'Saturday'
-            ] as $columnIndex  => $dayOfWeek) {
+        // dd(Set::dayOfWeek());
+        foreach (Set::dayOfWeek() as $columnIndex  => $dayOfWeek) {
             $fpdf->SetX( $leftSet + 2 + ($columnIndex  * $dayWidth ));
             $fpdf->Cell( $dayWidth, 16, $dayOfWeek, '', 0, 'C');
         }

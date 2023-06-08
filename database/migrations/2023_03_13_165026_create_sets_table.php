@@ -17,6 +17,7 @@ return new class extends Migration
             $table->char('dayOfWeek', 10)->nullable();
             $table->char('setOfDay', 10)->nullable();
             $table->char('location', 24)->nullable();
+            $table->foreignId('location_id');
             $table->unsignedBigInteger('section_leader_id')->nullable();
             $table->unsignedBigInteger('worship_leader_id')->nullable();
             $table->unsignedBigInteger('associate_worship_leader_id')->nullable();

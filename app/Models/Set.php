@@ -19,6 +19,10 @@ class Set extends Model
         'title',
     ];
 
+    public function location(): BelongsTo
+    {
+        return $this->belongsTo(Location::class);
+    }
     public function sectionLeader(): BelongsTo
     {
         return $this->belongsTo(User::class, 'section_leader_id'); 
@@ -32,4 +36,28 @@ class Set extends Model
         return $this->belongsTo(User::class, 'prayer_leader_id'); 
     }
 
+    public static function setOfDay () {
+        return [
+            '12am',
+            '2am',
+            '4am',
+            '6am',
+            '8am',
+            '10am',
+            '12pm',
+            '2pm',
+            '4pm',
+            '6pm',
+            '8pm',
+            '10pm',
+        ];
+    }
+
+    public static function dayOfWeek (){ 
+        return ['Sunday', 'Monday',  'Tuesday',  'Wednesday',  'Thursday', 'Friday', 'Saturday'];
+    }
+
+    public static function intercessionSets() {
+        return ['12am', '4am', '6am', '10am', '4pm', '8pm'];
+    }
 }

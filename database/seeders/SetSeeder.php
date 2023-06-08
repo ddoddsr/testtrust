@@ -31,47 +31,28 @@ class SetSeeder extends Seeder
      */
     public function run(): void
     {
-        $intercessionSets = ['12am', '4am', '6am', '10am', '4pm', '8pm'];
-        $setOfDay = [
-             '12am',
-             '2am',
-             '4am',
-             '6am',
-             '8am',
-             '10am',
-             '12pm',
-             '2pm',
-             '4pm',
-             '6pm',
-             '8pm',
-             '10pm',
-         ];
+        $intercessionSets = Set::intercessionSets();
 
-        $dayOfWeek = [
-            'Sunday', 'Monday',  'Tuesday',  'Wednesday',  'Thursday', 'Friday', 'Saturday'];
         $sequence = 1;
-
-        //  $sets = [];
-         $sequence=1;
-         $faker = new FAKER;
-         foreach ($dayOfWeek as $day) {
-             foreach ($setOfDay as $set) {
-                 $set = [
-                     'dayOfWeek' => $day,
-                     'setOfDay' => $set,
-                     'location' => 'GPR',
-                     'worship_leader_id' => $faker->numberBetween(30, 50),
-                     'associate_worship_leader_id' => $faker->numberBetween(51, 75),
-                     'prayer_leader_id' => $faker->numberBetween(76, 100),
-                     'section_leader_id' => $faker->numberBetween(3, 29),
-                     'title' => in_array($set, $intercessionSets)  ? 'Intercession' : 'Worship with the Word',
-                     'sequence' => $sequence++,
-                     'active' => true,
-                 ];
-                 $result = Set::create($set);
-                 logger($result);
-             }
-         }
-
+        $faker = new FAKER;
+        foreach (Set::dayOfWeek() as $day) {
+            foreach (Set::setOfDay() as $set) {
+                $set = [
+                    'dayOfWeek' => $day,
+                    'setOfDay' => $set,
+                    'location' => 'GPR',
+                    'location_id' => 1,
+                    'worship_leader_id' => $faker->numberBetween(30, 50),
+                    'associate_worship_leader_id' => $faker->numberBetween(51, 75),
+                    'prayer_leader_id' => $faker->numberBetween(76, 100),
+                    'section_leader_id' => $faker->numberBetween(3, 29),
+                    'title' => in_array($set, $intercessionSets)  ? 'Intercession' : 'Worship with the Word',
+                    'sequence' => $sequence++,
+                    'active' => true,
+                ];
+                $result = Set::create($set);
+                //logger($result);
+            }
+        }
     }
 }

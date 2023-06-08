@@ -36,4 +36,37 @@
             </tbody>
         <table>
     @endif
+    
+    @if($ownSuperNames)
+        <div>
+            <h1>Staff entered Own email for Super</h1>
+        </div>
+        
+        <table>
+            <thead>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Effective Date</th>
+                <th>Supervisor</th>
+                <th>Actions</th>
+
+            </thead>
+            <tbody>
+                @foreach ( $ownSuperNames as $own )
+                {{-- @dd($own) --}}
+                    {{-- @foreach ( $mown as $own ) --}}
+                    <tr> 
+                        <td>{{ $own['user_id'] }} </td>
+                        <td>{{ $own['user_name'] }} </td>
+                        <td>{{ $own['email'] }} </td>
+                        <td>{{ $own['effective'] }} </td>
+                        <td>{{ $own['super'] }} </td>
+                        <td> <a href="users/{{ $own['user_id'] }}/edit" target="_blank">Edit</a></td>                  
+                    </tr>
+                    {{-- @endforeach --}}
+                @endforeach
+            </tbody>
+        <table>
+    @endif
 </x-filament::page>

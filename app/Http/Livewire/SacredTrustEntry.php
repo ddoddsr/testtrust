@@ -2,10 +2,11 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\Set;
 use Filament\Forms;
 use App\Models\User;
 use Livewire\Component;
-
+use App\Models\Schedule;
 use Illuminate\Support\HtmlString;
 use Filament\Forms\Components\Card;
 use Filament\Forms\Components\Grid;
@@ -110,36 +111,26 @@ class SacredTrustEntry extends Component implements HasForms
     }
     public static function schedLine($pos = 1) {
         return [
-            Forms\Components\Select::make("day_of_week_" . $pos )->options( self::daysOfWeek())->label('')->placeholder("Day"),
-            Forms\Components\Select::make("start_time_" . $pos)->options( self::timeOfDay())->label('')->placeholder("Start Time"),
-            Forms\Components\Select::make("end_time_" . $pos)->options( self::timeOfDay())->label('')->placeholder("End Time"),
-            Forms\Components\Select::make("locaction_" . $pos)->options( self::locations())->label('')->placeholder("Location"),
+            Select::make("day_of_week_" . $pos )->options( Set::dayOfWeek())->label('')->placeholder("Day"),
+            Select::make("start_time_" . $pos)->options( Schedule::timeOfDay())->label('')->placeholder("Start Time"),
+            Select::make("end_time_" . $pos)->options( Schedule::timeOfDay())->label('')->placeholder("End Time"),
+            Select::make("location_" . $pos)->options( self::locations())->label('')->placeholder("Location"),
         ];
     }
 
-    public static function daysOfWeek() {
-        return [
-            1 => 'Sunday',
-            2 => 'Monday',
-            3 => 'Tuesday',
-            4 => 'Wednesday',
-            5 => 'Thursday',
-            6 => 'Friday',
-            7 => 'Saturday'
-        ];
-    }
 
-    public static function timeOfDay() {
-        return[ 
-            '12:00 am','12:30 am','1:00 am','1:30 am','2:00 am','3:30 am','3:00 am','3:30 am',
-            '4:00 am','4:30 am','5:00 am','5:30 am','6:00 am','6:30 am','7:00 am','7:30 am',
-            '8:00 am','8:30 am','9:00 am', '9:30 am','10:00 am', '10:30 am','11:00 am', '11:30 am',
-            '12:00 pm','12:30 pm','1:00 pm','1:30 pm','2:00 pm','3:30 pm','3:00 pm','3:30 pm',
-            '4:00 pm','4:30 pm','5:00 pm','5:30 pm','6:00 pm','6:30 pm','7:00 pm','7:30 pm',
-            '8:00 pm','8:30 pm','9:00 pm', '9:30 pm','10:00 pm', '10:30 pm','11:00 pm', '11:30 pm',
-        ];
-    }
+    // public static function timeOfDay() {
+    //     return[ 
+    //         '12:00 am','12:30 am','1:00 am','1:30 am','2:00 am','3:30 am','3:00 am','3:30 am',
+    //         '4:00 am','4:30 am','5:00 am','5:30 am','6:00 am','6:30 am','7:00 am','7:30 am',
+    //         '8:00 am','8:30 am','9:00 am', '9:30 am','10:00 am', '10:30 am','11:00 am', '11:30 am',
+    //         '12:00 pm','12:30 pm','1:00 pm','1:30 pm','2:00 pm','3:30 pm','3:00 pm','3:30 pm',
+    //         '4:00 pm','4:30 pm','5:00 pm','5:30 pm','6:00 pm','6:30 pm','7:00 pm','7:30 pm',
+    //         '8:00 pm','8:30 pm','9:00 pm', '9:30 pm','10:00 pm', '10:30 pm','11:00 pm', '11:30 pm',
+    //     ];
+    // }
 
+    // TODO get from table
     public static function locations() {
         return [
             1 => 'GPR',
@@ -150,6 +141,7 @@ class SacredTrustEntry extends Component implements HasForms
         ];
     }
 
+    // TODO get from table
     public static function departments() {
         return [
             'other' => 'Other',

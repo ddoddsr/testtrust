@@ -137,8 +137,11 @@ class WallPdfController extends Controller
         $schedLines = [];
 
         foreach(Schedule::where('location', $location)
-                       ->where('day' , $day)
-                        ->get() as $schedule) {
+                ->leftJoin('users', 'users.id', '=', 'schedules.user_id')
+                ->where('day' , $day)
+                ->whereIn('users.designation_id', [1,2,5,7])
+                ->get() as $schedule
+            ) {
             $schedLines[] = $this->modSchedLines($set, $schedule);
         }
 
@@ -158,8 +161,8 @@ class WallPdfController extends Controller
         $isEnd   = $scheduleEndM->gte($setTimeEndM);
 
         $schedDuration = $scheduleStartM->diffInMinutes($schedule->end);
-logger($schedule->user->exit_date );
-// logger( $this->dateTime);
+        // logger($schedule->user->exit_date );
+        // logger( $this->dateTime);
         // check for duration >= 60 min
         if ($isStart && $isEnd 
         && $schedDuration >= 60

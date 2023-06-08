@@ -22,6 +22,9 @@ class SetResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-collection';
 
+    // TODO show for super_admin Hides from admin menu 
+    protected static bool $shouldRegisterNavigation = false;
+    
     public static function form(Form $form): Form
     {
         return $form
@@ -67,9 +70,9 @@ class SetResource extends Resource
         return $table
         ->columns([
             // Tables\Columns\TextColumn::make('sequence'),
-            Tables\Columns\TextColumn::make('dayOfWeek')->sortable(),
-            Tables\Columns\TextColumn::make('setOfDay')->sortable(),
-            Tables\Columns\TextColumn::make('location')->sortable(),
+            TextColumn::make('dayOfWeek')->sortable(),
+            TextColumn::make('setOfDay')->sortable(),
+            TextColumn::make('location')->sortable(),
             TextColumn::make('sectionLeader.full_name')->searchable(),
             TextColumn::make('worshipLeader.full_name')->searchable(),
             TextColumn::make('associateWorshipLeader.full_name')->searchable(),

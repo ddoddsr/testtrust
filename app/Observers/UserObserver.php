@@ -29,7 +29,7 @@ class UserObserver
      */
     public function deleting(User $user): void
     {
-        if (Storage::disk('public')->exists($user->profile_photo_path)) {
+        if ($user->profile_photo_path && Storage::disk('public')->exists($user->profile_photo_path)) {
             Storage::disk('public')->delete($user->profile_photo_path);
         }
         

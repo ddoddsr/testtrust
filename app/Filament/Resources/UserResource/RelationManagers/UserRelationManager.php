@@ -29,7 +29,7 @@ class UserRelationManager extends RelationManager
                 Forms\Components\Select::make('supervisor_id')
                 ->label('Supervisor lookup')
                 ->options(User::all()
-                ->pluck('full_name', 'id'))
+                ->pluck('name_and_email', 'id'))
                 ->searchable()
             ]);
     }

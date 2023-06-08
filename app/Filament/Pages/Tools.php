@@ -7,11 +7,12 @@ use Filament\Pages\Page;
 use Filament\Pages\Actions\Action;
 // use App\Http\Controllers\StaffController;
 // use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\HtmlString;
-use App\Http\Controllers\SchedPdfController;
 use Filament\Notifications\Notification;
 use App\Http\Controllers\WallPdfController;
 use App\Http\Controllers\FormsiteController;
+use App\Http\Controllers\SchedPdfController;
 // use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 
 class Tools extends Page
@@ -19,6 +20,7 @@ class Tools extends Page
     // use HasPageShield;
     
     public array $duplicateNames = []; 
+    public array $ownSuperNames = [];
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
     protected static string $view = 'filament.pages.tools';
@@ -57,8 +59,12 @@ class Tools extends Page
                 ->action('genSchedPdf'),
 
             Action::make('duplicateNameCheck')
-                ->label('Duplicate Name Check')
-                ->action('duplicateNameCheck'),
+            ->label('Duplicate Name Check')
+            ->action('duplicateNameCheck'),
+
+            Action::make('ownSuperCheck')
+                ->label('Own Supervisor Check')
+                ->action('ownSuperCheck'),
             Action::make('Re-import all Results')
                 ->action('allResults')
                 ->requiresConfirmation()
@@ -173,5 +179,29 @@ class Tools extends Page
             });
         });
         
+    }
+    public function ownSuperCheck()
+    {
+        $this->duplicateNames = [];
+        $this->ownSuperNames = [];
+        $ownNames = [];
+        $staff = DB::table('users')
+        // $staff->select('id', 'first_name', 'email', 'super_email1')
+        ->get();
+        foreach($staff as $thier_own) {
+            if($thier_own->email == $thier_own->super_email1) {
+                 $ownNames[] =  [
+                     'user_id' => $thier_own->id, 
+                     'user_name' => $thier_own->first_name . ' ' . $thier_own->last_name,
+                     'email' => $thier_own->email, 
+                     'super' => $thier_own->super_email1,
+                     'effective' => $thier_own->effective_date,
+                 ];
+            }
+        }
+
+        // logger(count($ownNames));
+        $this->ownSuperNames = $ownNames ;
+        // dd($this->ownSuperNames);
     }
 }
