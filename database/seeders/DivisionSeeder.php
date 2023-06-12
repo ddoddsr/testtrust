@@ -19,7 +19,7 @@ class DivisionSeeder extends Seeder
         }
         //GPR
         foreach([
-            'Nightwatch', 'Morning', 'Afternoon', 'Evening', 
+            'Nightwatch', 'Morning Section', 'Afternoon Section', 'Evening Section', 
             'GPR Sound', 'Global Prayer Initiatives',
             'Intro', 'Simeon', 'One Thing', 'FITN', 'Immerse',
             'ANPR', 'Hope City Prayer Room', 'Israel Mandate - Isaiah 19', 

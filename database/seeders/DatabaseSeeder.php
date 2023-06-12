@@ -4,8 +4,8 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Database\Seeders\ShieldSeeder;
-use Illuminate\Support\Facades\Artisan;
+// use Database\Seeders\ShieldSeeder;
+// use Illuminate\Support\Facades\Artisan;
 
 class DatabaseSeeder extends Seeder
 {
@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'dd@dd.io',
             'password' => bcrypt('asdf'),
             'active' => true,
+            'current_company_id' => 1,
         ]);
         \App\Models\User::factory()->withPersonalCompany()->create([
             'first_name' => 'Sam',
@@ -30,6 +31,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'sam@dd.io',
             'password' => bcrypt('asdf'),
             'active' => true,
+            'current_company_id' => 2,
         ]);
         \App\Models\User::factory()->withPersonalCompany()->create([
             'first_name' => 'Stuart',
@@ -38,6 +40,7 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('asdf'),
             'active' => true,
             'is_supervisor' => true,
+            'current_company_id' => 3,
         ]);
 
         // TODO Better Alias seeder?
@@ -50,14 +53,7 @@ class DatabaseSeeder extends Seeder
         'email' => 'stuartgreaves@pm.me'
         //         'stuartgreaves@pm.me
         ]);
-/* 
-Elijah Choi	
-    elijahchoi@ihopkc.org
-    jaeeunchoi@ihopkc.org
-    Elijah Choi	ejijahchoi@ihopkc.org
-    Elijah Choi	jaeunchoi@ihopkc.org
 
-*/
         // $shield = new ShieldSeeder;
         // $shield->run();
        
@@ -65,6 +61,7 @@ Elijah Choi
 
         // \App\Models\User::factory(15000)->withPersonalCompany()->create();
         // Locations
+        
         foreach (['GPR', 'ANPR', 'FC', 'HOPE City','Malichai 6:6' ] as $location) {
                     \App\Models\Location::create([
                 'name' => $location
