@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Hash;
 class StaffController extends Controller
 {
     public $superRecord;
-    public $superAlias;
+    // public $superAlias;
     public $designations;
     public $locations;
 
@@ -31,8 +31,9 @@ class StaffController extends Controller
 
            if( $form->result_status == 'Complete') {
             
-                $this->superAlias = $this->superFromAlias($form->super_email1 ) ; 
-
+                // $this->superAlias = $this->superFromAlias($form->super_email1 ) ; 
+                // logger(['super update' => $this->superAlias]);
+                
                 $staffRecord = tap(
                     User::firstOrCreate(
                         [  'email' => $form->email  ], 
@@ -59,7 +60,7 @@ class StaffController extends Controller
                         $staffRecord->designation_id = $this->designations[strtolower(substr($form->designation, 0, 4))]  ?? null;
                         $staffRecord->supervisor = $form->supervisor;
                         $staffRecord->super_email1 = $form->super_email1;
-                        $staffRecord->supervisor_id = $this->superAlias->id ?? null;
+                        $staffRecord->supervisor_id = $this->superFromAlias($form->super_email1 ) ?? null;
                         $staffRecord->effective_date = \Carbon\Carbon::parse($form->effective_date)->format('Y-m-d');
                         $staffRecord->exit_date = null;
                         $staffRecord->save();
@@ -82,7 +83,6 @@ class StaffController extends Controller
                 $superRecord = EmailAlias::where( 'email' ,  $form->super_email1 )->first() ; 
                 if( $superRecord  == null ) {
                     $superRecord = User::where( 'email' ,  $form->super_email1 )->first() ;   
-            
                 }
                 if( $superRecord  == null ) {
                     
@@ -98,6 +98,7 @@ class StaffController extends Controller
                                 'password' => Str::password(), 
                                 'active' => true,
                                 'is_supervisor' => true,
+                                
                             ]
                         ), function (User $user) {
                             $this->createCompany($user);
@@ -109,8 +110,8 @@ class StaffController extends Controller
     }  
    
     public function formPrep($form) {
-        $this->superAlias = $this->superFromAlias($form->super_email1 ) ; 
-        
+        // $this->superAlias = $this->superFromAlias($form->super_email1 ) ; 
+        // logger(['super create' => $this->superAlias]);
         return [
             'first_name' => $form->first_name,
             'last_name' => $form->last_name,
@@ -127,7 +128,7 @@ class StaffController extends Controller
             'designation_id' => $this->designations[strtolower(substr($form->designation, 0, 4))] ?? null,
             'designation' => $form->designation,
             // 'department_id' => 1 ,
-            'supervisor_id' => $this->superAlias->id ?? null,
+            'supervisor_id' => $this->superFromAlias($form->super_email1 ) ?? null,
             'supervisor' => $form->supervisor,
             'super_email1' => $form->super_email1,
             'effective_date' => \Carbon\Carbon::parse($form->effective_date)->format('Y-m-d'),
@@ -173,13 +174,15 @@ class StaffController extends Controller
     }
 
     protected function superFromAlias($super_email) {
+        // logger($super_email);
         $superRecord = EmailAlias::where( 'email' ,  $super_email )->first() ;   
         if ($superRecord == ! null) {
-            logger($superRecord->user->id );
-            return $superRecord->user->id ;
+            // logger($superRecord->user_id );
+            return $superRecord->user_id ;
         } else {
+            // logger('Alias null');
             $superRecord = User::where( 'email' ,  $super_email )->first() ;   
-            return $superRecord->user->id ?? null ;
+            return $superRecord->id ?? null ;
         }
         
     }
