@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Livewire\SacredTrustEntry;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,8 +15,10 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    // return view('welcome');
+    return view('staff');
 });
+Route::get('/st_entry', SacredTrustEntry::class);
 
 Route::middleware([
     'auth:sanctum',
