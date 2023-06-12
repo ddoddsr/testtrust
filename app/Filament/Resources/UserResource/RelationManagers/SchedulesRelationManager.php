@@ -17,6 +17,7 @@ use Filament\Forms\Components\Select;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
+use Filament\Tables\Actions\CreateAction;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Forms\Components\TextInput\Mask;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -45,11 +46,13 @@ class SchedulesRelationManager extends RelationManager
         // $timeRegex = '/^(?:[01]?\d|2[0-3])(?::[0-5]\d){1,2}$/';
         // $timeRegex = '/((1[0-2]|0?[1-9]):([0-5][0-9])?([AaPp][Mm]))/';
         // $timeRegex = '/^(([0-1]{0,1}[0-9]( )?([AaPp][Mm]))|(([0]?[1-9]|1[0-2])(:|\.)[0-5][0-9]( )?([AaPp][Mm]))|(([0]?[0-9]|1[0-9]|2[0-3])(:|\.)[0-5][0-9]))$/';
-
+        // dd(['Sunday', 'Monday',  'Tuesday',  'Wednesday',  'Thursday', 'Friday', 'Saturday']);
         return $form
+        
             ->schema([
                 Select::make('day')
-                ->options(Set::dayOfWeek())
+                ->options(Set::dayOfWeekStr())
+                
                 ->searchable(),
                 // TODO select from 
                 // Select::make('start')
@@ -72,7 +75,8 @@ class SchedulesRelationManager extends RelationManager
                     ,
                     
                 Select::make('location')
-                ->options(Location::all()->pluck('name', 'id'))
+                ->options(Location::all()->pluck('name', 'name'))
+                ->default('GPR')
                 ->searchable(),
             ])->columns(4);
     }
@@ -86,10 +90,7 @@ class SchedulesRelationManager extends RelationManager
                 TextColumn::make('start'),
                 TextColumn::make('end'),
                 TextColumn::make('location'),
-                TextColumn::make('created_at')
-                    ->dateTime(),
-                TextColumn::make('updated_at')
-                    ->dateTime(),
+
             ])
             ->filters([
                 //
@@ -98,13 +99,8 @@ class SchedulesRelationManager extends RelationManager
                 Tables\Actions\CreateAction::make(),
             ])
             ->actions([
-                // Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
-                EditAction::make()->mutateFormDataUsing(function (array $data): array {
-                    // $timeOfDay = Schedule::timeOfDay();
-                    // $data['start'] = $timeOfDay[$data['start']];
-                    // $string = str_replace(' ', '', $string);
-                    // remove spaces? 
+                CreateAction::make()->mutateFormDataUsing(function (array $data): array {
 
                     $data['start'] = SchedulesRelationManager::cleanTime($data['start']) ;
                     $data['end'] = SchedulesRelationManager::cleanTime($data['end']) ;
