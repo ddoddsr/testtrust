@@ -12,7 +12,7 @@ class EmailAlias extends Model
 
     protected $fillable = ['email'];
 
-    public function post(): BelongsTo
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }

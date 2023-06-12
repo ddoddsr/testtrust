@@ -10,6 +10,7 @@ use Illuminate\Notifications\Notifiable;
 use Wallo\FilamentCompanies\HasCompanies;
 use Filament\Models\Contracts\FilamentUser;
 use Wallo\FilamentCompanies\HasProfilePhoto;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Wallo\FilamentCompanies\HasConnectedAccounts;
@@ -20,12 +21,13 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable implements FilamentUser, HasAvatar, HasName
 {
-    use HasApiTokens;
     use HasFactory;
-    use HasProfilePhoto;
-    use HasCompanies;
-    use HasConnectedAccounts;
     use Notifiable;
+    use softDeletes;
+    use HasApiTokens;
+    use HasCompanies;
+    use HasProfilePhoto;
+    use HasConnectedAccounts;
     use SetsProfilePhotoFromUrl;
     use TwoFactorAuthenticatable;
 

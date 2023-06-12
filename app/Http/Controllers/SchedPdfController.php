@@ -11,9 +11,9 @@ use Illuminate\Support\Facades\DB;
 class SchedPdfController extends Controller
 {
 
-    public function generatePdf(string $filePath)
+    public function generatePdf(string $filePath, int $location)
     {
-        $setWithScheds = $this->setSchedule();
+        $setWithScheds = $this->setSchedule($location);
         // 
         $fpdf = new \Codedge\Fpdf\Fpdf\Fpdf('L','pt','Letter') ;
         $fpdf->AddFont('Uni','','39335_UniversCondensed.php');
@@ -139,7 +139,7 @@ class SchedPdfController extends Controller
 
 
 
-    public function setSchedule($location='GPR')
+    public function setSchedule(int $location=1 )
     {
         // get staff sched into sets
         $setRecords = DB::table('sets')
@@ -150,6 +150,7 @@ class SchedPdfController extends Controller
             'pluser.first_name as pl_first_name',  'pluser.last_name as pl_last_name',
             'wluser.first_name as wl_first_name',  'wluser.last_name as wl_last_name',
             'sluser.first_name as sl_first_name',  'sluser.last_name as sl_last_name')
+        ->where('location_id', $location)
         ->get();
         $setWithScheds = [];
 

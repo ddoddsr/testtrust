@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 class WallPdfController extends Controller
 {
     public $dateTime; 
-    public function generatePdf(string $filePath, string $location = 'GPR')
+    public function generatePdf(string $filePath, int $location = 1)
     {
         $setWithScheds = $this->setSchedule($location);
 
@@ -101,7 +101,7 @@ class WallPdfController extends Controller
 
 
 
-    public function setSchedule($location='GPR')
+    public function setSchedule($location)
     {
         // get staff sched into sets
         $setRecords = DB::table('sets')
@@ -112,7 +112,7 @@ class WallPdfController extends Controller
             'pluser.first_name as pl_first_name',  'pluser.last_name as pl_last_name',
             'wluser.first_name as wl_first_name',  'wluser.last_name as wl_last_name',
             'sluser.first_name as sl_first_name',  'sluser.last_name as sl_last_name')
-        ->where('location',$location )
+        ->where('location_id', $location )
         ->get();
         $setWithScheds = [];
 
@@ -136,7 +136,7 @@ class WallPdfController extends Controller
     public function collectSchedSets($day, $set, $location) {
         $schedLines = [];
 
-        foreach(Schedule::where('location', $location)
+        foreach(Schedule::where('location_id', $location)
                 ->leftJoin('users', 'users.id', '=', 'schedules.user_id')
                 ->where('day' , $day)
                 ->whereIn('users.designation_id', [1,2,5,7])

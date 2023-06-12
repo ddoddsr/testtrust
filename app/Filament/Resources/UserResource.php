@@ -209,7 +209,7 @@ class UserResource extends Resource
                 Tables\Filters\Filter::make('effective_date')
                 ->label(trans('Old Effective Date'))
                 ->query(fn (Builder $query): Builder => 
-                    $query->where('effective_date', '<', Carbon::now()->addYears(1))
+                    $query->where('effective_date', '<', Carbon::today()->addYears(-1))
                     ->where('exit_date', null)
                 ),
 
@@ -221,12 +221,18 @@ class UserResource extends Resource
                 ->label(trans('Not supervisor'))
                 ->query(fn (Builder $query): Builder => $query->where('is_supervisor', false)),
 
+                Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\ForceDeleteAction::make(),
+                Tables\Actions\RestoreAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
+                Tables\Actions\ForceDeleteBulkAction::make(),
+                Tables\Actions\RestoreBulkAction::make(),
             ]);
     }
     
@@ -247,4 +253,14 @@ class UserResource extends Resource
             'edit' => Pages\EditUser::route('/{record}/edit'),
         ];
     }    
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->withoutGlobalScopes([
+                SoftDeletingScope::class,
+            ]);
+    }
+
+
 }

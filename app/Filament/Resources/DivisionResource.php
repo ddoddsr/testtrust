@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\DepartmentResource\Pages;
-use App\Filament\Resources\DepartmentResource\RelationManagers;
-use App\Models\Department;
+use App\Filament\Resources\DivisionResource\Pages;
+use App\Filament\Resources\DivisionResource\RelationManagers;
+use App\Models\Division;
 use Filament\Forms;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
@@ -13,14 +13,12 @@ use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class DepartmentResource extends Resource
+class DivisionResource extends Resource
 {
-    protected static ?string $model = Department::class;
+    protected static ?string $model = Division::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-collection';
 
-    protected static bool $shouldRegisterNavigation = false;
-    
     public static function form(Form $form): Form
     {
         return $form
@@ -28,7 +26,6 @@ class DepartmentResource extends Resource
                 Forms\Components\TextInput::make('name')
                 ->required()
                 ->maxLength(255),
-                
             ]);
     }
 
@@ -37,7 +34,6 @@ class DepartmentResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')->sortable()->searchable(isIndividual: true),
-                // Tables\Columns\TextColumn::make('division_name')->sortable()->searchable(isIndividual: true),
             ])
             ->filters([
                 //
@@ -53,16 +49,16 @@ class DepartmentResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            DivisionManagerResource\RelationManagers\DepartmentsRelationManager::class
         ];
     }
     
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListDepartments::route('/'),
-            'create' => Pages\CreateDepartment::route('/create'),
-            'edit' => Pages\EditDepartment::route('/{record}/edit'),
+            'index' => Pages\ListDivisions::route('/'),
+            'create' => Pages\CreateDivision::route('/create'),
+            'edit' => Pages\EditDivision::route('/{record}/edit'),
         ];
     }    
 }

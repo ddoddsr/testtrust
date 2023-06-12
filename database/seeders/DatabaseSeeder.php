@@ -37,6 +37,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'stuartgreaves@ihopkc.org',
             'password' => bcrypt('asdf'),
             'active' => true,
+            'is_supervisor' => true,
         ]);
 
         // TODO Better Alias seeder?
@@ -47,6 +48,7 @@ class DatabaseSeeder extends Seeder
         \App\Models\EmailAlias::create([
         'user_id' => 3,    
         'email' => 'stuartgreaves@pm.me'
+        //         'stuartgreaves@pm.me
         ]);
 /* 
 Elijah Choi	
@@ -69,7 +71,6 @@ Elijah Choi
             ]);
         }
 
-        //TODO create divisions and departments
-
+        $this->call(DivisionSeeder::class);
     }
 }

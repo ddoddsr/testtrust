@@ -25,7 +25,7 @@ return new class extends Migration
             $table->foreignId('current_company_id')->nullable();
             $table->foreignId('current_connected_account_id')->nullable();
             $table->string('profile_photo_path')->nullable();
-
+            $table->softDeletes();
             $table->timestamps();
 
             $table->boolean('active')->default(0);

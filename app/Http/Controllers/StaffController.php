@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Hash;
 class StaffController extends Controller
 {
     public $superRecord;
-    public $superId;
+    public $superAlias;
     public $designations;
     public $locations;
 
@@ -30,20 +30,12 @@ class StaffController extends Controller
         foreach($formData as $form) {
 
            if( $form->result_status == 'Complete') {
-            // TODO check Alias record
-                $this->superRecord = EmailAlias::where( 'email' ,  $form->super_email1 )->first() ;   
-                if ($this->superRecord == ! null) {
-                    $this->superId = $this->superRecord->user_id ;
-                } else {
-                    $this->superRecord = User::where( 'email' ,  $form->super_email1 )->first() ;   
-                    $this->superId = $this->superRecord->id ?? null ;
-                }
-
+            
+                $this->superAlias = $this->superFromAlias($form->super_email1 ) ; 
 
                 $staffRecord = tap(
                     User::firstOrCreate(
-                        [  'email' => $form->email  ], // search params
-                        // returns [] of any additional data to add to record
+                        [  'email' => $form->email  ], 
                         $this->formPrep($form)
                     ), function (User $user) {
                         $this->createCompany($user);
@@ -67,8 +59,9 @@ class StaffController extends Controller
                         $staffRecord->designation_id = $this->designations[strtolower(substr($form->designation, 0, 4))]  ?? null;
                         $staffRecord->supervisor = $form->supervisor;
                         $staffRecord->super_email1 = $form->super_email1;
-                        $staffRecord->supervisor_id = $this->superId ?? null;
+                        $staffRecord->supervisor_id = $this->superAlias->id ?? null;
                         $staffRecord->effective_date = \Carbon\Carbon::parse($form->effective_date)->format('Y-m-d');
+                        $staffRecord->exit_date = null;
                         $staffRecord->save();
                     }
                 }
@@ -83,34 +76,40 @@ class StaffController extends Controller
     {
         foreach($formData as $form) {
 
-           if( $form->result_status == 'Complete' && $form->super_email1 != '') {
-                $first_name = trim(substr($form->supervisor, 0, strpos($form->supervisor, ' ')));
-                $last_name = trim(substr($form->supervisor, strlen($first_name)));
+            if( $form->result_status == 'Complete' && $form->super_email1 != '') {
                 
-                $this->superRecord = tap(
-                    User::firstOrCreate(
-                        [  'email' => $form->super_email1  ], // search params
-                        // of any additional data to add to record
-                        [ 
-                            'first_name' => $first_name,
-                            'last_name' => $last_name,
-                            //TODO use random password 
-                            'password' => Str::password(),
-                            //TODO Not asdf
-                            // 'password' => Hash::make("asdf"),
-                            'active' => true,
-                            'is_supervisor' => true,
-                        ]
-                    ), function (User $user) {
-                        $this->createCompany($user);
-                    }
-                );
+                // $this->superAlias = $this->superFromAlias($form->super_email1 ) ?? null; 
+                $superRecord = EmailAlias::where( 'email' ,  $form->super_email1 )->first() ; 
+                if( $superRecord  == null ) {
+                    $superRecord = User::where( 'email' ,  $form->super_email1 )->first() ;   
+            
+                }
+                if( $superRecord  == null ) {
+                    
+                    $first_name = trim(substr($form->supervisor, 0, strpos($form->supervisor, ' ')));
+                    $last_name = trim(substr($form->supervisor, strlen($first_name)));
+                
+                    $this->superRecord = tap(
+                        User::Create(
+                            [  
+                                'email' => $form->super_email1,
+                                'first_name' => $first_name,
+                                'last_name' => $last_name,
+                                'password' => Str::password(), 
+                                'active' => true,
+                                'is_supervisor' => true,
+                            ]
+                        ), function (User $user) {
+                            $this->createCompany($user);
+                        }
+                    );
+                }
            }
         }
     }  
    
     public function formPrep($form) {
-        $this->superRecord = User::where( 'email' ,  $form->super_email1 )->first() ;
+        $this->superAlias = $this->superFromAlias($form->super_email1 ) ; 
         
         return [
             'first_name' => $form->first_name,
@@ -128,10 +127,11 @@ class StaffController extends Controller
             'designation_id' => $this->designations[strtolower(substr($form->designation, 0, 4))] ?? null,
             'designation' => $form->designation,
             // 'department_id' => 1 ,
-            'supervisor_id' => $this->superRecord->id ?? null,
+            'supervisor_id' => $this->superAlias->id ?? null,
             'supervisor' => $form->supervisor,
             'super_email1' => $form->super_email1,
             'effective_date' => \Carbon\Carbon::parse($form->effective_date)->format('Y-m-d'),
+            'exit_date' => null,
         ];
     }
 
@@ -170,5 +170,17 @@ class StaffController extends Controller
             'name' => $user->full_name ." 's Company",
             'personal_company' => true,
         ]));
+    }
+
+    protected function superFromAlias($super_email) {
+        $superRecord = EmailAlias::where( 'email' ,  $super_email )->first() ;   
+        if ($superRecord == ! null) {
+            logger($superRecord->user->id );
+            return $superRecord->user->id ;
+        } else {
+            $superRecord = User::where( 'email' ,  $super_email )->first() ;   
+            return $superRecord->user->id ?? null ;
+        }
+        
     }
 }

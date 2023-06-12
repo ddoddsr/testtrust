@@ -2,6 +2,7 @@
 
 namespace App\Filament\Pages;
 use App\Models\User;
+use App\Models\Location;
 use App\Models\Schedule;
 use Filament\Pages\Page;
 use Filament\Pages\Actions\Action;
@@ -9,6 +10,8 @@ use Filament\Pages\Actions\Action;
 // use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\HtmlString;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use App\Http\Controllers\WallPdfController;
 use App\Http\Controllers\FormsiteController;
@@ -48,23 +51,34 @@ class Tools extends Page
     {
         return [
             Action::make('newest')
-                ->action('newResults'),
+            ->action('newResults'),
 
             Action::make('genWallPdf')
             ->label('Generate Wall PDF')
-                ->action('genWallPdf'),
+            ->action('genWallPdf')
+            ->form([
+                Select::make('location')
+                    ->options(Location::query()->pluck('name', 'id'))
+                    ->required(),
+            ]),
 
             Action::make('genSchedPdf')
             ->label('Generate Schedule PDF')
-                ->action('genSchedPdf'),
+            ->action('genSchedPdf')
+            ->form([
+                Select::make('location')
+                    ->options(Location::query()->pluck('name', 'id'))
+                    ->required(),
+            ]),
 
             Action::make('duplicateNameCheck')
             ->label('Duplicate Name Check')
             ->action('duplicateNameCheck'),
 
             Action::make('ownSuperCheck')
-                ->label('Own Supervisor Check')
-                ->action('ownSuperCheck'),
+            ->label('Own Supervisor Check')
+            ->action('ownSuperCheck'),
+
             Action::make('Re-import all Results')
                 ->action('allResults')
                 ->requiresConfirmation()
@@ -80,7 +94,8 @@ class Tools extends Page
                 ->visible(env('FORMSITE_IMPORT', 'false')),
             Action::make('testme')
                 ->label('Test Me')
-                ->action('testMe'),
+                ->action('testMe')
+                ->visible(env('FORMSITE_IMPORT', 'false')),
         ];
     }
     public function newResults()
@@ -121,11 +136,11 @@ class Tools extends Page
         ->send(); 
         return $this->redirect('/admin/tools');
     }
-    public function genWallPdf()
+    public function genWallPdf($data)
     {
         $filePath = 'storage/sacred_trust_wall.pdf';
         $pdf = new WallPdfController;
-        $pdf->generatePdf($filePath);
+        $pdf->generatePdf($filePath, $data['location']);
 
         Notification::make() 
             ->title('Generation complete.')
@@ -135,11 +150,11 @@ class Tools extends Page
         return response()->download($filePath);
     }
 
-    public function genSchedPdf()
+    public function genSchedPdf($data)
     {
         $filePath = 'storage/sacred_trust_schedule.pdf';
         $pdf = new SchedPdfController;
-        $pdf->generatePdf($filePath);
+        $pdf->generatePdf($filePath, $data['location']);
 
         Notification::make() 
             ->title('Generation complete.')
