@@ -96,16 +96,18 @@ class SchedulesRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
+                Tables\Actions\CreateAction::make()
+                ->mutateFormDataUsing(function (array $data): array {
+                    $data['start'] = SchedulesRelationManager::cleanTime($data['start']) ;
+                    $data['end'] = SchedulesRelationManager::cleanTime($data['end']) ;      
+                    return $data;
+                    }),
             ])
             ->actions([
                 Tables\Actions\DeleteAction::make(),
-                CreateAction::make()->mutateFormDataUsing(function (array $data): array {
-
+                EditAction::make()->mutateFormDataUsing(function (array $data): array {
                     $data['start'] = SchedulesRelationManager::cleanTime($data['start']) ;
-                    $data['end'] = SchedulesRelationManager::cleanTime($data['end']) ;
-
-                   
+                    $data['end'] = SchedulesRelationManager::cleanTime($data['end']) ;      
                     return $data;
                     }), 
             ])
@@ -114,17 +116,15 @@ class SchedulesRelationManager extends RelationManager
             ]);
     }    
     public static function cleanTime($entry) {
-        // aor A to AM p or P to PM
-        
         // remove spaces
         $entry = str_replace(' ', '', $entry);
         // change '.' to ':'
         $entry = str_replace('.', ':', $entry);
         
         $entry = Str::upper($entry);
-        // if end char = AP change to AM PM
-    
+        
         $entryLen = Str::length($entry);
+        // remove leaing 0
         if (Str::startsWith($entry, '0')) {
             $entry = substr($entry,1);
         }
@@ -134,16 +134,18 @@ class SchedulesRelationManager extends RelationManager
         if ( Str::endsWith($entry, '+')){
             $entry = substr($entry,0, $entryLen -1  ) . 'PM';
         }
+        // if end char = A or P change to AM PM
         if ( Str::endsWith($entry, ['A', 'P'])){
             $entry .= 'M';
         }
-        logger($entry);
+        
         if( $entryLen >=  2 && $entryLen <=  4 ) {
             $entry = substr($entry,0, $entryLen -1 ) . ':00' . substr($entry, $entryLen -1, 2  );
         }
 
-        // if( $entryLen ==  3 && ) {
-            
+        // TODO make this work if needed
+        // if( :?  then AorP  make it :?0  ) {
+            // $entry = substr($entry,0, stripos($entry, ':' ) +1 ) . '0' . substr($entry, $entryLen -1, 2  );
         // }
 
         return $entry;

@@ -23,32 +23,44 @@ class WallPdfController extends Controller
         $fpdf->SetAutoPageBreak(true,5);
 
         $leaderWidth = $fpdf->GetPageWidth() -35 ;
-        $taglinePos =  - 20 ;
+        
+        $leftMargin = 6;
+        $namesMargin = 25;
+        $taglinePos =  - 20 ;   // vert from bottom
         $tagline = env('FOOTER_STATEMENT','Set FOOTER_STATEMENT in .env');
         $topOfColumns = 80;
         $postionColumn = 0; 
 
         foreach($setWithScheds as $set) {
             $schedCnt = count($set['scheds']);
+
+            //Adjust for long names?
+
             // Adlust schedCnt per page count
-            if( $schedCnt < 180 ) {
+            if( $schedCnt < 181 ) {
                 $nameFontSize = 12;
                 $rowHeight = 16;
                 $maxColumns = 6;
-                $columnSpacing = ( $fpdf->GetPageWidth() / $maxColumns ) - 7 ;
+                $columnSpacing = ( $fpdf->GetPageWidth() / $maxColumns ) - 8 ;
                 $namesPerColumn = 30;
             } elseif ( $schedCnt < 210 ) {
                 $nameFontSize = 10;
                 $rowHeight = 14;
-                $maxColumns = 7;
-                $columnSpacing = ( $fpdf->GetPageWidth() / $maxColumns ) - 5 ;
-                $namesPerColumn = 30;
-            } else {  // Up to 280 per page
-                $nameFontSize = 8;
-                $rowHeight = 12;
-                $maxColumns = 7;
-                $columnSpacing = ( $fpdf->GetPageWidth() / $maxColumns ) - 5 ;
+                $maxColumns = 6;
+                $columnSpacing = ( $fpdf->GetPageWidth() / $maxColumns ) - 6 ;
                 $namesPerColumn = 40;
+            } elseif( $schedCnt < 241 ) {
+                $nameFontSize = 8.5;
+                $rowHeight = 12;
+                $maxColumns = 6;
+                $columnSpacing = ( $fpdf->GetPageWidth() / $maxColumns ) - 6 ;
+                $namesPerColumn = 40;
+            } else {  // > 350
+                $nameFontSize = 7;
+                $rowHeight = 10;
+                $maxColumns = 7;
+                $columnSpacing = ( $fpdf->GetPageWidth() / $maxColumns ) - 6 ;
+                $namesPerColumn = 50;
             }
             
             $fpdf->AddPage();
@@ -56,19 +68,22 @@ class WallPdfController extends Controller
             $fpdf->Cell(0,0, $set['title'], 0, 1, 'C');
             $fpdf->Ln(32);
             $fpdf->SetFont('Arial', 'B', 10);
-            
+            $fpdf->SetX( $leftMargin );
             if ($set['worshipLeader']) {
-                $fpdf->Cell($leaderWidth,0, "Worship Leader: " .$set['worshipLeader']  , 0, 1, 'L');
+                $name = iconv('UTF-8', 'windows-1252', $set['worshipLeader']);
+                $fpdf->Cell($leaderWidth,0, "Worship Leader: " . $name, 0, 1, 'L');
             } 
             if ($set['prayerLeader']){
-                $fpdf->Cell($leaderWidth,0, "Prayer Leader: " . $set['prayerLeader'], 0, 1, 'C');
+                $name = iconv('UTF-8', 'windows-1252', $set['prayerLeader']);
+                $fpdf->Cell($leaderWidth,0, "Prayer Leader: " . $name, 0, 1, 'C');
             }
             if ($set['sectionLeader']) {
-                $fpdf->Cell($leaderWidth,0, "Section Leader: " . $set['sectionLeader']  , 0, 1, 'R');
+                $name = iconv('UTF-8', 'windows-1252', $set['sectionLeader']);
+                $fpdf->Cell($leaderWidth,0, "Section Leader: " . $name, 0, 1, 'R');
             }
             
             $fpdf->Ln(32);
-            $fpdf->SetFont('Arial', '', $nameFontSize);
+            $fpdf->SetFont('Arial', 'B', $nameFontSize);
             
             $rowCount = 0;
             $postionColumn = 0;
@@ -78,9 +93,34 @@ class WallPdfController extends Controller
                     $rowCount++;
                     
                     $name = iconv('UTF-8', 'windows-1252', $name);
+                    $columnSpacingNoMargin = $columnSpacing - $leftMargin ;
+                    $getNameWidth = $fpdf->GetStringWidth($name);
+                     
+                    $shrink = $getNameWidth / $columnSpacingNoMargin;
+                    if($getNameWidth  > $columnSpacingNoMargin) {
 
-                    $fpdf->Text( 50 +($columnSpacing * $postionColumn),
+                        // logger([$name => [
+                        //     'strlen' => strlen($name),
+                        //     'getStrWidth' => $getNameWidth,
+                        //     'colSpacingNoMargin' => $columnSpacingNoMargin,
+
+                        //     'tmpFontSize' => $nameFontSize / $shrink,
+                        //     'tmpFontSizeDiv' => $nameFontSize / $shrink,
+                        //     'stdFontSize' => $nameFontSize,
+                        // ]]);
+
+                       
+                        $tmpFontSize = $nameFontSize / $shrink; 
+
+                        $fpdf->SetFont('Arial', 'B', $tmpFontSize);
+                        $fpdf->Text( $namesMargin +($columnSpacing * $postionColumn),
                         $topOfColumns + ( $rowCount * $rowHeight), $name );
+                        $fpdf->SetFont('Arial', 'B', $nameFontSize);
+
+                    } else {
+                        $fpdf->Text( $namesMargin +($columnSpacing * $postionColumn),
+                        $topOfColumns + ( $rowCount * $rowHeight), $name );
+                    }
 
                     if ($rowCount != 1 && $rowCount % $namesPerColumn == 0) {
                         $postionColumn++;
@@ -98,7 +138,6 @@ class WallPdfController extends Controller
         $fpdf->Output('F', $filePath);
         return;     
     }
-
 
 
     public function setSchedule($location)
@@ -171,7 +210,7 @@ class WallPdfController extends Controller
             Carbon::parse($schedule->user->exit_date) > Carbon::parse($this->dateTime)
             )
          ) {
-            return Str::title((trim($schedule->user->first_name). ' ' . trim($schedule->user->last_name))); 
+            return trim($schedule->user->first_name). ' ' . trim($schedule->user->last_name); 
         } else {
             return ;
         }

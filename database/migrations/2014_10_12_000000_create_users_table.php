@@ -29,6 +29,7 @@ return new class extends Migration
             $table->timestamps();
 
             $table->boolean('active')->default(0);
+            $table->boolean('review')->default(0);
             $table->boolean('is_supervisor')->default(0);
             $table->boolean('is_worship_leader')->default(0);
             $table->boolean('is_associate_worship_leader')->default(0);
@@ -43,7 +44,7 @@ return new class extends Migration
             $table->unsignedBigInteger('designation_id')->nullable();
             $table->char('designation', 100)->nullable();
             $table->unsignedBigInteger('supervisor_id')->nullable();
-            $table->char('supervisor', 100)->nullable();
+            $table->char('supervisor', 254)->nullable();
             $table->char('super_email1', 100)->nullable();
             $table->date('effective_date')->nullable();
             $table->date('exit_date')->nullable();

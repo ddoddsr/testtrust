@@ -22,18 +22,14 @@ class StaffController extends Controller
     {
         $this->designations = User::designations_key();
         $this->locations = array_flip(Location::all()->pluck('name', 'id')->toArray());
-        
     }
+
     public function storeRecord($formData)
     {
-
         foreach($formData as $form) {
 
            if( $form->result_status == 'Complete') {
             
-                // $this->superAlias = $this->superFromAlias($form->super_email1 ) ; 
-                // logger(['super update' => $this->superAlias]);
-                
                 $staffRecord = tap(
                     User::firstOrCreate(
                         [  'email' => $form->email  ], 
@@ -92,7 +88,7 @@ class StaffController extends Controller
                     $this->superRecord = tap(
                         User::Create(
                             [  
-                                'email' => $form->super_email1,
+                                'email' => str::lower($form->super_email1),
                                 'first_name' => $first_name,
                                 'last_name' => $last_name,
                                 'password' => Str::password(), 
