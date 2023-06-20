@@ -59,7 +59,9 @@ class Tools extends Page
             ->form([
                 Select::make('location')
                     ->options(Location::query()->pluck('name', 'id'))
-                    ->required(),
+                    ->required()
+                    ->default(1)
+                    ->disablePlaceholderSelection(),
             ]),
 
             Action::make('genSchedPdf')
@@ -68,7 +70,9 @@ class Tools extends Page
             ->form([
                 Select::make('location')
                     ->options(Location::query()->pluck('name', 'id'))
-                    ->required(),
+                    ->required()
+                    ->default(1)
+                    ->disablePlaceholderSelection(),
             ]),
 
             Action::make('duplicateNameCheck')

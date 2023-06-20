@@ -86,7 +86,8 @@ class UserResource extends Resource
                         Forms\Components\DateTimePicker::make('exit_date'),
                         Forms\Components\Toggle::make('is_supervisor')
                         ->label('Is Supervisor')->default('false'),
-
+                        Forms\Components\Toggle::make('review')
+                        ->default('false'),
                         // Select::make('section')
                         // ->options(['various', 'morning', 'afternoon', 'evening','nightwatch']),
                         // Forms\Components\Toggle::make('isSectionLeader')
@@ -160,7 +161,9 @@ class UserResource extends Resource
                 // Tables\Columns\IconColumn::make('active')
                 //     ->boolean()->sortable(),
                 Tables\Columns\IconColumn::make('is_supervisor')
-                    ->boolean(),
+                ->boolean(),
+                Tables\Columns\IconColumn::make('review')
+                ->boolean(),
                     
                     // Tables\Columns\IconColumn::make('isSectionLeader')
                     // ->boolean(),
@@ -213,6 +216,10 @@ class UserResource extends Resource
                     ->where('exit_date', null)
                 ),
 
+                Tables\Filters\Filter::make('review')
+                ->label(trans('To Be Reviewed'))
+                ->query(fn (Builder $query): Builder => $query->where('review', true)),
+                
                 Tables\Filters\Filter::make('is_supervisor')
                 ->label(trans('Is supervisor'))
                 ->query(fn (Builder $query): Builder => $query->where('is_supervisor', true)),

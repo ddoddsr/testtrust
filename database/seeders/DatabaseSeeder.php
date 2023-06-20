@@ -42,6 +42,15 @@ class DatabaseSeeder extends Seeder
             'is_supervisor' => true,
             'current_company_id' => 3,
         ]);
+        \App\Models\User::factory()->withPersonalCompany()->create([
+            'first_name' => 'HR',
+            'last_name' => 'Excellance',
+            'email' => 'hr@ihopkc.org',
+            'password' => bcrypt('2474u'),
+            'active' => true,
+            'is_supervisor' => true,
+            'current_company_id' => 4,
+        ]);        
 
         // TODO Better Alias seeder?
         \App\Models\EmailAlias::create([

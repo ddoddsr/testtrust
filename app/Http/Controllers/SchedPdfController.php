@@ -95,29 +95,35 @@ class SchedPdfController extends Controller
         
         $fpdf->SetFont('Uni', '', 9.25);
         foreach($setWithScheds as $set) {
-
+            $nameWL = $set['worshipLeader'] ? iconv('UTF-8', 'windows-1252', $set['worshipLeader']) : 'TBD';
             $fpdf->Text(
                 $leftSet + ($columnIndex  * $dayWidth ) + 4,
                 $topSets + ($setIndex * $setH ) + 8.5,
-                strlen($set['worshipLeader']) > 1 ?  $set['worshipLeader'] : 'TBD'
+                $nameWL  
             );
+            $nameAL = $set['associateWorshipLeader'] ? iconv('UTF-8', 'windows-1252', $set['associateWorshipLeader']) : 'TBD';
             $fpdf->Text(
                 $leftSet + ($columnIndex  * $dayWidth ) + 4,
                 $topSets + ($setIndex * $setH )  + ($setH  * .25) + 8.3,
-                'TBD',
-                // strlen($set['associateWorshipLeader']) > 1 ?  $set['associateWorshipLeader'] : 'TBD'
+                $nameAL
             );
+            $namePL = $set['prayerLeader'] ? iconv('UTF-8', 'windows-1252', $set['prayerLeader']) : 'TBD';
+            
             $fpdf->Text(
                 $leftSet + ($columnIndex  * $dayWidth ) + 4,
                 $topSets + ($setIndex * $setH ) + ($setH  * .5)  + 8.15,
+                $namePL
                 // $set['prayerLeader']
-                strlen($set['prayerLeader']) > 1 ?  $set['prayerLeader'] : 'TBD'
+                // strlen($set['prayerLeader']) > 1 ?  $set['prayerLeader'] : 'TBD'
             );
+            $nameSL = $set['sectionLeader'] ? iconv('UTF-8', 'windows-1252', $set['sectionLeader']) : 'TBD';
+            
             $fpdf->Text(
                 $leftSet + ($columnIndex  * $dayWidth ) + 4,
                 $topSets + ($setIndex * $setH )  + ($setH  * .75)  +8,
+                $nameSL
                 // $set['sectionLeader']
-                strlen($set['sectionLeader']) > 1 ? $set['sectionLeader'] : 'TBD'
+                // strlen($set['sectionLeader']) > 1 ? $set['sectionLeader'] : 'TBD'
             );
             
             //each 12sets start in column 1
@@ -144,11 +150,13 @@ class SchedPdfController extends Controller
         // get staff sched into sets
         $setRecords = DB::table('sets')
         ->leftJoin('users as pluser', 'sets.prayer_leader_id', '=', 'pluser.id') 
-        ->leftJoin('users as wluser', 'sets.worship_leader_id', '=', 'wluser.id') 
+        ->leftJoin('users as wluser', 'sets.worship_leader_id', '=', 'wluser.id')
+        ->leftJoin('users as aluser', 'sets.associate_worship_leader_id', '=', 'aluser.id') 
         ->leftJoin('users as sluser', 'sets.section_leader_id', '=', 'sluser.id') 
         ->select('sets.*',
             'pluser.first_name as pl_first_name',  'pluser.last_name as pl_last_name',
             'wluser.first_name as wl_first_name',  'wluser.last_name as wl_last_name',
+            'aluser.first_name as al_first_name',  'aluser.last_name as al_last_name',
             'sluser.first_name as sl_first_name',  'sluser.last_name as sl_last_name')
         ->where('location_id', $location)
         ->get();
@@ -159,6 +167,7 @@ class SchedPdfController extends Controller
             $setWithScheds[] = [
                 'prayerLeader' => trim($setData->pl_first_name . ' ' . $setData->pl_last_name ),
                 'worshipLeader' => trim($setData->wl_first_name . ' ' . $setData->wl_last_name ),
+                'associateWorshipLeader' => trim($setData->al_first_name . ' ' . $setData->al_last_name ),
                 'sectionLeader' => trim($setData->sl_first_name . ' ' . $setData->sl_last_name ), 
                 'title' => $setData->title,
                 'dayOfWeek' => $setData->dayOfWeek,

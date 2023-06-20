@@ -56,6 +56,16 @@ class Set extends Model
     public static function dayOfWeek (){ 
         return ['Sunday', 'Monday',  'Tuesday',  'Wednesday',  'Thursday', 'Friday', 'Saturday'];
     }
+    public static function dayOfWeekStr (){ 
+        return ['Sunday' => 'Sunday', 
+        'Monday' => 'Monday',  
+        'Tuesday' => 'Tuesday',  
+        'Wednesday' => 'Wednesday',  
+        'Thursday' => 'Thursday', 
+        'Friday' => 'Friday', 
+        'Saturday' => 'Saturday',
+    ];
+    }
 
     public static function intercessionSets() {
         return ['12am', '4am', '6am', '10am', '4pm', '8pm'];
