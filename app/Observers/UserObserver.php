@@ -86,9 +86,7 @@ class UserObserver
             preg_match($match, $user->first_name ) ||
             preg_match($match, $user->last_name ) ||
             preg_match($matchEmail, $user->super_email1 )
-            // str_contains($user->first_name, '/') ||
-            // str_contains($user->last_name, '/') ||
-            // str_contains($user->super_email1, '/')
+            
         ) {
             return true;
         } 
