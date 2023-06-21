@@ -21,14 +21,14 @@ class EmailAliasObserver
         $bogusUser = User::where('email', $emailAlias->email)
         // ->andWhere('is_admin', false) 
             ->first();
+        if ($bogusUser) {     
+            User::where('supervisor_id', $bogusUser->id)
+                ->update([
+                    'supervisor_id' => $emailAlias->user_id,
+                    'super_email1' => $emailAlias->user->email
+                ]);
             
-        User::where('supervisor_id', $bogusUser->id)
-            ->update([
-                'supervisor_id' => $emailAlias->user_id,
-                'super_email1' => $emailAlias->user->email
-            ]);
-            
-        if (true ) {   // successful move
+          // successful move
             $bogusUser->delete();
         }  else {
             // send message

@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Filament\Forms;
 use App\Models\User;
 use Filament\Tables;
+use App\Models\Department;
 use Filament\Resources\Form;
 use Filament\Resources\Table;
 use Filament\Resources\Resource;
@@ -21,6 +22,10 @@ class UserResource extends Resource
 {
     protected static ?string $model = User::class;
 
+    protected static ?string $modelLabel = 'Staff';
+    protected static ?string $pluralModelLabel = 'Staff';
+    protected static ?string $navigationLabel = 'Staff';
+    protected static ?string $recordTitleAttribute = 'full_name';
     protected static ?string $navigationIcon = 'heroicon-o-collection';
 
     public static function form(Form $form): Form
@@ -38,7 +43,7 @@ class UserResource extends Resource
                 ->email()
                 ->required()
                 // ->unique()
-                ->unique(table: User::class)
+                ->unique(table: User::class, ignoreRecord: true)
                 ->maxLength(255),
             // Forms\Components\DatePicker::make('effective_date'),
             
@@ -48,14 +53,9 @@ class UserResource extends Resource
                 
             Select::make('department_id')
                 ->label('Department')
-                ->options(
-                    //User::designations()
-                    [
-                        1 => 'None',
-                        2 => 'HR', 
-                        3 => 'IT',
-                    ]
-                ),
+                ->options(Department::all()
+                ->pluck('name', 'id'))
+                ->searchable(),
 
             Select::make('supervisor_id')
                 ->label('Supervisor lookup')
@@ -131,6 +131,8 @@ class UserResource extends Resource
                             Forms\Components\DateTimePicker::make('two_factor_confirmed_at'),
                             // Forms\Components\TextInput::make('current_team_id'),
                             // ->maxLength(2048),
+                            Forms\Components\Toggle::make('is_admin')
+                            ->label('Is Admin')->default('false'),
                     ]),
                 
                 ])->columns(2),
@@ -191,7 +193,10 @@ class UserResource extends Resource
                     ->date()->sortable(),
                 Tables\Columns\TextColumn::make('exit_date')
                     ->date()->sortable(),
-                
+                Tables\Columns\TextColumn::make('created_at')
+                ->dateTime(),
+                Tables\Columns\TextColumn::make('updated_at')
+                ->dateTime(),
                 //Tables\Columns\TextColumn::make('section')
             ])
             ->filters([
