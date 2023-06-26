@@ -5,6 +5,7 @@ namespace App\Observers;
 use App\Models\User;
 use App\Models\EmailAlias;
 use Illuminate\Support\Facades\DB;
+use Filament\Notifications\Notification;
 
 class EmailAliasObserver
 {
@@ -30,8 +31,16 @@ class EmailAliasObserver
             
           // successful move
             $bogusUser->delete();
+            Notification::make() 
+            ->title('Alias Added and Staff Moved.')
+            ->success()
+            ->send(); 
         }  else {
             // send message
+            Notification::make() 
+            ->title('Alias record not found. Did you copy it all?')
+            ->success()
+            ->send(); 
         }  
             
     }

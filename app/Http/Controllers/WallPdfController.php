@@ -49,18 +49,24 @@ class WallPdfController extends Controller
                 $maxColumns = 6;
                 $columnSpacing = ( $fpdf->GetPageWidth() / $maxColumns ) - 6 ;
                 $namesPerColumn = 35;
-            } elseif( $schedCnt < 241 ) {
+            } elseif( $schedCnt < 281 ) {
                 $nameFontSize = 8.5;
                 $rowHeight = 12;
                 $maxColumns = 6;
                 $columnSpacing = ( $fpdf->GetPageWidth() / $maxColumns ) - 6 ;
                 $namesPerColumn = 40;
-            } else {  // > 350
+            } elseif( $schedCnt < 351 ) {
                 $nameFontSize = 7;
                 $rowHeight = 10;
                 $maxColumns = 7;
                 $columnSpacing = ( $fpdf->GetPageWidth() / $maxColumns ) - 6 ;
                 $namesPerColumn = 50;
+            } else {  // > 350
+                $nameFontSize = 5.5;
+                $rowHeight = 8;
+                $maxColumns = 8;
+                $columnSpacing = ( $fpdf->GetPageWidth() / $maxColumns ) - 6 ;
+                $namesPerColumn = 62;
             }
             
             $fpdf->AddPage();
