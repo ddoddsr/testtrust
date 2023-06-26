@@ -33,7 +33,8 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName
 
     public function canAccessFilament(): bool
     {
-        return true;
+        //  samplr return str_ends_with($this->email, '@yourdomain.com') && $this->hasVerifiedEmail();
+        return $this->is_admin == true;
     }
 
     public function getFilamentAvatarUrl(): ?string
@@ -48,12 +49,14 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName
      */
     protected $fillable = [
         'first_name', 'last_name', 'email', 'password',
+        'is_admin',
         'profile_photo_path', 'supervisor',
         'supervisor_id', 'designation', 'designation_id', 'active',
         'is_supervisor', 'section',
         'is_worship_leader', 'is_associate_worship_leader',
         'is_prayerLeader', 'is_sectionLeader',
-        'exit_date','effective_date', 'review'
+        'exit_date','effective_date', 'review',
+        'department_id'
     ];
 
     /**
@@ -123,6 +126,10 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName
         return $this->belongsTo(User::class, 'supervisor_id');
     }
 
+    public function department()
+    {
+        return $this->belongsTo(Department::class);
+    }
     public function supervising()
     {
         return $this->hasMany(User::class, 'supervisor_id');

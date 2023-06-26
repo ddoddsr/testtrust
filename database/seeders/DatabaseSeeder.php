@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'dd@dd.io',
             'password' => bcrypt('asdf'),
             'active' => true,
+            'is_admin' => true,
             'current_company_id' => 1,
         ]);
         \App\Models\User::factory()->withPersonalCompany()->create([
@@ -39,6 +40,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'stuartgreaves@ihopkc.org',
             'password' => bcrypt('asdf'),
             'active' => true,
+            'is_admin' => false,
             'is_supervisor' => true,
             'current_company_id' => 3,
         ]);
@@ -48,6 +50,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'hr@ihopkc.org',
             'password' => bcrypt('2474u'),
             'active' => true,
+            'is_admin' => true,
             'is_supervisor' => true,
             'current_company_id' => 4,
         ]);        

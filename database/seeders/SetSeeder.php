@@ -54,5 +54,31 @@ class SetSeeder extends Seeder
                 //logger($result);
             }
         }
+
+        $intercessionSets = Set::intercessionSets();
+
+        $sequence = 1;
+        $faker = new FAKER;
+        
+        $day = 'Sunday';
+        foreach (Set::setOfDay() as $setOfDay) {
+            if($setOfDay == '10am') {
+                break; 
+            }
+            $set = [
+                'dayOfWeek' => $day,
+                'setOfDay' => $setOfDay,
+                'location' => 'ANPR',
+                'location_id' => 2,
+                'worship_leader_id' => $faker->numberBetween(30, 50),
+                'associate_worship_leader_id' => $faker->numberBetween(51, 75),
+                'prayer_leader_id' => $faker->numberBetween(76, 100),
+                'section_leader_id' => $faker->numberBetween(3, 29),
+                'title' => in_array($setOfDay, $intercessionSets)  ? 'Intercession' : 'Worship with the Word',
+                'sequence' => $sequence++,
+                'active' => true,
+            ];
+            $result = Set::create($set);
+        }
     }
 }

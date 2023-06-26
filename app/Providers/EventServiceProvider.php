@@ -3,8 +3,10 @@
 namespace App\Providers;
 
 use App\Models\User;
-use App\Observers\UserObserver;
+use App\Models\EmailAlias;
 // use App\Listeners\DeleteProfilePhoto;
+use App\Observers\UserObserver;
+use App\Observers\EmailAliasObserver;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -29,6 +31,7 @@ class EventServiceProvider extends ServiceProvider
     public function boot(): void
     {
         User::observe(UserObserver::class);
+        EmailAlias::observe(EmailAliasObserver::class);
     }
 
     /**

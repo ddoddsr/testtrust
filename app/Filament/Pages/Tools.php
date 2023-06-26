@@ -110,7 +110,7 @@ class Tools extends Page
         $formSite->storeForms($latest);
         
         Notification::make() 
-            ->title('New results downloaded')
+            ->title('New download request completed.')
             ->success()
             ->send(); 
     }

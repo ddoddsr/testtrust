@@ -30,6 +30,7 @@ return new class extends Migration
 
             $table->boolean('active')->default(0);
             $table->boolean('review')->default(0);
+            $table->boolean('is_admin')->default(0);
             $table->boolean('is_supervisor')->default(0);
             $table->boolean('is_worship_leader')->default(0);
             $table->boolean('is_associate_worship_leader')->default(0);
@@ -43,7 +44,8 @@ return new class extends Migration
             $table->char('result_status', 100)->nullable();
             $table->unsignedBigInteger('designation_id')->nullable();
             $table->char('designation', 100)->nullable();
-            $table->unsignedBigInteger('supervisor_id')->nullable();
+            $table->foreignId('supervisor_id')->nullable();
+            $table->foreignId('department_id')->nullable();
             $table->char('supervisor', 254)->nullable();
             $table->char('super_email1', 100)->nullable();
             $table->date('effective_date')->nullable();

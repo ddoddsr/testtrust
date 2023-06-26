@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Filament\Forms;
 use App\Models\User;
 use Filament\Tables;
+use App\Models\Department;
 use Filament\Resources\Form;
 use Filament\Resources\Table;
 use Filament\Resources\Resource;
@@ -13,6 +14,7 @@ use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\Select;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
+use Filament\Tables\Filters\TernaryFilter;
 use App\Filament\Resources\UserResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\UserResource\RelationManagers;
@@ -21,7 +23,17 @@ class UserResource extends Resource
 {
     protected static ?string $model = User::class;
 
+    protected static ?string $modelLabel = 'Staff';
+    protected static ?string $pluralModelLabel = 'Staff';
+    protected static ?string $navigationLabel = 'Staff';
+    protected static ?string $recordTitleAttribute = 'full_name';
     protected static ?string $navigationIcon = 'heroicon-o-collection';
+    
+    // Not WORKING as Doc's 
+    // protected function getTableRecordsPerPageSelectOptions(): array 
+    // {
+    //     return [12, 24, 48, 84];
+    // } 
 
     public static function form(Form $form): Form
     {
@@ -30,13 +42,17 @@ class UserResource extends Resource
         ->schema([
             Forms\Components\TextInput::make('first_name')
                 ->required()
+                ->minLength(2)
                 ->maxLength(255),
             Forms\Components\TextInput::make('last_name')
                 ->required()
+                ->minLength(2)
                 ->maxLength(255),
             Forms\Components\TextInput::make('email')
                 ->email()
                 ->required()
+                // ->unique()
+                ->unique(table: User::class, ignoreRecord: true)
                 ->maxLength(255),
             // Forms\Components\DatePicker::make('effective_date'),
             
@@ -46,14 +62,9 @@ class UserResource extends Resource
                 
             Select::make('department_id')
                 ->label('Department')
-                ->options(
-                    //User::designations()
-                    [
-                        1 => 'None',
-                        2 => 'HR', 
-                        3 => 'IT',
-                    ]
-                ),
+                ->options(Department::all()
+                ->pluck('name', 'id'))
+                ->searchable(),
 
             Select::make('supervisor_id')
                 ->label('Supervisor lookup')
@@ -77,7 +88,7 @@ class UserResource extends Resource
                 ->image(),
             Tabs::make('Heading')->columnSpan(2)
                 ->tabs([
-                    Tabs\Tab::make('User Data')
+                    Tabs\Tab::make('Staff Data')
                     ->schema([
                         // photo 
                         // Forms\Components\Toggle::make('active')
@@ -129,6 +140,8 @@ class UserResource extends Resource
                             Forms\Components\DateTimePicker::make('two_factor_confirmed_at'),
                             // Forms\Components\TextInput::make('current_team_id'),
                             // ->maxLength(2048),
+                            Forms\Components\Toggle::make('is_admin')
+                            ->label('Is Admin')->default('false'),
                     ]),
                 
                 ])->columns(2),
@@ -189,7 +202,10 @@ class UserResource extends Resource
                     ->date()->sortable(),
                 Tables\Columns\TextColumn::make('exit_date')
                     ->date()->sortable(),
-                
+                Tables\Columns\TextColumn::make('created_at')
+                ->dateTime(),
+                Tables\Columns\TextColumn::make('updated_at')
+                ->dateTime(),
                 //Tables\Columns\TextColumn::make('section')
             ])
             ->filters([
@@ -211,10 +227,19 @@ class UserResource extends Resource
 
                 Tables\Filters\Filter::make('effective_date')
                 ->label(trans('Old Effective Date'))
-                ->query(fn (Builder $query): Builder => 
+
+                // ->form([
+                //     Forms\Components\DatePicker::make('effective_from'),
+                    
+                // ])
+            
+                ->query(fn (Builder $query, array $data): Builder => 
                     $query->where('effective_date', '<', Carbon::today()->addYears(-1))
+                    // $query->where('effective_date', '<', Carbon::createFromFormat('d-m-Y', $data['effective_from']))
                     ->where('exit_date', null)
                 ),
+
+
 
                 Tables\Filters\Filter::make('review')
                 ->label(trans('To Be Reviewed'))
@@ -227,6 +252,8 @@ class UserResource extends Resource
                 Tables\Filters\Filter::make('not_supervisor')
                 ->label(trans('Not supervisor'))
                 ->query(fn (Builder $query): Builder => $query->where('is_supervisor', false)),
+
+                TernaryFilter::make('is_admin'),
 
                 Tables\Filters\TrashedFilter::make(),
             ])

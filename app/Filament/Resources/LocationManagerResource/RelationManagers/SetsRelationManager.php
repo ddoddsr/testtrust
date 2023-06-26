@@ -17,18 +17,15 @@ use Filament\Resources\RelationManagers\RelationManager;
 class SetsRelationManager extends RelationManager
 {
     protected static string $relationship = 'sets';
-
     protected static ?string $recordTitleAttribute = 'location_id';
-
+    protected function getTableRecordsPerPageSelectOptions(): array 
+    {
+        return [12, 24, 480, 84];
+    } 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                // TextInput::make('sectionLeader.full_name')->label('Section Leader'),
-                // TextInput::make('worshipLeader.full_name')->label('Worship Leader'),
-                // TextInput::make('associateWorshipLeader.full_name')->label('Associate Worship Leader'),
-                // TextInput::make('prayerLeader.full_name')->label('Prayer  Leader'),
-
                 Select::make('section_leader_id')
                 ->label('Section Leader')
                 ->options(User::all()

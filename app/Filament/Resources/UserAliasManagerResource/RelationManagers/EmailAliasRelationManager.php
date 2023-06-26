@@ -7,6 +7,7 @@ use Filament\Resources\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Resources\Table;
 use Filament\Tables;
+use Illuminate\Validation\Rules\Unique;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
@@ -26,6 +27,12 @@ class EmailAliasRelationManager extends RelationManager
                 Forms\Components\TextInput::make('email')
                 ->email()
                 ->required()
+                ->unique(ignoreRecord: true)
+                /* 
+                You can further customize the rule by passing a closure to the callback parameter:
+                ->unique(callback: function (Unique $rule) {
+                    return $rule->where('is_active', 1);
+                }) */
                 ->maxLength(255),
             ]);
     }
@@ -35,7 +42,9 @@ class EmailAliasRelationManager extends RelationManager
         return $table
             ->columns([
                 // Tables\Columns\TextColumn::make('user_id'),
-                Tables\Columns\TextColumn::make('email')->sortable()->searchable(isIndividual: true),
+                Tables\Columns\TextColumn::make('email')
+                ->sortable()
+                ->searchable(isIndividual: true),
             ])
             ->filters([
                 //
