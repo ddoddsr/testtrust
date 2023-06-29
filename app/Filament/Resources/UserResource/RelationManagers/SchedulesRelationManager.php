@@ -80,7 +80,6 @@ class SchedulesRelationManager extends RelationManager
                 TextColumn::make('start'),
                 TextColumn::make('end'),
                 TextColumn::make('location'),
-
             ])
             ->filters([
                 //
