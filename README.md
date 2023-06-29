@@ -1,31 +1,71 @@
-TODO edit vendor/codedge/laravel-fpdf/src/Fpdf/Fpdf.php 
-'use Exception' to fix namespace issue;
+## GoLive
+sltrust01.internal.ihopkc.org
 
-## Requests
-- Backups 
-- Audit trail
-- Individule logins
+pltrust01.internal.ihopkc.org
+
+Change Password
+- TODO  After composer update or install
+  - sudo vim vendor/codedge/laravel-fpdf/src/Fpdf/Fpdf.php 
+  - after namespace to fix namespace issue;
+  - 'use Exception;' 
+- ® SMTP setup email outgoing  requested / ticket opened
+- π Staging copy of Production  
+- ® VPN - should request
+- ® https setup requested
+- ∫ Fix PDF!!!!!  Must refresh page if button press not working.  Help asked on Discord
+- √ Fix default is_admin and is supervisor on new
+- √ add default effective date   (how?? persistance ustack of all the same date)?
+- √ Less scary buttons archive not delete on Staff
+- √ FIX Mission Statement!!
+- √ Add schedule s/b add "schedule line"
+_ √ is_approved  ie: pending approval by supervisor
+- √+ why ben nunez is review  -- expand char list  turned off
+- √+ top search bar broken full_name  removed
+
+## Roadmap
+- Supervisor/Staff PDF of info on each Staff supervised
+
+### 2.0
+- audit by user
+- roles / permissions by user role
+- notes for Admin users
+  - morph belongs to user set dept & etc.
+    - requires additional info
+      - who can see
+      - when to apply?
+### 3.0
+
+### 4.0
+- add service hours
+
+## Requests / Questions
+- Backups: Handled by VMware
+- Audit trail: by laravel & filament packages requires some tweaking
+- Individule logins:  Yes
+  - Who setup? via admin
+  - password reset needs email works with mailpit local
 
 ## Changes
 ### Editing / Adding schedules 
 - TODO add tooltip on the folllowing
 - TODO disallow start time > end time
 - removes spaces
-- '.' or 'a' expanded to AM and '+' or 'p' expanded to PM
+- '.' expanded to ':'
+- '-' or 'a' expanded to AM and '+' or 'p' expanded to PM
 
 
 ### Progress
-  Staff Table
-    Rename User to Staff (might find some stragglers)
-    Add dept table to Department select
-    Add 'created' and 'updated' date-times to Staff table/list
-  EmailAlias When adding email Alias, move supervised from Alias to real, delete Bogus
-
+- Staff Table
+-- Rename User to Staff (might find some stragglers)
+  - Add dept table to Department select
+  - Add 'created' and 'updated' date-times to Staff table/list
+- EmailAlias When adding email Alias, move supervised from Alias to real, delete Bogus
+- Notice of success or failure when transferring supervisee
 
 ### Import data
   Review Flag 
    first or Last <2 spaces
-    TODO effects saved from Staff Record  can reset the review flag
+  - feature or bug? When Staff Record saved applies the rules to change the review flag, 
 
 ## Wall PDF
 ### Sizes/
@@ -42,9 +82,6 @@ TODO edit vendor/codedge/laravel-fpdf/src/Fpdf/Fpdf.php
 ## Dashboard Ideas
 - TODO Last update from formsite date number of records
 
-## Other Todo
-- Notice of success or failure when transferring supervisee
-- Supervisor/Staff PDF of info on each Staff supervised
 
 ## Staging test run 
 ### Import Supervisors  (Dan)

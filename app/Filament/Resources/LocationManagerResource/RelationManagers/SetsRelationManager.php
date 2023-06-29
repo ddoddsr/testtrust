@@ -18,10 +18,12 @@ class SetsRelationManager extends RelationManager
 {
     protected static string $relationship = 'sets';
     protected static ?string $recordTitleAttribute = 'location_id';
+    
     protected function getTableRecordsPerPageSelectOptions(): array 
     {
-        return [12, 24, 480, 84];
-    } 
+        return [12, 24, 48, 84];
+    }
+
     public static function form(Form $form): Form
     {
         return $form

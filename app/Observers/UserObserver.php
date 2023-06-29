@@ -78,13 +78,17 @@ class UserObserver
 
     protected function detirmineReviewStatus($user) {
         
-        $match = "/[^a-zA-Z \'\. \`-]/i";
+        $match = "/[^a-zA-Z \'\. \`-]+/i";
+        // $match = "/[^a-zA-Z \'\. \`-]+/i";
+        
+        // $match = "/[^a-zA-Z \'\. \`-\p{L}]+/i";
+        
         $matchEmail = "/[^a-zA-Z 0-9\'\.\@]/i";
         if( 
             strlen( $user->first_name) < 2  ||
             strlen( $user->last_name ) < 2  ||
-            preg_match($match, $user->first_name ) ||
-            preg_match($match, $user->last_name ) ||
+            // preg_match($match, $user->first_name ) ||
+            // preg_match($match, $user->last_name ) ||
             preg_match($matchEmail, $user->super_email1 )
             
         ) {

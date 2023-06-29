@@ -30,6 +30,8 @@ return new class extends Migration
 
             $table->boolean('active')->default(0);
             $table->boolean('review')->default(0);
+            
+            $table->boolean('is_approved')->default(0);
             $table->boolean('is_admin')->default(0);
             $table->boolean('is_supervisor')->default(0);
             $table->boolean('is_worship_leader')->default(0);

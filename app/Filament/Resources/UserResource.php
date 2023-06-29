@@ -26,14 +26,8 @@ class UserResource extends Resource
     protected static ?string $modelLabel = 'Staff';
     protected static ?string $pluralModelLabel = 'Staff';
     protected static ?string $navigationLabel = 'Staff';
-    protected static ?string $recordTitleAttribute = 'full_name';
+    // protected static ?string $recordTitleAttribute = 'full_name';
     protected static ?string $navigationIcon = 'heroicon-o-collection';
-    
-    // Not WORKING as Doc's 
-    // protected function getTableRecordsPerPageSelectOptions(): array 
-    // {
-    //     return [12, 24, 48, 84];
-    // } 
 
     public static function form(Form $form): Form
     {
@@ -71,14 +65,8 @@ class UserResource extends Resource
                 ->options(User::all()
                 ->pluck('name_and_email', 'id'))
                 ->searchable(),
-            // Forms\Components\TextInput::make('designation')
-            //     ->maxLength(100),
-                
-            // Forms\Components\TextInput::make('supervisor')
-            //     ->maxLength(100),
-                // Forms\Components\TextInput::make('superEmail1')
-                // ->maxLength(100),
-                Forms\Components\FileUpload::make('profile_photo_path')
+            
+            Forms\Components\FileUpload::make('profile_photo_path')
                 // ->label(__('fields.images.src'))
                 // ->helperText(__('fields.images.src.helper'))
                 // ->required()
@@ -96,9 +84,12 @@ class UserResource extends Resource
                         Forms\Components\DatePicker::make('effective_date'),
                         Forms\Components\DateTimePicker::make('exit_date'),
                         Forms\Components\Toggle::make('is_supervisor')
-                        ->label('Is Supervisor')->default('false'),
+                        ->label('Is Supervisor')->default(0),
                         Forms\Components\Toggle::make('review')
-                        ->default('false'),
+                        ->default(0),
+                        Forms\Components\Toggle::make('is_approved')
+                        ->label("Supervisor Approved ST")
+                        ->default(0),
                         // Select::make('section')
                         // ->options(['various', 'morning', 'afternoon', 'evening','nightwatch']),
                         // Forms\Components\Toggle::make('isSectionLeader')
@@ -141,7 +132,7 @@ class UserResource extends Resource
                             // Forms\Components\TextInput::make('current_team_id'),
                             // ->maxLength(2048),
                             Forms\Components\Toggle::make('is_admin')
-                            ->label('Is Admin')->default('false'),
+                            ->label('Is Admin')->default(0),
                     ]),
                 
                 ])->columns(2),
@@ -227,11 +218,6 @@ class UserResource extends Resource
 
                 Tables\Filters\Filter::make('effective_date')
                 ->label(trans('Old Effective Date'))
-
-                // ->form([
-                //     Forms\Components\DatePicker::make('effective_from'),
-                    
-                // ])
             
                 ->query(fn (Builder $query, array $data): Builder => 
                     $query->where('effective_date', '<', Carbon::today()->addYears(-1))
@@ -239,11 +225,13 @@ class UserResource extends Resource
                     ->where('exit_date', null)
                 ),
 
-
-
                 Tables\Filters\Filter::make('review')
                 ->label(trans('To Be Reviewed'))
                 ->query(fn (Builder $query): Builder => $query->where('review', true)),
+                
+                Tables\Filters\Filter::make('is_approved')
+                ->label(trans('Not Supervisor Approved'))
+                ->query(fn (Builder $query): Builder => $query->where('is_approved', false)),
                 
                 Tables\Filters\Filter::make('is_supervisor')
                 ->label(trans('Is supervisor'))

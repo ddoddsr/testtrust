@@ -52,27 +52,17 @@ class SchedulesRelationManager extends RelationManager
             ->schema([
                 Select::make('day')
                 ->options(Set::dayOfWeekStr())
-                
                 ->searchable(),
-                // TODO select from 
-                // Select::make('start')
-                // ->options( $timeOfDay)
-                // ->label('Start Time')
-                // ->placeholder("Start Time")
-                // Select::make('end')
-                // ->options( $timeOfDay)
-                // ->label('End Time')
-                // ->placeholder("End Time"),
+
                 TextInput::make('start')
-                    ->maxLength(7)
-                    ->minLength(2)
-                    ->regex($timeRegex)
-                    ,
+                ->maxLength(7)
+                ->minLength(2)
+                ->regex($timeRegex),
+
                 TextInput::make('end')
-                    ->maxLength(7)
-                    ->minLength(2)
-                    ->regex($timeRegex)
-                    ,
+                ->maxLength(7)
+                ->minLength(2)
+                ->regex($timeRegex),
                     
                 Select::make('location')
                 ->options(Location::all()->pluck('name', 'name'))
@@ -95,7 +85,7 @@ class SchedulesRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make()
+                Tables\Actions\CreateAction::make()->label('Add Schedule Line')
                 ->mutateFormDataUsing(function (array $data): array {
                     $data['start'] = SchedulesRelationManager::cleanTime($data['start']) ;
                     $data['end'] = SchedulesRelationManager::cleanTime($data['end']) ;      
