@@ -10,7 +10,7 @@ class StatsOverview extends BaseWidget
     protected function getCards(): array
     {
         return [
-            Card::make('Unique views', '192.1k')
+            Card::make('Supervisor Reviews TBA', '192.1k')
                 ->description('32k increase')
                 ->descriptionIcon('heroicon-s-trending-up')
                 ->chart([7, 2, 10, 3, 15, 4, 17])
@@ -18,7 +18,7 @@ class StatsOverview extends BaseWidget
             Card::make('Bounce rate', '21%')
                 ->description('7% increase')
                 ->descriptionIcon('heroicon-s-trending-down'),
-            Card::make('Average time on page', '3:12')
+            Card::make('Last new from Formsite', '3:12')
                 ->description('3% increase')
                 ->descriptionIcon('heroicon-s-trending-up'),
         ];

@@ -13,7 +13,7 @@ class EditUser extends EditRecord
     protected function getActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            Actions\DeleteAction::make()->label('Archive/Soft-Delete'),
             Actions\ForceDeleteAction::make(),
             Actions\RestoreAction::make(),
         ];

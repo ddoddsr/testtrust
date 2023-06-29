@@ -201,15 +201,14 @@ class Tools extends Page
     }
     public function ownSuperCheck()
     {
-        $this->duplicateNames = [];
-        $this->ownSuperNames = [];
-        $ownNames = [];
+        $this->duplicateNames = []; //clears out existing
+        $this->ownSuperNames = [];  // resets to empty
         $staff = DB::table('users')
         // $staff->select('id', 'first_name', 'email', 'super_email1')
         ->get();
         foreach($staff as $thier_own) {
             if($thier_own->email == $thier_own->super_email1) {
-                 $ownNames[] =  [
+                 $this->ownSuperNames[] =  [
                      'user_id' => $thier_own->id, 
                      'user_name' => $thier_own->first_name . ' ' . $thier_own->last_name,
                      'email' => $thier_own->email, 
@@ -218,9 +217,5 @@ class Tools extends Page
                  ];
             }
         }
-
-        // logger(count($ownNames));
-        $this->ownSuperNames = $ownNames ;
-        // dd($this->ownSuperNames);
     }
 }

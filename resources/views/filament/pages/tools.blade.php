@@ -1,5 +1,6 @@
 
 <x-filament::page>
+    @vite(['resources/css/my-styles.css'])
     @if($duplicateNames)
         <div>
             <h1>Duplication Check by Name</h1>
