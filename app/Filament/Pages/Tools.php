@@ -204,18 +204,20 @@ class Tools extends Page
         $this->duplicateNames = []; //clears out existing
         $this->ownSuperNames = [];  // resets to empty
         $staff = DB::table('users')
-        // $staff->select('id', 'first_name', 'email', 'super_email1')
+        // ->where('email', '==', 'email2')
         ->get();
-        foreach($staff as $thier_own) {
-            if($thier_own->email == $thier_own->super_email1) {
+        logger("B4 4Each");
+        foreach($staff as $own) {
+            if($own->email == $own->super_email1) {
                  $this->ownSuperNames[] =  [
-                     'user_id' => $thier_own->id, 
-                     'user_name' => $thier_own->first_name . ' ' . $thier_own->last_name,
-                     'email' => $thier_own->email, 
-                     'super' => $thier_own->super_email1,
-                     'effective' => $thier_own->effective_date,
+                     'user_id' => $own->id, 
+                     'user_name' => $own->first_name . ' ' . $own->last_name,
+                     'email' => $own->email, 
+                     'super' => $own->super_email1,
+                     'effective' => $own->effective_date,
                  ];
             }
         }
     }
 }
+

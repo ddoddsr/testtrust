@@ -120,7 +120,9 @@ class FormsiteController
                 $sched = (object)[];
 
                  foreach($result->items as $item) {
-                    
+                    // if ($item == '88-0') {
+                    //     logger(['88-0' => $item]);
+                    // }
                     // get the field number and look it up in $fieldNames
                     if (array_key_exists((int)$item->id,$fieldNames))
                     {

@@ -1,6 +1,6 @@
 ## GoLive
 sltrust01.internal.ihopkc.org
-
+SMTP 172.17.121.38
 pltrust01.internal.ihopkc.org
 
 Change Password

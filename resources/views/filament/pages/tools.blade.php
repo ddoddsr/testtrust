@@ -46,10 +46,10 @@
         <table>
             <thead>
                 <th>Id</th>
-                <th>Name</th>
-                <th>Email</th>
+                <th>Staff Name</th>
+                <th>Own Email</th>
                 <th>Effective Date</th>
-                <th>Supervisor</th>
+                <th>Supervisor Email</th>
                 <th>Actions</th>
 
             </thead>
