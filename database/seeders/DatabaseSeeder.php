@@ -30,6 +30,7 @@ class DatabaseSeeder extends Seeder
             'first_name' => 'Sam',
             'last_name' => 'IAM',
             'email' => 'sam@dd.io',
+            'super_email1' => 'sam@dd.io',
             'password' => bcrypt('asdf'),
             'active' => true,
             'current_company_id' => 2,
