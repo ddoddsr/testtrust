@@ -7,6 +7,7 @@ use Laravel\Sanctum\HasApiTokens;
 use Filament\Models\Contracts\HasName;
 use Filament\Models\Contracts\HasAvatar;
 use Illuminate\Notifications\Notifiable;
+use OwenIt\Auditing\Contracts\Auditable;
 use Wallo\FilamentCompanies\HasCompanies;
 use Filament\Models\Contracts\FilamentUser;
 use Wallo\FilamentCompanies\HasProfilePhoto;
@@ -19,7 +20,7 @@ use Wallo\FilamentCompanies\SetsProfilePhotoFromUrl;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class User extends Authenticatable implements FilamentUser, HasAvatar, HasName
+class User extends Authenticatable implements FilamentUser, HasAvatar, HasName, Auditable
 {
     use HasFactory;
     use Notifiable;
@@ -30,6 +31,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName
     use HasConnectedAccounts;
     use SetsProfilePhotoFromUrl;
     use TwoFactorAuthenticatable;
+    use \OwenIt\Auditing\Auditable;
 
     public function canAccessFilament(): bool
     {
@@ -107,7 +109,15 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName
                 $attributes['last_name']
         );
     }
-    protected function nameAndEmail(): Attribute
+    
+    protected function name(): Attribute
+    {
+        return Attribute::make(
+            get: fn (mixed $value, array $attributes) => 
+                $attributes['first_name'] . ' ' .
+                $attributes['last_name']
+        );
+    }protected function nameAndEmail(): Attribute
     {
         return Attribute::make(
             get: fn (mixed $value, array $attributes) => 

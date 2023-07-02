@@ -18,6 +18,7 @@ use Filament\Tables\Filters\TernaryFilter;
 use App\Filament\Resources\UserResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\UserResource\RelationManagers;
+use Tapp\FilamentAuditing\RelationManagers\AuditsRelationManager;
 
 class UserResource extends Resource
 {
@@ -264,6 +265,7 @@ class UserResource extends Resource
             RelationManagers\SchedulesRelationManager::class,
             UserResource\RelationManagers\UserRelationManager::class,
             UserAliasManagerResource\RelationManagers\EmailAliasRelationManager::class,
+            AuditsRelationManager::class,
         ];
     }
     

@@ -9,9 +9,10 @@ Change Password
   - after namespace to fix namespace issue;
   - 'use Exception;' 
 - ® SMTP setup email outgoing  requested / ticket opened
-- π Staging copy of Production  
+- π Staging copy of Production  help requested scp not working
 - ® VPN - should request
-- ® https setup requested
+- ® https setup requested  process started not realy clear on propgress
+- ® Wall PDF fixed font size  Need info what to do fior > 210 staff with 6x35 page full
 - ∫ Fix PDF!!!!!  Must refresh page if button press not working.  Help asked on Discord
 - √ Fix default is_admin and is supervisor on new
 - √ add default effective date   (how?? persistance ustack of all the same date)?
@@ -22,17 +23,21 @@ _ √ is_approved  ie: pending approval by supervisor
 - √+ why ben nunez is review  -- expand char list  turned off
 - √+ top search bar broken full_name  removed
 
+## Check on staff internet
+loading my-stles from build
+
 ## Roadmap
 - Supervisor/Staff PDF of info on each Staff supervised
 
 ### 2.0
-- audit by user
+- √ audit by user 1.1
 - roles / permissions by user role
 - notes for Admin users
   - morph belongs to user set dept & etc.
     - requires additional info
       - who can see
       - when to apply?
+- should we use 'TAGS' ?
 ### 3.0
 
 ### 4.0
@@ -112,3 +117,10 @@ Laravel is a web application framework with expressive, elegant syntax. We belie
 
 Laravel is accessible, powerful, and provides tools required for large, robust applications.
 
+### Mailpit 
+see https://golangexample.com/an-email-testing-tool-for-developers/
+- browser http://0.0.0.0:8025/
+- .env
+  - MAIL_MAILER=smtp
+  - MAIL_HOST=localhost
+  - MAIL_PORT=1025

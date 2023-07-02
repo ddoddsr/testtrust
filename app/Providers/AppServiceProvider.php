@@ -22,7 +22,7 @@ class AppServiceProvider extends ServiceProvider
     {
         //
         Filament::registerStyles([
-            asset('css/my-styles.css'),
+            asset('build/assets/my-styles.css'),
         ]);
     }
 }
