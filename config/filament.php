@@ -1,6 +1,7 @@
 <?php
 
-use App\Http\Middleware\Authenticate;
+// use App\Http\Middleware\Authenticate;
+use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Http\Middleware\MirrorConfigToSubpackages;
 use Filament\Pages;
