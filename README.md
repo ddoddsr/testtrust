@@ -8,14 +8,15 @@ Change Password
   - sudo vim vendor/codedge/laravel-fpdf/src/Fpdf/Fpdf.php 
   - after namespace to fix namespace issue;
   - 'use Exception;' 
-- ® SMTP setup email outgoing  requested / ticket opened
+  
+- √ SMTP setup email outgoing  requested / ticket opened
 - π Staging copy of Production  help requested scp not working
 - ® VPN - should request
 - ® https setup requested  process started not realy clear on propgress
-- ® Wall PDF fixed font size  Need info what to do fior > 210 staff with 6x35 page full
+- ® Wall PDF 'fixed' font size  Need info what to do fior > 210 staff with 6x35 page full
 - ∫ Fix PDF!!!!!  Must refresh page if button press not working.  Help asked on Discord
-- √ Fix default is_admin and is supervisor on new
-- √ add default effective date   (how?? persistance ustack of all the same date)?
+- √ Fix default ! is_admin and ! is_supervisor on new
+- √ add default effective date   (how?? persistance for a stack of STs all the same date)?
 - √ Less scary buttons archive not delete on Staff
 - √ FIX Mission Statement!!
 - √ Add schedule s/b add "schedule line"
@@ -24,14 +25,17 @@ _ √ is_approved  ie: pending approval by supervisor
 - √+ top search bar broken full_name  removed
 
 ## Check on staff internet
-loading my-stles from build
+loading my-styles from build
 
 ## Roadmap
 - Supervisor/Staff PDF of info on each Staff supervised
 
-### 2.0
+### 1.x In production
 - √ audit by user 1.1
 - roles / permissions by user role
+
+### 2.0
+- add service hours
 - notes for Admin users
   - morph belongs to user set dept & etc.
     - requires additional info
@@ -41,7 +45,6 @@ loading my-stles from build
 ### 3.0
 
 ### 4.0
-- add service hours
 
 ## Requests / Questions
 - Backups: Handled by VMware
