@@ -9,9 +9,9 @@ Change Password
   - after namespace to fix namespace issue;
   - 'use Exception;' 
 - ® SMTP setup email outgoing  requested / ticket opened
-- π Staging copy of Production  
+- π Staging copy of Production  help requested scp not working
 - ® VPN - should request
-- ® https setup requested
+- ® https setup requested  process started not realy clear on propgress
 - ∫ Fix PDF!!!!!  Must refresh page if button press not working.  Help asked on Discord
 - √ Fix default is_admin and is supervisor on new
 - √ add default effective date   (how?? persistance ustack of all the same date)?
@@ -112,3 +112,10 @@ Laravel is a web application framework with expressive, elegant syntax. We belie
 
 Laravel is accessible, powerful, and provides tools required for large, robust applications.
 
+### Mailpit 
+see https://golangexample.com/an-email-testing-tool-for-developers/
+- browser http://0.0.0.0:8025/
+- .env
+  - MAIL_MAILER=smtp
+  - MAIL_HOST=localhost
+  - MAIL_PORT=1025
