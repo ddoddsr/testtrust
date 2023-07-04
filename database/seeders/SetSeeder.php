@@ -68,8 +68,8 @@ class SetSeeder extends Seeder
             $set = [
                 'dayOfWeek' => $day,
                 'setOfDay' => $setOfDay,
-                'location' => 'ANPR',
-                'location_id' => 2,
+                'location' => 'TEST',
+                'location_id' => 6,
                 'worship_leader_id' => $faker->numberBetween(30, 50),
                 'associate_worship_leader_id' => $faker->numberBetween(51, 75),
                 'prayer_leader_id' => $faker->numberBetween(76, 100),

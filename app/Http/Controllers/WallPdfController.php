@@ -28,14 +28,11 @@ class WallPdfController extends Controller
         $namesMargin = 25;
         $taglinePos =  - 20 ;   // vert from bottom
         $tagline = env('FOOTER_STATEMENT','Set FOOTER_STATEMENT in .env');
-        $topOfColumns = 80;
+        $topOfColumns = 70;
         $postionColumn = 0; 
-
+        $sequence = 1;
         foreach($setWithScheds as $set) {
             $schedCnt = count($set['scheds']);
-
-            //Adjust for long names?
-
             // Adlust schedCnt per page count
             if( $schedCnt < 181 ) {
                 $nameFontSize = 12;
@@ -44,23 +41,23 @@ class WallPdfController extends Controller
                 $columnSpacing = ( $fpdf->GetPageWidth() / $maxColumns ) - 8 ;
                 $namesPerColumn = 30;
             } elseif ( $schedCnt < 211 ) {
-                $nameFontSize = 10;
-                $rowHeight = 14;
+                $nameFontSize = 11;
+                $rowHeight = 14.4;
                 $maxColumns = 6;
                 $columnSpacing = ( $fpdf->GetPageWidth() / $maxColumns ) - 6 ;
                 $namesPerColumn = 35;
-            } elseif( $schedCnt < 281 ) {
-                $nameFontSize = 8.5;
+            } elseif( $schedCnt < 241 ) {
+                $nameFontSize = 9.5;
                 $rowHeight = 12;
                 $maxColumns = 6;
                 $columnSpacing = ( $fpdf->GetPageWidth() / $maxColumns ) - 6 ;
                 $namesPerColumn = 40;
-            } elseif( $schedCnt < 351 ) {
-                $nameFontSize = 7;
+            } elseif( $schedCnt < 286 ) {
+                $nameFontSize = 8.4;
                 $rowHeight = 10;
                 $maxColumns = 7;
                 $columnSpacing = ( $fpdf->GetPageWidth() / $maxColumns ) - 6 ;
-                $namesPerColumn = 50;
+                $namesPerColumn = 40;
             } else {  // > 350
                 $nameFontSize = 5.5;
                 $rowHeight = 8;
@@ -68,7 +65,17 @@ class WallPdfController extends Controller
                 $columnSpacing = ( $fpdf->GetPageWidth() / $maxColumns ) - 6 ;
                 $namesPerColumn = 62;
             }
-            
+            logger(['set' => [
+                'sequencec' => $sequence, 
+                // $set['dayOfWeek'], 
+                // $set['setOfDay'], 
+                'cnt' => $schedCnt,
+                'fontsz' => $nameFontSize,
+                'rowHt' => $rowHeight,
+                'colNum' => $maxColumns,
+                'colSpace' => $columnSpacing,
+                'NamePerCol' => $namesPerColumn ]]);
+            $sequence++ ;
             $fpdf->AddPage();
             $fpdf->SetFont('Arial', 'B', 24);
             $fpdf->Cell(0,0, $set['title'], 0, 1, 'C');

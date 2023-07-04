@@ -16,7 +16,7 @@ class SuperStaffPdfController extends Controller
 // dd($record);
         // $staff = $record->supervising();
         $fpdf = new \Codedge\Fpdf\Fpdf\Fpdf('P','pt','Letter') ;
-        $fpdf->AddFont('Uni','','39335_UniversCondensed.php');
+        // $fpdf->AddFont('Uni','','39335_UniversCondensed.php');
         
         // get todays date time
         $dateTime = 'Updated: ' . Carbon::now()->format('M d Y');
@@ -42,7 +42,7 @@ class SuperStaffPdfController extends Controller
         $fpdf->Text(60, $superInfoTop + 40 ,$record->email);
         // Table parameters
         $topOfList = 250;
-        $fpdf->SetFont('Uni', '', 12);
+        $fpdf->SetFont('Arial', '', 12);
         $lnNum = 1;
         foreach( User::where('supervisor_id', $record->id )->get() as $staffLine) {
             $fpdf->Text(60, ($lnNum  * 20) + $topOfList,  $staffLine->first_name);

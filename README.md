@@ -76,14 +76,15 @@ loading my-styles from build
   - feature or bug? When Staff Record saved applies the rules to change the review flag, 
 
 ## Wall PDF
-### Sizes/
-- Up to
+### Sizes/  re test and review
+
 - Tot = Col Per Font  RowHt
-- 180 = 6 x 30  12    16
-- 210 = 6 x 35  10    14  
-- 280 = 7 x 40  8.5   12
-- 350 = 7 x 50  7     10
-- >350  8 x 62  5.5   8
+- √< 181 = 6 x 30  12    16
+- √< 211 = 6 x 35  11    14.4
+- ®< 246 = 6 x 40  9.5   13 
+- ®< 285 = 7 x 40  8.4   9.5
+- ®< 350 = 7 x 50  7     10
+- ®>350  8 x 62  5.5    8
 ### seeding ANPR
 - Add APR seeder for testing staff per page sizes 
 
@@ -104,7 +105,8 @@ loading my-styles from build
 - Scan Table for any errors
 - Set for NO IMPORT
 
-
+## Preproduction Tasks / bugs
+- 
 
 ## About Laravel
 
@@ -127,3 +129,6 @@ see https://golangexample.com/an-email-testing-tool-for-developers/
   - MAIL_MAILER=smtp
   - MAIL_HOST=localhost
   - MAIL_PORT=1025
+
+  ## bug in fpdf look at font name 39335_UniversCondensed.php
+  - in resources/fonts/UniversCondensed.php
