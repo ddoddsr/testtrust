@@ -9,7 +9,7 @@ use Faker\Generator as Faker;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
-class AnprSeeder extends Seeder
+class TestSeeder extends Seeder
 {
 
 
