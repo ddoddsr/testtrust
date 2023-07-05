@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Events\UserDeleting;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
 use Filament\Models\Contracts\HasName;
 use Filament\Models\Contracts\HasAvatar;
 use Illuminate\Notifications\Notifiable;
@@ -22,6 +23,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable implements FilamentUser, HasAvatar, HasName, Auditable
 {
+    use HasRoles;
     use HasFactory;
     use Notifiable;
     use softDeletes;
@@ -35,8 +37,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName, 
 
     public function canAccessFilament(): bool
     {
-        return $this->is_admin ;
-
+        return $this->can('access dash') || $this->hasRole('Super-Admin');
         
     }
 
@@ -172,5 +173,9 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName, 
             $short[$key] = strtok($value, " ");
         }
         return $short;
+    }
+
+    public function canManageTools() {
+        return false;
     }
 }

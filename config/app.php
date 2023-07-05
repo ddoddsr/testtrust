@@ -168,6 +168,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\FortifyServiceProvider::class,
+        App\Providers\FilamentCustomProvider::class,
         OwenIt\Auditing\AuditingServiceProvider::class,
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\FilamentCompaniesServiceProvider::class,

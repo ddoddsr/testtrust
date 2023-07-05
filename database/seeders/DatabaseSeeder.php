@@ -3,7 +3,10 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\User;
 use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 // use Database\Seeders\ShieldSeeder;
 // use Illuminate\Support\Facades\Artisan;
 
@@ -17,7 +20,32 @@ class DatabaseSeeder extends Seeder
         $sets= new \Database\Seeders\SetSeeder;
         $sets->run();
         
-        \App\Models\User::factory()->withPersonalCompany()->create([
+        // app()[PermissionRegistrar::class]->forgetCachedPermissions();
+        
+        // create roles and Permissions
+        Permission::create(['name' => 'access dash']);
+        Permission::create(['name' => 'access tools']);
+        Permission::create(['name' => 'access divisions']);
+        Permission::create(['name' => 'access locations']);
+        Permission::create(['name' => 'access staff']);
+
+        $role1 = Role::create(['name' => 'Super-Admin']);
+        $role2 = Role::create(['name' => 'Staff']);
+        $role3 = Role::create(['name' => 'Supervisor']);
+        $role4 = Role::create(['name' => 'HR Staff']);
+        
+        $role1->givePermissionTo('access dash');
+        
+        $role2->givePermissionTo('access dash');
+
+        $role3->givePermissionTo('access dash');
+        
+        $role4->givePermissionTo('access dash');
+        $role4->givePermissionTo('access tools');
+        $role4->givePermissionTo('access locations');
+        // $role4->givePermissionTo('access divisions');
+
+        $user = User::factory()->withPersonalCompany()->create([
             'first_name' => 'Dan',
             'last_name' => 'Doddzy',
             'email' => 'dd@dd.io',
@@ -26,7 +54,10 @@ class DatabaseSeeder extends Seeder
             'is_admin' => true,
             'current_company_id' => 1,
         ]);
-        \App\Models\User::factory()->withPersonalCompany()->create([
+
+        $user->assignRole($role1);
+
+        $user = User::factory()->withPersonalCompany()->create([
             'first_name' => 'Sam',
             'last_name' => 'IAM',
             'email' => 'sam@dd.io',
@@ -35,7 +66,9 @@ class DatabaseSeeder extends Seeder
             'active' => true,
             'current_company_id' => 2,
         ]);
-        \App\Models\User::factory()->withPersonalCompany()->create([
+        $user->assignRole($role2);
+
+        $user = User::factory()->withPersonalCompany()->create([
             'first_name' => 'Stuart',
             'last_name' => 'Greaves',
             'email' => 'stuartgreaves@ihopkc.org',
@@ -45,7 +78,8 @@ class DatabaseSeeder extends Seeder
             'is_supervisor' => true,
             'current_company_id' => 3,
         ]);
-        \App\Models\User::factory()->withPersonalCompany()->create([
+        $user->assignRole($role3);
+        $user = User::factory()->withPersonalCompany()->create([
             'first_name' => 'HR',
             'last_name' => 'Excellance',
             'email' => 'hr@ihopkc.org',
@@ -55,7 +89,7 @@ class DatabaseSeeder extends Seeder
             'is_supervisor' => true,
             'current_company_id' => 4,
         ]);        
-
+        $user->assignRole($role1);
         // TODO Better Alias seeder?
         \App\Models\EmailAlias::create([
         'user_id' => 1,    
@@ -67,6 +101,7 @@ class DatabaseSeeder extends Seeder
         //         'stuartgreaves@pm.me
         ]);
 
+        
         // $shield = new ShieldSeeder;
         // $shield->run();
        
