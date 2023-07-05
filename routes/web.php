@@ -27,3 +27,5 @@ Route::middleware([
 ])->group(function () {
 
 });
+
+Route::redirect('/admin/login', '/login')->name('filament.auth.login');
