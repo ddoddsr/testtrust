@@ -45,7 +45,7 @@ class DatabaseSeeder extends Seeder
         $role4->givePermissionTo('access tools');
         $role4->givePermissionTo('access locations');
         $role4->givePermissionTo('access divisions');
-        
+        $role4->givePermissionTo('access staff');
 
         $user = User::factory()->withPersonalCompany()->create([
             'first_name' => 'Dan',
