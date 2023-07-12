@@ -4,12 +4,13 @@ namespace App\Filament\Resources;
 
 use Filament\Forms;
 use Filament\Tables;
-use App\Models\Permission;
+// use App\Models\Permission;
 use Filament\Resources\Form;
 use Filament\Resources\Table;
 use Filament\Resources\Resource;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
+use Spatie\Permission\Models\Permission;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\PermissionResource\Pages;
@@ -29,7 +30,7 @@ class PermissionResource extends Resource
                 ->minLength(2)
                 ->maxLength(255)
                 ->required()
-                ->unique()
+                ->unique(ignoreRecord: true)
             ]);
     }
 
@@ -37,13 +38,18 @@ class PermissionResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('name')
+                TextColumn::make('name'),
+                TextColumn::make('created_at')
+                ->dateTime('d-M-Y')->sortable(),
+                TextColumn::make('updated_at')
+                ->dateTime('d-M-Y')->sortable(),
             ])
             ->filters([
                 //
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),

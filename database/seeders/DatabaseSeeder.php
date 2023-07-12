@@ -34,16 +34,18 @@ class DatabaseSeeder extends Seeder
         $role3 = Role::create(['name' => 'Supervisor']);
         $role4 = Role::create(['name' => 'HR Staff']);
         
+        // Admin
         $role1->givePermissionTo('access dash');
-        
+        // Sam Iam
         $role2->givePermissionTo('access dash');
-
+        // Stuart
         $role3->givePermissionTo('access dash');
-        
+        // HR
         $role4->givePermissionTo('access dash');
         $role4->givePermissionTo('access tools');
         $role4->givePermissionTo('access locations');
-        // $role4->givePermissionTo('access divisions');
+        $role4->givePermissionTo('access divisions');
+        
 
         $user = User::factory()->withPersonalCompany()->create([
             'first_name' => 'Dan',
@@ -89,7 +91,7 @@ class DatabaseSeeder extends Seeder
             'is_supervisor' => true,
             'current_company_id' => 4,
         ]);        
-        $user->assignRole($role1);
+        $user->assignRole($role4);
         // TODO Better Alias seeder?
         \App\Models\EmailAlias::create([
         'user_id' => 1,    

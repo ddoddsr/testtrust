@@ -9,6 +9,7 @@ use Filament\Resources\Form;
 use Filament\Resources\Table;
 use Filament\Resources\Resource;
 use Spatie\Permission\Models\Role;
+use Filament\Forms\Components\Select;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
 use Illuminate\Database\Eloquent\Builder;
@@ -30,7 +31,13 @@ class RoleResource extends Resource
                 ->minLength(2)
                 ->maxLength(255)
                 ->required()
-                ->unique()
+                ->unique(ignoreRecord: true), 
+                 
+                Select::make('permissions')
+                ->multiple()
+                ->relationship('permissions', 'name')
+                ->preload(),
+
             ]);
     }
 
@@ -38,13 +45,18 @@ class RoleResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('name')
+                TextColumn::make('name'),
+                Tables\Columns\TextColumn::make('created_at')
+                ->dateTime('d-M-Y')->sortable(),
+                Tables\Columns\TextColumn::make('updated_at')
+                ->dateTime('d-M-Y')->sortable(),
             ])
             ->filters([
                 //
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
@@ -66,4 +78,8 @@ class RoleResource extends Resource
             'edit' => Pages\EditRole::route('/{record}/edit'),
         ];
     }    
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()->where('name', '!=', 'Admin');
+    }
 }

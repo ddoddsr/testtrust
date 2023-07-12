@@ -24,8 +24,10 @@ class LocationResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('name')
+                ->minLength(2)
+                ->maxLength(255)
                 ->required()
-                ->maxLength(255),
+                ->unique(ignoreRecord: true)
             ]);
     }
 

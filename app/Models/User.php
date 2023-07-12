@@ -37,7 +37,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName, 
 
     public function canAccessFilament(): bool
     {
-        return $this->can('access dash') || $this->hasRole('Super-Admin');
+        return $this->can('access dash') ;
         
     }
 
@@ -175,7 +175,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName, 
         return $short;
     }
 
-    public function canManageTools() {
-        return false;
-    }
+    // public function canManageTools() {
+    //     return false;
+    // }
 }

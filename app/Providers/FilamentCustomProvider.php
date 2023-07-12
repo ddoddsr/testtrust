@@ -24,7 +24,7 @@ class FilamentCustomProvider extends ServiceProvider
     public function boot(): void
     {
         Filament::serving(function () {
-            if (Auth::user()->can('access tools')) {
+            if (Auth::user() && Auth::user()->can('access tools')) {
                 Filament::registerUserMenuItems([
                     UserMenuItem::make()
                     ->label('Tools')
