@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Events\UserDeleting;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
 use Filament\Models\Contracts\HasName;
 use Filament\Models\Contracts\HasAvatar;
 use Illuminate\Notifications\Notifiable;
@@ -22,6 +23,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable implements FilamentUser, HasAvatar, HasName, Auditable
 {
+    use HasRoles;
     use HasFactory;
     use Notifiable;
     use softDeletes;
@@ -35,8 +37,8 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName, 
 
     public function canAccessFilament(): bool
     {
-        //  samplr return str_ends_with($this->email, '@yourdomain.com') && $this->hasVerifiedEmail();
-        return $this->is_admin == true;
+        return $this->can('access dash') ;
+        
     }
 
     public function getFilamentAvatarUrl(): ?string
@@ -172,4 +174,8 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName, 
         }
         return $short;
     }
+
+    // public function canManageTools() {
+    //     return false;
+    // }
 }

@@ -134,6 +134,14 @@ class UserResource extends Resource
                             // ->maxLength(2048),
                             Forms\Components\Toggle::make('is_admin')
                             ->label('Is Admin')->default(0),
+                            Select::make('roles')
+                            ->multiple()
+                            ->relationship('roles', 'name')
+                            ->preload(),
+                            Select::make('permissions')
+                            ->multiple()
+                            ->relationship('permissions', 'name')
+                            ->preload(),
                     ]),
                 
                 ])->columns(2),

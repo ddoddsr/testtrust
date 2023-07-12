@@ -21,7 +21,7 @@ use App\Http\Controllers\SchedPdfController;
 class Tools extends Page
 {
     // use HasPageShield;
-    
+    // TODO Hmmm protected static ?string $model = Tools::class;
     public array $duplicateNames = []; 
     public array $ownSuperNames = [];
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
@@ -29,23 +29,13 @@ class Tools extends Page
     protected static string $view = 'filament.pages.tools';
 
     // https://github.com/filamentphp/filament/discussions/6275
-    protected static bool $shouldRegisterNavigation = true;
-    // protected static bool $shouldRegisterNavigation = false;
+    protected static bool $shouldRegisterNavigation = false;
+    
+    
     // https://filamentphp.com/docs/2.x/admin/navigation#disabling-resource-or-page-navigation-items
 
 
 
-    // protected static function shouldRegisterNavigation(): bool
-    // {
-    //     return auth()->user()->canManageSettings();
-    // }
- 
-    // public function mount(): void
-    // {
-    //     abort_unless(auth()->user()->canManageSettings(), 403);
-    
-    //     abort_unless(Auth::user()->currentCompany->id === 3, 403);
-    // }
 
     protected function getActions(): array
     {
@@ -100,6 +90,9 @@ class Tools extends Page
                 ->label('Test Me')
                 ->action('testMe')
                 ->visible(env('FORMSITE_IMPORT', 'false')),
+            Action::make('TestWallPdf')
+                // ->label('Test Me')
+                ->action('genWallPdf'),
         ];
     }
     public function newResults()
@@ -144,7 +137,7 @@ class Tools extends Page
     {
         $filePath = 'storage/sacred_trust_wall.pdf';
         $pdf = new WallPdfController;
-        $pdf->generatePdf($filePath, $data['location']);
+        $pdf->generatePdf($filePath, 6);
 
         Notification::make() 
             ->title('Generation complete.')
@@ -172,6 +165,13 @@ class Tools extends Page
     {
         Notification::make() 
             ->title('TestMe complete')
+            ->success()
+            ->send(); 
+    }
+    public function testWallPdf($name = 'testMe')
+    {
+        Notification::make() 
+            ->title('Test Wall Pdf complete')
             ->success()
             ->send(); 
     }
