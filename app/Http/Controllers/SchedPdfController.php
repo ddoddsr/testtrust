@@ -16,7 +16,7 @@ class SchedPdfController extends Controller
         $setWithScheds = $this->setSchedule($location);
         // 
         $fpdf = new \Codedge\Fpdf\Fpdf\Fpdf('L','pt','Letter') ;
-        $fpdf->AddFont('Uni','','39335_UniversCondensed.php');
+        //$fpdf->AddFont('Uni','','39335_UniversCondensed.php');
         
         // get todays date time
         $dateTime = 'Updated: ' . Carbon::now()->format('M d Y');
@@ -93,7 +93,7 @@ class SchedPdfController extends Controller
         $columnIndex = 0;
         $setIndex = 0;
         
-        $fpdf->SetFont('Uni', '', 9.25);
+        $fpdf->SetFont('Arial', '', 9.25);
         foreach($setWithScheds as $set) {
             $nameWL = $set['worshipLeader'] ? iconv('UTF-8', 'windows-1252', $set['worshipLeader']) : 'TBD';
             $fpdf->Text(
