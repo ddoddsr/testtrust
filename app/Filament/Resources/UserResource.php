@@ -269,9 +269,10 @@ class UserResource extends Resource
     {
         return [
             RelationManagers\SchedulesRelationManager::class,
-            UserResource\RelationManagers\UserRelationManager::class,
+            RelationManagers\SupervisingRelationManager::class,
             RelationManagers\ServiceHoursRelationManager::class,
-            UserAliasManagerResource\RelationManagers\EmailAliasRelationManager::class,
+            // RelationManagers\SupervisingHoursRelationManager ::class,
+            RelationManagers\EmailAliasRelationManager::class,
             AuditsRelationManager::class,
         ];
     }
@@ -289,6 +290,7 @@ class UserResource extends Resource
     {
         return parent::getEloquentQuery()
             // ->where('id', '!=', 1)
+            // ->where('id', '!=', $user->id )
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
             ]);
