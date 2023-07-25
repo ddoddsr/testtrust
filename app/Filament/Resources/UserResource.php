@@ -132,8 +132,6 @@ class UserResource extends Resource
                             Forms\Components\DateTimePicker::make('two_factor_confirmed_at'),
                             // Forms\Components\TextInput::make('current_team_id'),
                             // ->maxLength(2048),
-                            Forms\Components\Toggle::make('is_admin')
-                            ->label('Is Admin')->default(0),
                             Select::make('roles')
                             ->multiple()
                             ->relationship('roles', 'name')
@@ -272,6 +270,7 @@ class UserResource extends Resource
         return [
             RelationManagers\SchedulesRelationManager::class,
             UserResource\RelationManagers\UserRelationManager::class,
+            RelationManagers\ServiceHoursRelationManager::class,
             UserAliasManagerResource\RelationManagers\EmailAliasRelationManager::class,
             AuditsRelationManager::class,
         ];
@@ -289,6 +288,7 @@ class UserResource extends Resource
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()
+            // ->where('id', '!=', 1)
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
             ]);

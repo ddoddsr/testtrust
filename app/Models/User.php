@@ -97,6 +97,10 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName, 
     {
         return $this->hasMany(Schedule::class);
     }
+    public function serviceHours()
+    {
+        return $this->hasMany(ServiceHours::class);
+    }
     
     public function emailAlias()
     {

@@ -13,6 +13,7 @@ use Filament\Resources\Form;
 use Filament\Resources\Table;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Contracts\View\View;
 use Filament\Forms\Components\Select;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
@@ -42,11 +43,17 @@ class SchedulesRelationManager extends RelationManager
     public static function form(Form $form): Form
     {
         // $timeOfDay = Schedule::timeOfDay();
-        $timeRegex = '/^([1-9]|1[0-2])((:|\.)[0-5][0-9])|()?([AaPp\-\+][Mm]?)$/';
-        // $timeRegex = '/^(?:[01]?\d|2[0-3])(?::[0-5]\d){1,2}$/';
-        // $timeRegex = '/((1[0-2]|0?[1-9]):([0-5][0-9])?([AaPp][Mm]))/';
-        // $timeRegex = '/^(([0-1]{0,1}[0-9]( )?([AaPp][Mm]))|(([0]?[1-9]|1[0-2])(:|\.)[0-5][0-9]( )?([AaPp][Mm]))|(([0]?[0-9]|1[0-9]|2[0-3])(:|\.)[0-5][0-9]))$/';
-        // dd(['Sunday', 'Monday',  'Tuesday',  'Wednesday',  'Thursday', 'Friday', 'Saturday']);
+        // $startRegex = '/^([1-9]|1[0-2])((:|\.)[0-5][0-9])|()?([AaPp\-\+][Mm]?)$/';
+        $startRegex = '/(^[1-9]|^1[0-2])[:\.]?([0-5][0-9])?[a\-p\+]m?$/mi';
+        $endRegex   = '/^
+        (?<hours>[1-9]|1[0-2])
+        [:\.]?
+        (?<minutes>[0-5][0-9])?
+        (?>(?<am>am?|\-)|(?<pm>pm?|\+))
+        $/mix';
+        // $timeRegex = '';
+        // $timeRegex = '';
+        // $timeRegex = '';
         return $form
         
             ->schema([
@@ -57,12 +64,12 @@ class SchedulesRelationManager extends RelationManager
                 TextInput::make('start')
                 ->maxLength(7)
                 ->minLength(2)
-                ->regex($timeRegex),
+                ->regex($startRegex),
 
                 TextInput::make('end')
                 ->maxLength(7)
                 ->minLength(2)
-                ->regex($timeRegex),
+                ->regex($endRegex),
                     
                 Select::make('location')
                 ->options(Location::all()->pluck('name', 'name'))
@@ -76,9 +83,32 @@ class SchedulesRelationManager extends RelationManager
         
         return $table
             ->columns([
+                // Tables\Columns\TextColumn::make('id')
+                // ->getStateUsing(function(Schedule $record) {
+                //     return $record->id;
+                // }),
+                // Tables\Columns\TextColumn::make('id_test')
+                // ->getStateUsing(function(Schedule $record) {
+                //     return $record->id;
+                // }),
                 TextColumn::make('day'),
                 TextColumn::make('start'),
                 TextColumn::make('end'),
+                Tables\Columns\TextColumn::make('calc_time')
+                ->label('Calculated Time')
+                ->getStateUsing(function(Schedule $record) {
+                    $schedStartM = Carbon::parse($record->start); 
+                    if ($record->end == '12:00AM')  {
+                        $schedEndM = Carbon::parse('11:59PM')->addMinutes(1);
+                    } else {
+                        $schedEndM = Carbon::parse($record->end);
+                    }
+
+                    $schedDuration = $schedStartM->diff($schedEndM)->format('%h:%I');
+                    // $schedDuration = $schedStartM->diffInMinutes($schedEndM);
+                    // logger($schedDuration );
+                    return $schedDuration ;
+                }),
                 TextColumn::make('location'),
             ])
             ->filters([
@@ -104,6 +134,19 @@ class SchedulesRelationManager extends RelationManager
                 Tables\Actions\DeleteBulkAction::make(),
             ]);
     }    
+
+    // public array $data_list= [
+    //     'calc_columns' => [
+    //         'calc_time', 
+    //         // 'id',
+    //         // 'id_test',   
+    //     ],
+    // ];
+    // protected function getTableContentFooter(): ?View
+    // {
+    //     return view('table.footer', $this->data_list);
+    // }
+
     public static function cleanTime($entry) {
         // remove spaces
         $entry = str_replace(' ', '', $entry);

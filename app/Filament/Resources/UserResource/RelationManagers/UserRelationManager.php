@@ -24,13 +24,13 @@ class UserRelationManager extends RelationManager
                 // Forms\Components\TextInput::make('supervisor_id')
                 //     ->required()
                 //     ->maxLength(255),
-                Forms\Components\TextInput::make('first_name'),
-                Forms\Components\TextInput::make('last_name'),
-                Forms\Components\Select::make('supervisor_id')
-                ->label('Supervisor lookup')
-                ->options(User::all()
-                ->pluck('name_and_email', 'id'))
-                ->searchable()
+                // Forms\Components\TextInput::make('first_name'),
+                // Forms\Components\TextInput::make('last_name'),
+                // Forms\Components\Select::make('supervisor_id')
+                // ->label('Supervisor lookup')
+                // ->options(User::all()
+                // ->pluck('name_and_email', 'id'))
+                // ->searchable()
             ]);
     }
 
@@ -50,8 +50,8 @@ class UserRelationManager extends RelationManager
                 //Tables\Actions\CreateAction::make(),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                // Tables\Actions\DeleteAction::make(),
+                // Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 // Tables\Actions\DeleteBulkAction::make(),

@@ -11,7 +11,6 @@ use Filament\Pages\Actions\Action;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\HtmlString;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use App\Http\Controllers\WallPdfController;
 use App\Http\Controllers\FormsiteController;
@@ -92,6 +91,7 @@ class Tools extends Page
                 ->visible(env('FORMSITE_IMPORT', 'false')),
             Action::make('TestWallPdf')
                 // ->label('Test Me')
+                ->visible(env('FORMSITE_IMPORT', 'false'))
                 ->action('genWallPdf'),
         ];
     }
