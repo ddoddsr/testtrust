@@ -92,7 +92,7 @@ class Tools extends Page
             Action::make('TestWallPdf')
                 // ->label('Test Me')
                 ->visible(env('FORMSITE_IMPORT', 'false'))
-                ->action('genWallPdf'),
+                ->action('testWallPdf'),
         ];
     }
     public function newResults()
@@ -137,7 +137,7 @@ class Tools extends Page
     {
         $filePath = 'storage/sacred_trust_wall.pdf';
         $pdf = new WallPdfController;
-        $pdf->generatePdf($filePath, 6);
+        $pdf->generatePdf($filePath, $data['location']);
 
         Notification::make() 
             ->title('Generation complete.')
@@ -170,10 +170,16 @@ class Tools extends Page
     }
     public function testWallPdf($name = 'testMe')
     {
+        $filePath = 'storage/sacred_trust_wall.pdf';
+        $pdf = new WallPdfController;
+        $pdf->generatePdf($filePath, 6);
+
         Notification::make() 
-            ->title('Test Wall Pdf complete')
+            ->title('Generation complete.')
             ->success()
             ->send(); 
+        
+        return response()->download($filePath);
     }
     public function duplicateNameCheck()
     {

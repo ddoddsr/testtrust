@@ -65,16 +65,16 @@ class WallPdfController extends Controller
                 $columnSpacing = ( $fpdf->GetPageWidth() / $maxColumns ) - 6 ;
                 $namesPerColumn = 62;
             }
-            logger(['set' => [
-                'sequencec' => $sequence, 
-                // $set['dayOfWeek'], 
-                // $set['setOfDay'], 
-                'cnt' => $schedCnt,
-                'fontsz' => $nameFontSize,
-                'rowHt' => $rowHeight,
-                'colNum' => $maxColumns,
-                'colSpace' => $columnSpacing,
-                'NamePerCol' => $namesPerColumn ]]);
+            // logger(['set' => [
+            //     'sequencec' => $sequence, 
+            //     // $set['dayOfWeek'], 
+            //     // $set['setOfDay'], 
+            //     'cnt' => $schedCnt,
+            //     'fontsz' => $nameFontSize,
+            //     'rowHt' => $rowHeight,
+            //     'colNum' => $maxColumns,
+            //     'colSpace' => $columnSpacing,
+            //     'NamePerCol' => $namesPerColumn ]]);
             $sequence++ ;
             $fpdf->AddPage();
             $fpdf->SetFont('Arial', 'B', 24);
