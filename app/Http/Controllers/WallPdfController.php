@@ -191,6 +191,7 @@ class WallPdfController extends Controller
         foreach(Schedule::where('location_id', $location)
                 ->join('users', 'users.id', '=', 'schedules.user_id')
                 ->where('day' , $day)
+                ->where('deleted_at' , null)
                 ->whereIn('users.designation_id', [1,2,5,7])
                 ->get() as $schedule
             ) {
