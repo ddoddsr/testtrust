@@ -96,7 +96,7 @@ class WallPdfController extends Controller
             }
             
             $fpdf->Ln(32);
-            $fpdf->SetFont('Arial', 'B', $nameFontSize);
+            $fpdf->SetFont('Arial', '', $nameFontSize);
             
             $rowCount = 0;
             $postionColumn = 0;
