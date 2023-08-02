@@ -189,7 +189,7 @@ class WallPdfController extends Controller
         $schedLines = [];
 
         foreach(Schedule::where('location_id', $location)
-                ->leftJoin('users', 'users.id', '=', 'schedules.user_id')
+                ->join('users', 'users.id', '=', 'schedules.user_id')
                 ->where('day' , $day)
                 ->whereIn('users.designation_id', [1,2,5,7])
                 ->get() as $schedule
@@ -217,10 +217,10 @@ class WallPdfController extends Controller
         // logger( $this->dateTime);
         // check for duration >= 60 min
         if ($isStart && $isEnd 
-        && $schedDuration >= 60
-        && (  $schedule->user->exit_date == null
-            ||
-            Carbon::parse($schedule->user->exit_date) > Carbon::parse($this->dateTime)
+            && $schedDuration >= 60
+            && ( ($schedule->user && $schedule->user->exit_date == null )
+                ||
+                Carbon::parse($schedule->user->exit_date) > Carbon::parse($this->dateTime)
             )
          ) {
             return trim($schedule->user->first_name). ' ' . trim($schedule->user->last_name); 
