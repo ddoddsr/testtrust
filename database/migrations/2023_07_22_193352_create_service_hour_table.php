@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('service_hours', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id');
-            $table->foreignId('department_id')->nullable();
+            $table->foreignId('direct_report_id'); 
+            $table->foreignId('supervisor_id');  
+            $table->foreignId('department_id');  
             $table->decimal('hours',  4, 2);
-            $table->foreignId('supervisor_id');  // in the user table
             $table->timestamps();
         });
     }

@@ -271,7 +271,7 @@ class UserResource extends Resource
             RelationManagers\SchedulesRelationManager::class,
             RelationManagers\SupervisingRelationManager::class,
             RelationManagers\ServiceHoursRelationManager::class,
-            // RelationManagers\SupervisingHoursRelationManager ::class,
+            RelationManagers\DirectReportRelationManager::class,
             RelationManagers\EmailAliasRelationManager::class,
             AuditsRelationManager::class,
         ];

@@ -4,8 +4,8 @@ namespace App\Models;
 
 use App\Events\UserDeleting;
 use Laravel\Sanctum\HasApiTokens;
-use Spatie\Permission\Traits\HasRoles;
 use Filament\Models\Contracts\HasName;
+use Spatie\Permission\Traits\HasRoles;
 use Filament\Models\Contracts\HasAvatar;
 use Illuminate\Notifications\Notifiable;
 use OwenIt\Auditing\Contracts\Auditable;
@@ -17,9 +17,12 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Wallo\FilamentCompanies\HasConnectedAccounts;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Wallo\FilamentCompanies\SetsProfilePhotoFromUrl;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class User extends Authenticatable implements FilamentUser, HasAvatar, HasName, Auditable
 {
@@ -97,11 +100,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName, 
     {
         return $this->hasMany(Schedule::class);
     }
-    public function serviceHours()
-    {
-        return $this->hasMany(ServiceHours::class);
-    }
-    
+
     public function emailAlias()
     {
         return $this->hasMany(EmailAlias::class);
@@ -146,11 +145,31 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName, 
     {
         return $this->belongsTo(Department::class);
     }
+    
     public function supervising()
     {
         return $this->hasMany(User::class, 'supervisor_id');
     }
 
+    /**
+     * The user's serviceHour .
+     */
+    public function serviceHours(): HasMany
+    {
+        // return $this->hasManyThrough(User::class, ServiceHours::class, 'direct_report_id'); 
+        return $this->hasMany(ServiceHours::class, 'direct_report_id'); 
+        
+    }
+     /**
+     * The users that belong to the serviceHour .
+     */
+    public function directReports(): HasMany // BelongsToMany
+    {
+        // return $this->belongsToMany(DirectReport::class, 'service_hours', 'direct_report_id', 'supervisor_id'); 
+        return $this->hasMany(ServiceHours::class,  'supervisor_id'); 
+    }
+    
+    
     public static function designations() {
         // If you change ther order, keep the keys with the line they are on
         return [
@@ -179,7 +198,4 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName, 
         return $short;
     }
 
-    // public function canManageTools() {
-    //     return false;
-    // }
 }

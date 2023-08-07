@@ -16,6 +16,7 @@ class Set extends Model
         'section_leader_id',
         'worship_leader_id',
         'prayer_leader_id',
+        'associate_worship_leader_id',
         'title',
     ];
 
