@@ -2,26 +2,26 @@
 
 namespace App\Policies;
 
-use App\Models\ServiceHours;
+use App\Models\DirectReport;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
 
-class ServiceHoursPolicy
+class DirectReportPolicy
 {
     /**
      * Determine whether the user can view any models.
      */
     public function viewAny(User $user): bool
     {
-        return $user->can('access service hours');
+        return $user->can('access direct reports');
     }
 
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, ServiceHours $serviceHours): bool
+    public function view(User $user, DirectReport $directReport): bool
     {
-        return $user->can('access service hours');
+        return $user->can('access direct reports');
     }
 
     /**
@@ -29,38 +29,38 @@ class ServiceHoursPolicy
      */
     public function create(User $user): bool
     {
-        return $user->can('access service hours');
+        return $user->can('access direct reports');
     }
 
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, ServiceHours $serviceHours): bool
+    public function update(User $user, DirectReport $directReport): bool
     {
-        return $user->can('access service hours');
+        return $user->can('access direct reports');
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, ServiceHours $serviceHours): bool
+    public function delete(User $user, DirectReport $directReport): bool
     {
-        return $user->can('access service hours');
+        return $user->can('access direct reports');
     }
 
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, ServiceHours $serviceHours): bool
+    public function restore(User $user, DirectReport $directReport): bool
     {
-        return $user->can('access service hours');
+        return $user->can('access direct reports');
     }
 
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, ServiceHours $serviceHours): bool
+    public function forceDelete(User $user, DirectReport $directReport): bool
     {
-        return $user->can('access service hours');
+        return $user->can('access direct reports');
     }
 }

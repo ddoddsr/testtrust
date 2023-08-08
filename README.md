@@ -35,7 +35,10 @@ loading my-styles from build
 - roles / permissions by user role
 
 ### 2.0
-- add service hours
+- add service hours 
+- Add policy for direct reports and servce hours
+  - access service hours
+  - access direct reports
 - notes for Admin users
   - morph belongs to user set dept & etc.
     - requires additional info
