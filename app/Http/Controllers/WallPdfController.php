@@ -80,7 +80,7 @@ class WallPdfController extends Controller
             $fpdf->SetFont('Arial', 'B', 24);
             $fpdf->Cell(0,0, $set['title'], 0, 1, 'C');
             $fpdf->Ln(32);
-            $fpdf->SetFont('Arial', 'B', 10);
+            $fpdf->SetFont('Arial', '', 10);
             $fpdf->SetX( $leftMargin );
             if ($set['worshipLeader']) {
                 $name = iconv('UTF-8', 'windows-1252', $set['worshipLeader']);
@@ -125,10 +125,10 @@ class WallPdfController extends Controller
                        
                         $tmpFontSize = $nameFontSize / $shrink; 
 
-                        $fpdf->SetFont('Arial', 'B', $tmpFontSize);
+                        $fpdf->SetFont('Arial', '', $tmpFontSize);
                         $fpdf->Text( $namesMargin +($columnSpacing * $postionColumn),
                         $topOfColumns + ( $rowCount * $rowHeight), $name );
-                        $fpdf->SetFont('Arial', 'B', $nameFontSize);
+                        $fpdf->SetFont('Arial', '', $nameFontSize);
 
                     } else {
                         $fpdf->Text( $namesMargin +($columnSpacing * $postionColumn),
@@ -142,7 +142,7 @@ class WallPdfController extends Controller
                 }
             }
 
-            $fpdf->SetFont('Arial', 'B', 10);
+            $fpdf->SetFont('Arial', '', 10);
             $fpdf->SetY( $taglinePos );
             $fpdf->Cell( $leaderWidth, 0, $set['dayOfWeek'] . ' ' . $set['setOfDay'], 0, 1, 'L');
             $fpdf->Cell( $leaderWidth, 0, $tagline, 0, 1, 'C');
