@@ -22,9 +22,9 @@ class WallPdfController extends Controller
         $fpdf->SetTitle('Sacred Trust');
         $fpdf->SetAutoPageBreak(true,5);
 
-        $leaderWidth = $fpdf->GetPageWidth() -35 ;
+        $leaderWidth = $fpdf->GetPageWidth() -44 ; //-35 ;
         
-        $leftMargin = 6;
+        $leftMargin = 15; //6;
         $namesMargin = 25;
         $taglinePos =  - 20 ;   // vert from bottom
         $tagline = env('FOOTER_STATEMENT','Set FOOTER_STATEMENT in .env');
