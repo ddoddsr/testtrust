@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\LocationManagerResource\RelationManagers;
+namespace App\Filament\Resources\LocationResource\RelationManagers;
 
 use Filament\Forms;
 use App\Models\User;
@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Resources\RelationManagers\RelationManager;
 
-class SetsRelationManager extends RelationManager
+class SetRelationManager extends RelationManager
 {
     protected static string $relationship = 'sets';
     protected static ?string $recordTitleAttribute = 'location_id';

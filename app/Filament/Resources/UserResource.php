@@ -118,7 +118,7 @@ class UserResource extends Resource
                         Forms\Components\TextInput::make('result_status')
                             ->maxLength(100),
                     ]),
-                    Tabs\Tab::make('Admin Only')
+                    Tabs\Tab::make('Admin Only')->hidden(! auth()->user()->can('access staff admin'))
                         ->schema([
                             Forms\Components\DateTimePicker::make('email_verified_at'),
                             // Forms\Components\TextInput::make('password')

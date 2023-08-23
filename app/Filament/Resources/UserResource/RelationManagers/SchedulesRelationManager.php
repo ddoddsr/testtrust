@@ -71,8 +71,8 @@ class SchedulesRelationManager extends RelationManager
                 ->minLength(2)
                 ->regex($endRegex),
                     
-                Select::make('location')
-                ->options(Location::all()->pluck('name', 'name'))
+                Select::make('location_id')
+                ->options(Location::all()->pluck('name', 'id'))
                 ->default('GPR')
                 ->searchable(),
             ])->columns(4);

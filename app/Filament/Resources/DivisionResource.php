@@ -51,7 +51,7 @@ class DivisionResource extends Resource
     public static function getRelations(): array
     {
         return [
-            DivisionManagerResource\RelationManagers\DepartmentsRelationManager::class
+            DivisionResource\RelationManagers\DepartmentRelationManager::class
         ];
     }
     

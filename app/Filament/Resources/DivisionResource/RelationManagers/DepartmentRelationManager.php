@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\DivisionManagerResource\RelationManagers;
+namespace App\Filament\Resources\DivisionResource\RelationManagers;
 
 use Filament\Forms;
 use Filament\Resources\Form;
@@ -10,7 +10,7 @@ use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class DepartmentsRelationManager extends RelationManager
+class DepartmentRelationManager extends RelationManager
 {
     protected static string $relationship = 'departments';
 

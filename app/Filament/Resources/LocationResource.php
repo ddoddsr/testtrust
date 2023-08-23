@@ -52,7 +52,7 @@ class LocationResource extends Resource
     {
         return [
             //
-            LocationManagerResource\RelationManagers\SetsRelationManager::class
+            LocationResource\RelationManagers\SetRelationManager::class
         ];
     }
     
