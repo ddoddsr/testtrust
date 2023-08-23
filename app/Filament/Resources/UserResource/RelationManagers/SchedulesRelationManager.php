@@ -73,7 +73,7 @@ class SchedulesRelationManager extends RelationManager
                     
                 Select::make('location_id')
                 ->options(Location::all()->pluck('name', 'id'))
-                ->default('GPR')
+                ->default(1)
                 ->searchable(),
             ])->columns(4);
     }
@@ -109,7 +109,9 @@ class SchedulesRelationManager extends RelationManager
                     // logger($schedDuration );
                     return $schedDuration ;
                 }),
-                TextColumn::make('location'),
+                Tables\Columns\SelectColumn::make('location_id')
+                ->options(Location::all()->pluck('name', 'id'))
+               ,
             ])
             ->filters([
                 //
