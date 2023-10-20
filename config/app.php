@@ -172,7 +172,6 @@ return [
         App\Providers\FilamentCustomProvider::class,
         OwenIt\Auditing\AuditingServiceProvider::class,
         // App\Providers\BroadcastServiceProvider::class,
-        App\Providers\FilamentCompaniesServiceProvider::class,
     ])->toArray(),
 
     /*

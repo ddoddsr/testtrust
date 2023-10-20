@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Models;
-
+use Filament\Panel;
 use App\Events\UserDeleting;
 use Laravel\Sanctum\HasApiTokens;
 use Filament\Models\Contracts\HasName;
@@ -31,14 +31,14 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName, 
     use Notifiable;
     use softDeletes;
     use HasApiTokens;
-    use HasCompanies;
-    use HasProfilePhoto;
-    use HasConnectedAccounts;
-    use SetsProfilePhotoFromUrl;
+    // use HasCompanies;
+    // use HasProfilePhoto;
+    // use HasConnectedAccounts;
+    // use SetsProfilePhotoFromUrl;
     use TwoFactorAuthenticatable;
     use \OwenIt\Auditing\Auditable;
 
-    public function canAccessPanel(): bool
+    public function canAccessPanel(Panel $panel): bool
     {
         return $this->can('access dash') ;
         
