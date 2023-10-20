@@ -9,8 +9,8 @@ use Filament\Tables;
 use App\Models\Location;
 use App\Models\Schedule;
 use Illuminate\Support\Str;
-use Filament\Resources\Form;
-use Filament\Resources\Table;
+use Filament\Forms\Form;
+use Filament\Tables\Table;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Contracts\View\View;
@@ -31,16 +31,16 @@ class SchedulesRelationManager extends RelationManager
     // protected static ?string $recordTitleAttribute = 'name';
     public function __construct()
     {
-        
+
         // $this->users = DB::table('users')
         // ->select('first_name', 'last_name', 'is_supervisor')
         // ->get();
-        
+
         // $this->users = User::designations_key();
         // $this->locations = array_flip(Location::all()->pluck('name', 'id')->toArray());
         
     }
-    public static function form(Form $form): Form
+    public function form(Form $form): Form
     {
         // $timeOfDay = Schedule::timeOfDay();
         // $startRegex = '/^([1-9]|1[0-2])((:|\.)[0-5][0-9])|()?([AaPp\-\+][Mm]?)$/';
@@ -78,7 +78,7 @@ class SchedulesRelationManager extends RelationManager
             ])->columns(4);
     }
 
-    public static function table(Table $table): Table
+    public function table(Table $table): Table
     {
         
         return $table

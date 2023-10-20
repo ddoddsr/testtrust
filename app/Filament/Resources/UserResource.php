@@ -7,8 +7,8 @@ use Filament\Forms;
 use App\Models\User;
 use Filament\Tables;
 use App\Models\Department;
-use Filament\Resources\Form;
-use Filament\Resources\Table;
+use Filament\Forms\Form;
+use Filament\Tables\Table;
 use Filament\Resources\Resource;
 use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\Select;
@@ -28,7 +28,7 @@ class UserResource extends Resource
     protected static ?string $pluralModelLabel = 'Staff';
     protected static ?string $navigationLabel = 'Staff';
     // protected static ?string $recordTitleAttribute = 'full_name';
-    protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
     {

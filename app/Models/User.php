@@ -38,7 +38,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName, 
     use TwoFactorAuthenticatable;
     use \OwenIt\Auditing\Auditable;
 
-    public function canAccessFilament(): bool
+    public function canAccessPanel(): bool
     {
         return $this->can('access dash') ;
         
