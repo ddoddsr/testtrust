@@ -12,7 +12,7 @@ class Register extends BaseRegister
 {
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
-    // protected static string $view = 'filament.pages.register';
+    // protected static string $view = 'filament./pages.register';
 
     /**
      * @return array<int | string, string | Form>

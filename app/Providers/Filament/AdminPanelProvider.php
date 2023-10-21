@@ -6,10 +6,13 @@ use Filament\Pages;
 use Filament\Panel;
 use Filament\Widgets;
 use Filament\PanelProvider;
-use Filament\Pages\Auth\Register;
+// use Filament\Pages\Auth\Register;
 use Filament\Support\Colors\Color;
+use App\Filament\Pages\Auth\Register;
+use App\Livewire\PersonalInfoComponent;
 use Filament\Navigation\NavigationGroup;
 use Filament\Http\Middleware\Authenticate;
+use Jeffgreco13\FilamentBreezy\BreezyCore;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Routing\Middleware\SubstituteBindings;
@@ -56,6 +59,24 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
-            ]);
+            ])
+            ->plugin(
+                BreezyCore::make()
+                ->myProfile(
+                    shouldRegisterUserMenu: true, // Sets the 'account' link in the panel User Menu (default = true)
+                    shouldRegisterNavigation: false, // Adds a main navigation item for the My Profile page (default = false)
+                    hasAvatars: true, // Enables the avatar upload form component (default = false)
+                    slug: 'my-profile' // Sets the slug for the profile page (default = 'my-profile')
+                )
+                ->myProfileComponents([
+                    'personal_info' => PersonalInfoComponent::class])
+                ->avatarUploadComponent(fn($fileUpload) => $fileUpload
+                ->disableLabel()
+                ->disk('public')
+                ->directory('app/profile-photos')
+                ), 
+                \BezhanSalleh\FilamentShield\FilamentShieldPlugin::make()
+
+            );
     }
 }

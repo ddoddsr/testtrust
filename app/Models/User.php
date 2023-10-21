@@ -197,5 +197,8 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName, 
         }
         return $short;
     }
+    public function getProfilePhotoUrlAttribute(){
+        return '';
+    }
 
 }
