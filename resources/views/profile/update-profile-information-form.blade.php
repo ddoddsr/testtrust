@@ -47,22 +47,22 @@
                         </x-filament::button>
                     @endif
 
-                    <x-filament-companies::input-error for="photo" />
+                    <x-input-error for="photo" />
                 </div>
             @endif
 
             <!-- First Name -->
             <x-forms::field-wrapper id="first_name" statePath="first_name" required label="{{ __('filament-companies::default.fields.first_name') }}">
-                <x-filament-companies::input id="first_name" type="text" maxLength="255" required wire:model.defer="state.first_name" autocomplete="first_name" />
+                <x-input id="first_name" type="text" maxLength="255" required wire:model.defer="state.first_name" autocomplete="first_name" />
             </x-forms::field-wrapper>
             <!-- Last Name -->
             <x-forms::field-wrapper id="last_name" statePath="last_name" required label="{{ __('filament-companies::default.fields.last_name') }}">
-                <x-filament-companies::input id="last_name" type="text" maxLength="255" required wire:model.defer="state.last_name" autocomplete="last_name" />
+                <x-input id="last_name" type="text" maxLength="255" required wire:model.defer="state.last_name" autocomplete="last_name" />
             </x-forms::field-wrapper>
 
             <!-- Email -->
             <x-forms::field-wrapper id="email" statePath="email" required label="{{ __('filament-companies::default.fields.email') }}">
-                <x-filament-companies::input id="email" type="email" maxLength="255" required wire:model.defer="state.email" />
+                <x-input id="email" type="email" maxLength="255" required wire:model.defer="state.email" />
             </x-forms::field-wrapper>
 
             @if (!$this->user->hasVerifiedEmail() && Laravel\Fortify\Features::enabled(Laravel\Fortify\Features::emailVerification()))

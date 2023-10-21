@@ -17,22 +17,22 @@
         @csrf
 
         <x-forms::field-wrapper id="first_name" statePath="first_name" required label="{{ __('filament-companies::default.fields.first_name') }}">
-            <x-filament-companies::input id="first_name" type="text" name="first_name" :value="old('first_name')" required autofocus autocomplete="first_name" />
+            <x-input id="first_name" type="text" name="first_name" :value="old('first_name')" required autofocus autocomplete="first_name" />
         </x-forms::field-wrapper>
 
         <x-forms::field-wrapper id="last_name" statePath="last_name" required label="{{ __('filament-companies::default.fields.last_name') }}">
-            <x-filament-companies::input id="last_name" type="text" name="last_name" :value="old('last_name')" required autofocus autocomplete="last_name" />
+            <x-input id="last_name" type="text" name="last_name" :value="old('last_name')" required autofocus autocomplete="last_name" />
         </x-forms::field-wrapper>
         <x-forms::field-wrapper id="email" statePath="email" required label="{{ __('filament-companies::default.fields.email') }}">
-            <x-filament-companies::input id="email" type="email" name="email" :value="old('email')" required autocomplete="username" />
+            <x-input id="email" type="email" name="email" :value="old('email')" required autocomplete="username" />
         </x-forms::field-wrapper>
 
         <x-forms::field-wrapper id="password" statePath="password" required label="{{ __('filament-companies::default.fields.password') }}">
-            <x-filament-companies::input id="password" type="password" name="password" required autocomplete="new-password" />
+            <x-input id="password" type="password" name="password" required autocomplete="new-password" />
         </x-forms::field-wrapper>
 
         <x-forms::field-wrapper id="password_confirmation" statePath="password_confirmation" required label="{{ __('filament-companies::default.labels.password_confirmation') }}">
-            <x-filament-companies::input id="password_confirmation" type="password" name="password_confirmation" required autocomplete="new-password" />
+            <x-input id="password_confirmation" type="password" name="password_confirmation" required autocomplete="new-password" />
         </x-forms::field-wrapper>
 
         @if (Wallo\FilamentCompanies\FilamentCompanies::hasTermsAndPrivacyPolicyFeature())

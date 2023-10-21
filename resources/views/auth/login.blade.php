@@ -1,4 +1,4 @@
-<x-filament::layouts.card>
+<x-filament::base>
     <div class="space-y-2">
         <h2 class="text-2xl font-bold tracking-tight text-center">
             {{ __('filament-companies::default.headings.auth.login') }}
@@ -24,16 +24,16 @@
         @csrf
 
         <x-forms::field-wrapper id="email" statePath="email" required label="{{ __('filament-companies::default.fields.email') }}">
-            <x-filament-companies::input id="email" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
+            <input id="email" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
         </x-forms::field-wrapper>
 
         <x-forms::field-wrapper id="password" statePath="password" required label="{{ __('filament-companies::default.fields.password') }}">
-            <x-filament-companies::input id="password" type="password" name="password" required autocomplete="current-password" />
+            <input id="password" type="password" name="password" required autocomplete="current-password" />
         </x-forms::field-wrapper>
 
         <div class="flex items-center justify-between text-sm text-gray-600 font-medium tracking-tight dark:text-gray-300">
             <label for="remember_me">
-                <x-filament-companies::checkbox id="remember_me" name="remember" />
+                <checkbox id="remember_me" name="remember" />
                 <span class="ml-2">{{ __('filament-companies::default.buttons.remember_me') }}</span>
             </label>
 
@@ -49,7 +49,5 @@
         </x-filament::button>
     </form>
 
-    @if (Wallo\FilamentCompanies\Socialite::hasSocialiteFeatures())
-        <x-filament-companies::socialite />
-    @endif
-</x-filament::layouts.card>
+
+</x-filament::base>

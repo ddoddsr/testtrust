@@ -10,6 +10,7 @@ use Filament\Pages\Actions\Action;
 // use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\HtmlString;
+use Illuminate\Support\Facades\Auth;
 use Filament\Forms\Components\Select;
 use Filament\Notifications\Notification;
 use App\Http\Controllers\WallPdfController;
@@ -26,14 +27,11 @@ class Tools extends Page
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
     protected static string $view = 'filament.pages.tools';
-
-    // https://github.com/filamentphp/filament/discussions/6275
-    protected static bool $shouldRegisterNavigation = false;
     
-    
-    // https://filamentphp.com/docs/2.x/admin/navigation#disabling-resource-or-page-navigation-items
-
-
+    public static function shouldRegisterNavigation(): bool
+    {
+        return (Auth::user() && Auth::user()->can('access tools'));
+    }
 
 
     protected function getHeaderActions(): array

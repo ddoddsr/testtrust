@@ -28,7 +28,8 @@ class FilamentCustomProvider extends ServiceProvider
                 Filament::registerUserMenuItems([
                     UserMenuItem::make()
                     ->label('Tools')
-                    ->url(route('filament.pages.tools'))
+                    //TODO 
+                    // ->url(route('filament.pages.tools'))
                     ->icon('heroicon-s-cog'),
                     // ...
                 ]);
