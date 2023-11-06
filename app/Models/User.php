@@ -9,16 +9,12 @@ use Spatie\Permission\Traits\HasRoles;
 use Filament\Models\Contracts\HasAvatar;
 use Illuminate\Notifications\Notifiable;
 use OwenIt\Auditing\Contracts\Auditable;
-use Wallo\FilamentCompanies\HasCompanies;
 use Filament\Models\Contracts\FilamentUser;
-use Wallo\FilamentCompanies\HasProfilePhoto;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use Wallo\FilamentCompanies\HasConnectedAccounts;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Wallo\FilamentCompanies\SetsProfilePhotoFromUrl;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -31,10 +27,6 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName, 
     use Notifiable;
     use softDeletes;
     use HasApiTokens;
-    // use HasCompanies;
-    // use HasProfilePhoto;
-    // use HasConnectedAccounts;
-    // use SetsProfilePhotoFromUrl;
     use TwoFactorAuthenticatable;
     use \OwenIt\Auditing\Auditable;
 

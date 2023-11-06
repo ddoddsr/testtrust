@@ -6,7 +6,6 @@ ini_set ('max_execution_time',  0);
 
 use App\Models\Team;
 use App\Models\User;
-use App\Models\Company;
 use App\Models\Location;
 use App\Models\Schedule;
 use App\Models\EmailAlias;
@@ -32,14 +31,10 @@ class StaffController extends Controller
 
            if( $form->result_status == 'Complete') {
             
-                $staffRecord = tap(
-                    User::firstOrCreate(
+                $staffRecord = User::firstOrCreate(
                         [  'email' => $form->email  ], 
                         $this->formPrep($form)
-                    ), function (User $user) {
-                        $this->createCompany($user);
-                    }
-                );
+                    );
                 
                 // was not RecentlyCreated
                 if( ! $staffRecord->wasRecentlyCreated ) {
@@ -87,21 +82,16 @@ class StaffController extends Controller
                     $first_name = trim(substr($form->supervisor, 0, strpos($form->supervisor, ' ')));
                     $last_name = trim(substr($form->supervisor, strlen($first_name)));
                 
-                    $this->superRecord = tap(
-                        User::Create(
-                            [  
-                                'email' => str::lower($form->super_email1),
-                                'first_name' => $first_name,
-                                'last_name' => $last_name,
-                                'password' => Str::password(), 
-                                'active' => true,
-                                'is_supervisor' => true,
-                                
-                            ]
-                        ), function (User $user) {
-                            $this->createCompany($user);
-                        }
-                    );
+                    $this->superRecord =User::Create(
+                        [  
+                            'email' => str::lower($form->super_email1),
+                            'first_name' => $first_name,
+                            'last_name' => $last_name,
+                            'password' => Str::password(), 
+                            'active' => true,
+                            'is_supervisor' => true,
+                            
+                        ] );
                 }
            }
         }
@@ -157,18 +147,6 @@ class StaffController extends Controller
             }
         }
         return;
-    }
-
-    /**
-     * Create a personal team for the user.
-     */
-    protected function createCompany(User $user): void
-    {
-        $user->ownedCompanies()->save(Company::forceCreate([
-            'user_id' => $user->id,
-            'name' => $user->full_name ." 's Company",
-            'personal_company' => true,
-        ]));
     }
 
     protected function superFromAlias($super_email) {

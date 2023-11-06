@@ -47,30 +47,28 @@ class DatabaseSeeder extends Seeder
         $role4->givePermissionTo('access divisions');
         $role4->givePermissionTo('access staff');
 
-        $user = User::factory()->withPersonalCompany()->create([
+        $user = User::factory()->create([
             'first_name' => 'Dan',
             'last_name' => 'Doddzy',
             'email' => 'dd@dd.io',
             'password' => bcrypt('asdf'),
             'active' => true,
             'is_admin' => true,
-            'current_company_id' => 1,
         ]);
 
         $user->assignRole($role1);
 
-        $user = User::factory()->withPersonalCompany()->create([
+        $user = User::factory()->create([
             'first_name' => 'Sam',
             'last_name' => 'IAM',
             'email' => 'sam@dd.io',
             'super_email1' => 'sam@dd.io',
             'password' => bcrypt('asdf'),
             'active' => true,
-            'current_company_id' => 2,
         ]);
         $user->assignRole($role2);
 
-        $user = User::factory()->withPersonalCompany()->create([
+        $user = User::factory()->create([
             'first_name' => 'Stuart',
             'last_name' => 'Greaves',
             'email' => 'stuartgreaves@ihopkc.org',
@@ -78,10 +76,9 @@ class DatabaseSeeder extends Seeder
             'active' => true,
             'is_admin' => false,
             'is_supervisor' => true,
-            'current_company_id' => 3,
         ]);
         $user->assignRole($role3);
-        $user = User::factory()->withPersonalCompany()->create([
+        $user = User::factory()->create([
             'first_name' => 'HR',
             'last_name' => 'Excellance',
             'email' => 'hr@ihopkc.org',
@@ -89,7 +86,6 @@ class DatabaseSeeder extends Seeder
             'active' => true,
             'is_admin' => true,
             'is_supervisor' => true,
-            'current_company_id' => 4,
         ]);        
         $user->assignRole($role4);
         // TODO Better Alias seeder?
@@ -109,7 +105,7 @@ class DatabaseSeeder extends Seeder
        
         // Artisan::call('shield:super-admin --user=1');
 
-        // \App\Models\User::factory(15000)->withPersonalCompany()->create();
+        // \App\Models\User::factory(15000)->create();
         // Locations
         
         foreach (['GPR', 'ANPR', 'FC', 'HOPE City','Malichai 6:6' ] as $location) {

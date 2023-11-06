@@ -6,11 +6,12 @@ use Carbon\Carbon;
 use Filament\Forms;
 use App\Models\User;
 use Filament\Tables;
-use App\Models\Department;
 use Filament\Forms\Form;
+use App\Models\Department;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
 use Filament\Forms\Components\Tabs;
+use Illuminate\Support\Facades\Hash;
 use Filament\Forms\Components\Select;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
@@ -50,7 +51,13 @@ class UserResource extends Resource
                 ->unique(table: User::class, ignoreRecord: true)
                 ->maxLength(255),
             // Forms\Components\DatePicker::make('effective_date'),
-            
+            Forms\Components\TextInput::make('password')
+                ->password()
+                ->dehydrateStateUsing(fn ($state) => Hash::make($state))
+                ->dehydrated(fn ($state) => filled($state))
+                ->required(fn (string $context): bool => $context === 'create')
+                ->visible(fn (string $context): bool => $context === 'create')
+                ->maxLength(255),
             Select::make('designation_id')
                 ->label('Designation')
                 ->options(User::designations()),
@@ -122,9 +129,11 @@ class UserResource extends Resource
                         ->schema([
                             Forms\Components\DateTimePicker::make('email_verified_at'),
                             // Forms\Components\TextInput::make('password')
-                            //     ->password()
-                            //     ->required()
-                            //     ->maxLength(255),
+                            // ->password()
+                            // ->dehydrateStateUsing(fn ($state) => Hash::make($state))
+                            // ->dehydrated(fn ($state) => filled($state))
+                            // ->required(fn (string $context): bool => $context === 'create')
+                            // ->maxLength(255),
                             // Forms\Components\Textarea::make('two_factor_secret')
                             //     ->maxLength(65535),
                             // Forms\Components\Textarea::make('two_factor_recovery_codes')
