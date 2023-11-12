@@ -1,6 +1,16 @@
-
 <x-filament::page>
-    @vite(['resources/css/my-styles.css'])
+    {{-- @vite(['resources/css/my-styles.css']) --}}
+    <div>
+        {{ $this->newestAction }}
+        {{ $this->genWall }}
+        {{ $this->genSched }}
+    </div>
+    <p> {{ $this->checkName }}</p>
+    <p> {{ $this->checkSuper }}</p>
+
+   
+
+  
     @if($duplicateNames)
         <div>
             <h1>Duplication Check by Name</h1>

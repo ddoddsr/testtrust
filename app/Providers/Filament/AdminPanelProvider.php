@@ -6,7 +6,6 @@ use Filament\Pages;
 use Filament\Panel;
 use Filament\Widgets;
 use Filament\PanelProvider;
-// use Filament\Pages\Auth\Register;
 use Filament\Support\Colors\Color;
 use App\Filament\Pages\Auth\Register;
 use App\Livewire\PersonalInfoComponent;
