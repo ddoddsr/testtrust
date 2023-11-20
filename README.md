@@ -3,6 +3,20 @@ sltrust01.internal.ihopkc.org
 SMTP 172.17.121.38
 pltrust01.internal.ihopkc.org
 
+sttools.sh
+#copin h
+scp  ddodd@pltrust01.internal.ihopkc.org:/home/ddodd/backups/prod.sql.gz ./
+scp prod.sql.gz ddodd@sltrust01.internal.ihopkc.org:/home/ddodd/backups/prod.sql.gz
+
+#mysdal dump and transfew locally
+cd /Users/dandodd/Projects/testtrust/backups/
+ssh -t ddodd@sltrust01.internal.ihopkc.org \
+  "mysqldump \
+      -B laravel_db \
+      --add-drop-table \
+      --ignore-table database.logs" | gzip -9  > ./onecommand_db2.sql.gz
+
+
 
 ## Convert to filament 3 & breezy
 custom css tailwind
