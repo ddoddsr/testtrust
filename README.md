@@ -19,10 +19,11 @@ ssh -t ddodd@sltrust01.internal.ihopkc.org \
 
 
 ## Convert to filament 3 & breezy
-custom css tailwind
+not needed custom css tailwind
 missing avatar in dark or light () initials show
 how to use the new UserMenu / tools 
-Logged in user with no role / defaule role?
+Logged in user with no role / default role?
+"fixed" tools page lockup after check 
 
 Change Password
 - TODO  After composer update or install

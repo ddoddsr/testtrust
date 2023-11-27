@@ -49,7 +49,7 @@ class Tools extends Page
                 ->default(1),
             ])
             ->action(function (array $data) {
-                $this->genWallPdf($data['location']);
+                return $this->genWallPdf($data['location']);
             });
     }
     
@@ -65,22 +65,30 @@ class Tools extends Page
             ])
 
             ->action(function (array $data) {
-                $this->genSchedPdf($data['location']);
+                return $this->genSchedPdf($data['location']);
             });
     }
 
     public function checkName(): Action {
         return             
-        Action::make('duplicateNameCheck')
+        Action::make('duplicateNameChecker')
         ->label('Duplicate Name Check')
         ->action('duplicateNameCheck');
     }
     public function checkSuper(): Action {
         return  
-        Action::make('ownSuperCheck')
+        Action::make('ownSuperChecker')
         ->label('Own Supervisor Check')
         ->action('ownSuperCheck');
 
+    }
+    public function closeChecker(): Action {
+        return Action::make('closeChecker')
+        ->label('Close Checker')
+        ->action('closeCheck');
+    }
+    public function closeCheck() {
+        $this->redirect('/admin/tools');
     }
     protected function getHeaderActions(): array
     {
@@ -199,7 +207,7 @@ class Tools extends Page
     {
         $this->duplicateNames = [];
         $collection = \App\Models\User::all();
-
+        
         // Group models by sub_id and name
         $collection
         ->groupBy(function ($item) { return $item->first_name.'_'.$item->last_name; })
@@ -217,7 +225,7 @@ class Tools extends Page
                 ];
             });
         });
-        
+        return ;
     }
     public function ownSuperCheck()
     {

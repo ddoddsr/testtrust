@@ -2,15 +2,12 @@
     {{-- @vite(['resources/css/my-styles.css']) --}}
     <div>
         {{ $this->newestAction }}
-        {{ $this->genWall }}
-        {{ $this->genSched }}
     </div>
     <p> {{ $this->checkName }}</p>
     <p> {{ $this->checkSuper }}</p>
+    <p> {{ $this->genWall }}</p>
+    <p> {{ $this->genSched }}</p>
 
-   
-
-  
     @if($duplicateNames)
         <div>
             <h1>Duplication Check by Name</h1>
@@ -19,7 +16,7 @@
             <p>Use this list to resolve dups by editing the incorrect record, moving the staff supervised if needed</p>
             <p>TODO list supervisees to transfer</p>
         </div>
-        
+        <p> {{ $this->closeChecker }}</p>
         <table>
             <thead>
                 <th>Id</th>
@@ -52,7 +49,7 @@
         <div>
             <h1>Staff entered Own email for Supervisor email</h1>
         </div>
-        
+        <p> {{ $this->closeChecker }}</p>
         <table>
             <thead>
                 <th>Id</th>
