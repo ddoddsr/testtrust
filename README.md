@@ -4,7 +4,7 @@ SMTP 172.17.121.38
 pltrust01.internal.ihopkc.org
 
 sttools.sh
-#copin h
+#copying h
 scp  ddodd@pltrust01.internal.ihopkc.org:/home/ddodd/backups/prod.sql.gz ./
 scp prod.sql.gz ddodd@sltrust01.internal.ihopkc.org:/home/ddodd/backups/prod.sql.gz
 

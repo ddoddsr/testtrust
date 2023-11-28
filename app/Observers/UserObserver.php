@@ -31,7 +31,11 @@ class UserObserver
     {
         $user->first_name = $this->fixCase($user->first_name);
         $user->last_name = $this->fixCase($user->last_name);
-        $user->review = $this->detirmineReviewStatus($user);        
+        $user->review = $this->detirmineReviewStatus($user);   
+        // if ( $user->isDirty('profile_photo_path') ) {
+        //     logger('profile photo changed');
+        // }
+        
     }
 
     // public function updated(User $user): void
@@ -44,10 +48,7 @@ class UserObserver
      */
     public function deleting(User $user): void
     {
-        // if ($user->profile_photo_path && Storage::disk('public')->exists($user->profile_photo_path)) {
-        //     Storage::disk('public')->delete($user->profile_photo_path);
-        // }
-        
+        //
     }
 
     /**
@@ -71,8 +72,12 @@ class UserObserver
      */
     public function forceDeleted(User $user): void
     {
+        //TODO test
         if ($user->profile_photo_path && Storage::disk('public')->exists($user->profile_photo_path)) {
             Storage::disk('public')->delete($user->profile_photo_path);
+        }
+        if ($user->avatar_url && Storage::disk('public')->exists($user->avatar_url)) {
+            Storage::disk('public')->delete($user->avatar_url);
         }
     }
 

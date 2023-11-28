@@ -6,6 +6,7 @@ use App\Events\UserDeleting;
 use Laravel\Sanctum\HasApiTokens;
 use Filament\Models\Contracts\HasName;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Support\Facades\Storage;
 use Filament\Models\Contracts\HasAvatar;
 use Illuminate\Notifications\Notifiable;
 use OwenIt\Auditing\Contracts\Auditable;
@@ -37,7 +38,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName, 
 
     public function getFilamentAvatarUrl(): ?string
     {
-        return $this->avatar_url;
+        return ( $this->avatar_url ) ? Storage::url($this->avatar_url) : null ;
     }
 
     /**
