@@ -72,7 +72,7 @@ class AdminPanelProvider extends PanelProvider
                 ->avatarUploadComponent(fn($fileUpload) => $fileUpload
                 ->disableLabel()
                 ->disk('public')
-                ->directory('app/profile-photos')
+                ->directory('app/user/profile-photos')
                 ), 
                 \BezhanSalleh\FilamentShield\FilamentShieldPlugin::make()
 

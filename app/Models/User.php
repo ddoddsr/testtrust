@@ -33,12 +33,11 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName, 
     public function canAccessPanel(Panel $panel): bool
     {
         return $this->can('access dash') ;
-        
     }
 
     public function getFilamentAvatarUrl(): ?string
     {
-        return $this->profile_photo_url;
+        return $this->avatar_url;
     }
 
     /**
@@ -49,7 +48,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName, 
     protected $fillable = [
         'first_name', 'last_name', 'email', 'password',
         'is_admin',
-        'profile_photo_path', 'supervisor',
+        'profile_photo_path', 'avatar_url','supervisor',
         'supervisor_id', 'designation', 'designation_id', 'active',
         'is_supervisor', 'section',
         'is_worship_leader', 'is_associate_worship_leader',
@@ -190,7 +189,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName, 
         return $short;
     }
     public function getProfilePhotoUrlAttribute(){
-        return '';
+        return $this->avatar_url;
     }
 
 }

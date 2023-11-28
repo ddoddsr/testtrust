@@ -79,7 +79,7 @@ class UserResource extends Resource
                 // ->helperText(__('fields.images.src.helper'))
                 // ->required()
                 ->disk('public')
-                ->directory('profile-photos')
+                ->directory('app/user/profile-photos')
                 // ->maxSize(env('DRIVER_MEDIA_MAX_UPLOAD_BYTES'))
                 ->image(),
             Tabs::make('Heading')->columnSpan(2)
@@ -127,6 +127,7 @@ class UserResource extends Resource
                     ]),
                     Tabs\Tab::make('Admin Only')->hidden(! auth()->user()->can('access staff admin'))
                         ->schema([
+                            filament('filament-breezy')->getAvatarUploadComponent(),
                             Forms\Components\DateTimePicker::make('email_verified_at'),
                             // Forms\Components\TextInput::make('password')
                             // ->password()
