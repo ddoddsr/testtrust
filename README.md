@@ -10,13 +10,24 @@ scp prod.sql.gz ddodd@sltrust01.internal.ihopkc.org:/home/ddodd/backups/prod.sql
 
 #mysdal dump and transfew locally
 cd /Users/dandodd/Projects/testtrust/backups/
-ssh -t ddodd@sltrust01.internal.ihopkc.org \
+ssh -t ddodd@pltrust01.internal.ihopkc.org \
   "mysqldump \
       -B laravel_db \
       --add-drop-table \
-      --ignore-table database.logs" | gzip -9  > ./onecommand_db2.sql.gz
+      --ignore-table database.logs"   > ./onecommand_db2.sql
 
 
+ssh -t ddodd@pltrust01.internal.ihopkc.org \
+"mysqldump \
+      -B laravel_db \
+      -u laravel_user -p
+      --add-drop-table \
+      --ignore-table database.logs"   > ./bkup7.sql
+
+
+
+#--ignore-table database.logs" | gzip -9  > ./onecommand_db2.sql.gz
+#today full path and documented
 
 ## Convert to filament 3 & breezy
 not needed custom css tailwind
