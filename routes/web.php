@@ -18,14 +18,11 @@ Route::get('/', function () {
     // return view('welcome');
     return view('staff');
 });
-Route::get('/st_entry', SacredTrustEntry::class);
+// Route::get('/st_entry', SacredTrustEntry::class);
 
-Route::middleware([
-    'auth:sanctum',
-    config('filament-companies.auth_session'),
-    'verified'
-])->group(function () {
+// Route::redirect('/admin/login', '/login')->name('filament.auth.login');
 
-});
+Route::redirect('/login', '/admin/login')->name('login');
+// Route::redirect('/register', '/admin/register')->name('register');
 
-Route::redirect('/admin/login', '/login')->name('filament.auth.login');
+Route::redirect('/register', '/admin/register')->name('register');

@@ -5,8 +5,8 @@ namespace App\Filament\Resources\LocationResource\RelationManagers;
 use Filament\Forms;
 use App\Models\User;
 use Filament\Tables;
-use Filament\Resources\Form;
-use Filament\Resources\Table;
+use Filament\Forms\Form;
+use Filament\Tables\Table;
 use Filament\Forms\Components\Select;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
@@ -24,7 +24,7 @@ class SetRelationManager extends RelationManager
         return [12, 24, 48, 84];
     }
 
-    public static function form(Form $form): Form
+    public function form(Form $form): Form
     {
         return $form
             ->schema([
@@ -56,7 +56,7 @@ class SetRelationManager extends RelationManager
             ]);
     }
 
-    public static function table(Table $table): Table
+    public function table(Table $table): Table
     {
         return $table
             ->columns([

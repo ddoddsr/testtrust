@@ -6,11 +6,12 @@ use Carbon\Carbon;
 use Filament\Forms;
 use App\Models\User;
 use Filament\Tables;
+use Filament\Forms\Form;
 use App\Models\Department;
-use Filament\Resources\Form;
-use Filament\Resources\Table;
+use Filament\Tables\Table;
 use Filament\Resources\Resource;
 use Filament\Forms\Components\Tabs;
+use Illuminate\Support\Facades\Hash;
 use Filament\Forms\Components\Select;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
@@ -28,7 +29,7 @@ class UserResource extends Resource
     protected static ?string $pluralModelLabel = 'Staff';
     protected static ?string $navigationLabel = 'Staff';
     // protected static ?string $recordTitleAttribute = 'full_name';
-    protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
     {
@@ -50,7 +51,13 @@ class UserResource extends Resource
                 ->unique(table: User::class, ignoreRecord: true)
                 ->maxLength(255),
             // Forms\Components\DatePicker::make('effective_date'),
-            
+            Forms\Components\TextInput::make('password')
+                ->password()
+                ->dehydrateStateUsing(fn ($state) => Hash::make($state))
+                ->dehydrated(fn ($state) => filled($state))
+                ->required(fn (string $context): bool => $context === 'create')
+                ->visible(fn (string $context): bool => $context === 'create')
+                ->maxLength(255),
             Select::make('designation_id')
                 ->label('Designation')
                 ->options(User::designations()),
@@ -72,7 +79,7 @@ class UserResource extends Resource
                 // ->helperText(__('fields.images.src.helper'))
                 // ->required()
                 ->disk('public')
-                ->directory('profile-photos')
+                ->directory('app/user/profile-photos')
                 // ->maxSize(env('DRIVER_MEDIA_MAX_UPLOAD_BYTES'))
                 ->image(),
             Tabs::make('Heading')->columnSpan(2)
@@ -120,11 +127,14 @@ class UserResource extends Resource
                     ]),
                     Tabs\Tab::make('Admin Only')->hidden(! auth()->user()->can('access staff admin'))
                         ->schema([
+                            filament('filament-breezy')->getAvatarUploadComponent(),
                             Forms\Components\DateTimePicker::make('email_verified_at'),
                             // Forms\Components\TextInput::make('password')
-                            //     ->password()
-                            //     ->required()
-                            //     ->maxLength(255),
+                            // ->password()
+                            // ->dehydrateStateUsing(fn ($state) => Hash::make($state))
+                            // ->dehydrated(fn ($state) => filled($state))
+                            // ->required(fn (string $context): bool => $context === 'create')
+                            // ->maxLength(255),
                             // Forms\Components\Textarea::make('two_factor_secret')
                             //     ->maxLength(65535),
                             // Forms\Components\Textarea::make('two_factor_recovery_codes')

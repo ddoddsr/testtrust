@@ -6,16 +6,18 @@
     "license": "MIT",
     "require": {
         "php": "^8.1",
-        "andrewdwallo/filament-companies": "^2.0",
+        "bezhansalleh/filament-shield": "^3.0",
         "codedge/laravel-fpdf": "^1.11",
-        "filament/filament": "^2.0",
+        "filament/filament": "^3.0-stable",
         "guzzlehttp/guzzle": "^7.2",
+        "jeffgreco13/filament-breezy": "^2.1",
+        "laravel/fortify": "*",
         "laravel/framework": "^10.8",
         "laravel/sanctum": "^3.2",
         "laravel/tinker": "^2.8",
         "owen-it/laravel-auditing": "^13.5",
         "spatie/laravel-permission": "^5.10",
-        "tapp/filament-auditing": "^1.8"
+        "tapp/filament-auditing": "^3.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
@@ -41,11 +43,12 @@
     "scripts": {
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
-            "@php artisan package:discover --ansi"
+            "@php artisan package:discover --ansi",
+            "@php artisan filament:upgrade"
         ],
         "post-update-cmd": [
             "@php artisan vendor:publish --tag=laravel-assets --ansi --force",
-            "@php artisan filament:upgrade", 
+            "@php artisan filament:upgrade",
             "npm run build"
         ],
         "post-root-package-install": [

@@ -2,11 +2,9 @@
 
 namespace Database\Factories;
 
-use App\Models\Company;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
-use Wallo\FilamentCompanies\Features;
 
 class UserFactory extends Factory
 {
@@ -35,7 +33,6 @@ class UserFactory extends Factory
             'two_factor_recovery_codes' => null,
             'remember_token' => Str::random(10),
             'profile_photo_path' => null,
-            'current_company_id' => null,
         ];
     }
 
@@ -51,21 +48,5 @@ class UserFactory extends Factory
         });
     }
 
-    /**
-     * Indicate that the user should have a personal company.
-     */
-    public function withPersonalCompany(): static
-    {
-        if (! Features::hasCompanyFeatures()) {
-            return $this->state([]);
-        }
-
-        return $this->has(
-            Company::factory()
-                ->state(function (array $attributes, User $user) {
-                    return ['name' => $user->getFilamentName().'\'s Company', 'user_id' => $user->id, 'personal_company' => true];
-                }),
-            'ownedCompanies'
-        );
-    }
+   
 }

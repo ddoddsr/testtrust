@@ -5,8 +5,8 @@ namespace App\Filament\Resources\UserResource\RelationManagers;
 use Filament\Forms;
 use App\Models\User;
 use Filament\Tables;
-use Filament\Resources\Form;
-use Filament\Resources\Table;
+use Filament\Forms\Form;
+use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -17,7 +17,7 @@ class UserRelationManager extends RelationManager
 
     protected static ?string $recordTitleAttribute = 'supervisor_id';
 
-    public static function form(Form $form): Form
+    public function form(Form $form): Form
     {
         return $form
             ->schema([
@@ -34,7 +34,7 @@ class UserRelationManager extends RelationManager
             ]);
     }
 
-    public static function table(Table $table): Table
+    public function table(Table $table): Table
     {
         return $table
             ->columns([

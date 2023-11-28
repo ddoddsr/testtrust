@@ -4,6 +4,10 @@ namespace App\Providers;
 
 use Filament\Facades\Filament;
 use Illuminate\Support\ServiceProvider;
+use Filament\Support\Assets\Css;
+use Filament\Support\Facades\FilamentAsset;
+ 
+
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -15,14 +19,4 @@ class AppServiceProvider extends ServiceProvider
         //
     }
 
-    /**
-     * Bootstrap any application services.
-     */
-    public function boot(): void
-    {
-        //
-        Filament::registerStyles([
-            asset('build/assets/my-styles.css'),
-        ]);
-    }
 }

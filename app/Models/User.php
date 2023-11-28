@@ -1,24 +1,21 @@
 <?php
 
 namespace App\Models;
-
+use Filament\Panel;
 use App\Events\UserDeleting;
 use Laravel\Sanctum\HasApiTokens;
 use Filament\Models\Contracts\HasName;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Support\Facades\Storage;
 use Filament\Models\Contracts\HasAvatar;
 use Illuminate\Notifications\Notifiable;
 use OwenIt\Auditing\Contracts\Auditable;
-use Wallo\FilamentCompanies\HasCompanies;
 use Filament\Models\Contracts\FilamentUser;
-use Wallo\FilamentCompanies\HasProfilePhoto;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use Wallo\FilamentCompanies\HasConnectedAccounts;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Wallo\FilamentCompanies\SetsProfilePhotoFromUrl;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -31,22 +28,17 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName, 
     use Notifiable;
     use softDeletes;
     use HasApiTokens;
-    use HasCompanies;
-    use HasProfilePhoto;
-    use HasConnectedAccounts;
-    use SetsProfilePhotoFromUrl;
     use TwoFactorAuthenticatable;
     use \OwenIt\Auditing\Auditable;
 
-    public function canAccessFilament(): bool
+    public function canAccessPanel(Panel $panel): bool
     {
         return $this->can('access dash') ;
-        
     }
 
     public function getFilamentAvatarUrl(): ?string
     {
-        return $this->profile_photo_url;
+        return ( $this->avatar_url ) ? Storage::url($this->avatar_url) : null ;
     }
 
     /**
@@ -57,7 +49,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName, 
     protected $fillable = [
         'first_name', 'last_name', 'email', 'password',
         'is_admin',
-        'profile_photo_path', 'supervisor',
+        'profile_photo_path', 'avatar_url','supervisor',
         'supervisor_id', 'designation', 'designation_id', 'active',
         'is_supervisor', 'section',
         'is_worship_leader', 'is_associate_worship_leader',
@@ -196,6 +188,9 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName, 
             $short[$key] = strtok($value, " ");
         }
         return $short;
+    }
+    public function getProfilePhotoUrlAttribute(){
+        return $this->avatar_url;
     }
 
 }
