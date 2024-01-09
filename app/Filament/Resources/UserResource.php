@@ -55,7 +55,7 @@ class UserResource extends Resource
                 ->password()
                 ->dehydrateStateUsing(fn ($state) => Hash::make($state))
                 ->dehydrated(fn ($state) => filled($state))
-                ->required(fn (string $context): bool => $context === 'create')
+                // ->required(fn (string $context): bool => $context === 'create')
                 ->visible(fn (string $context): bool => $context === 'create')
                 ->maxLength(255),
             Select::make('designation_id')

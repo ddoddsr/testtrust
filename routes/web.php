@@ -25,4 +25,3 @@ Route::get('/', function () {
 Route::redirect('/login', '/admin/login')->name('login');
 // Route::redirect('/register', '/admin/register')->name('register');
 
-Route::redirect('/register', '/admin/register')->name('register');
