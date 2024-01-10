@@ -31,7 +31,8 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
-            ->registration(Register::class)
+            // and in fortify config
+            // ->registration(Register::class)
             ->passwordReset()
             ->colors([
                 'primary' => Color::Amber,
