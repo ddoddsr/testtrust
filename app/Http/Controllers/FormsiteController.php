@@ -150,9 +150,10 @@ class FormsiteController
                         //  so save the data
                         if ( in_array((int)$item->id, array_keys($fieldNames, 'location' ))) {
                             if($item->values){
-                                $sched->location = $item->values[0]->value ;
+                                $sched->location = $item->values[0]->value ?? 1 ;  // GPR = 1
                                 // $scheds will be stored
                                 $scheds[] = $sched;
+                           
                             }
                             // resest $sched
                             $sched = (object)[];
