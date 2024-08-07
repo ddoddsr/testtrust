@@ -163,6 +163,10 @@ class UserResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->persistFiltersInSession()
+            ->filtersTriggerAction( function ($action) {
+                return $action->button()->label('Filters');
+            })    
             ->columns([
                 Tables\Columns\TextColumn::make('first_name')->sortable()->searchable(isIndividual: true),
                 Tables\Columns\TextColumn::make('last_name')->sortable()->searchable(isIndividual: true),
@@ -223,7 +227,9 @@ class UserResource extends Resource
                 // Tables\Filters\Filter::make('unverified')
                 //     ->label(trans('filament-user::user.resource.unverified'))
                 //     ->query(fn (Builder $query): Builder => $query->whereNull('email_verified_at')),
-
+                Tables\Filters\Filter::make('no_schedule')
+                ->label(trans('No Schedule'))
+                ->query(fn (Builder $query): Builder => $query->whereDoesntHave('schedules')),
                 SelectFilter::make('designation_id')
                 ->multiple()
                 ->options(User::designations_short()),

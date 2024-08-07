@@ -7,6 +7,7 @@ use Filament\Panel;
 use Filament\Widgets;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
+use Filament\Support\Enums\MaxWidth;
 use App\Filament\Pages\Auth\Register;
 use App\Livewire\PersonalInfoComponent;
 use Filament\Navigation\NavigationGroup;
@@ -78,6 +79,8 @@ class AdminPanelProvider extends PanelProvider
                 ), 
                 \BezhanSalleh\FilamentShield\FilamentShieldPlugin::make()
 
-            );
+            )
+            ->sidebarFullyCollapsibleOnDesktop()
+            ->maxContentWidth(MaxWidth::Full);
     }
 }
