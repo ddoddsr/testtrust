@@ -9,13 +9,13 @@ use Illuminate\Support\Facades\DB;
 
 class WallPdfController extends Controller
 {
-    public $dateTime; 
+    public $dateTime;
     public function generatePdf(string $filePath, int $location = 1)
     {
         $setWithScheds = $this->setSchedule($location);
-
+// dd($setWithScheds);
         $fpdf = new \Codedge\Fpdf\Fpdf\Fpdf('L','pt','Letter') ;
-        
+
         // get todays date time
         $this->dateTime = 'Updated: ' . Carbon::now()->format('M d Y');
 
@@ -23,13 +23,13 @@ class WallPdfController extends Controller
         $fpdf->SetAutoPageBreak(true,5);
 
         $leaderWidth = $fpdf->GetPageWidth() -44 ; //-35 ;
-        
+
         $leftMargin = 15; //6;
         $namesMargin = 25;
         $taglinePos =  - 20 ;   // vert from bottom
         $tagline = env('FOOTER_STATEMENT','Set FOOTER_STATEMENT in .env');
         $topOfColumns = 70;
-        $postionColumn = 0; 
+        $postionColumn = 0;
         $sequence = 1;
         foreach($setWithScheds as $set) {
             $schedCnt = count($set['scheds']);
@@ -66,9 +66,9 @@ class WallPdfController extends Controller
                 $namesPerColumn = 62;
             }
             // logger(['set' => [
-            //     'sequencec' => $sequence, 
-            //     // $set['dayOfWeek'], 
-            //     // $set['setOfDay'], 
+            //     'sequencec' => $sequence,
+            //     // $set['dayOfWeek'],
+            //     // $set['setOfDay'],
             //     'cnt' => $schedCnt,
             //     'fontsz' => $nameFontSize,
             //     'rowHt' => $rowHeight,
@@ -85,7 +85,7 @@ class WallPdfController extends Controller
             if ($set['worshipLeader']) {
                 $name = iconv('UTF-8', 'windows-1252', $set['worshipLeader']);
                 $fpdf->Cell($leaderWidth,0, "Worship Leader: " . $name, 0, 1, 'L');
-            } 
+            }
             if ($set['prayerLeader']){
                 $name = iconv('UTF-8', 'windows-1252', $set['prayerLeader']);
                 $fpdf->Cell($leaderWidth,0, "Prayer Leader: " . $name, 0, 1, 'C');
@@ -94,21 +94,21 @@ class WallPdfController extends Controller
                 $name = iconv('UTF-8', 'windows-1252', $set['sectionLeader']);
                 $fpdf->Cell($leaderWidth,0, "Section Leader: " . $name, 0, 1, 'R');
             }
-            
+
             $fpdf->Ln(32);
             $fpdf->SetFont('Arial', '', $nameFontSize);
-            
+
             $rowCount = 0;
             $postionColumn = 0;
 
             foreach($set['scheds'] as $name ) {
                 if ($name != '' ) {
                     $rowCount++;
-                    
+
                     $name = iconv('UTF-8', 'windows-1252', $name);
                     $columnSpacingNoMargin = $columnSpacing - $leftMargin ;
                     $getNameWidth = $fpdf->GetStringWidth($name);
-                     
+
                     $shrink = $getNameWidth / $columnSpacingNoMargin;
                     if($getNameWidth  > $columnSpacingNoMargin) {
 
@@ -122,8 +122,8 @@ class WallPdfController extends Controller
                         //     'stdFontSize' => $nameFontSize,
                         // ]]);
 
-                       
-                        $tmpFontSize = $nameFontSize / $shrink; 
+
+                        $tmpFontSize = $nameFontSize / $shrink;
 
                         $fpdf->SetFont('Arial', '', $tmpFontSize);
                         $fpdf->Text( $namesMargin +($columnSpacing * $postionColumn),
@@ -148,8 +148,9 @@ class WallPdfController extends Controller
             $fpdf->Cell( $leaderWidth, 0, $tagline, 0, 1, 'C');
             $fpdf->Cell( $leaderWidth ,0, $this->dateTime, 0, 1, 'R');
         }
-        $fpdf->Output('F', $filePath);
-        return;     
+
+        //$fpdf->Output('F', $filePath);
+        return;
     }
 
 
@@ -157,9 +158,9 @@ class WallPdfController extends Controller
     {
         // get staff sched into sets
         $setRecords = DB::table('sets')
-        ->leftJoin('users as pluser', 'sets.prayer_leader_id', '=', 'pluser.id') 
-        ->leftJoin('users as wluser', 'sets.worship_leader_id', '=', 'wluser.id') 
-        ->leftJoin('users as sluser', 'sets.section_leader_id', '=', 'sluser.id') 
+        ->leftJoin('users as pluser', 'sets.prayer_leader_id', '=', 'pluser.id')
+        ->leftJoin('users as wluser', 'sets.worship_leader_id', '=', 'wluser.id')
+        ->leftJoin('users as sluser', 'sets.section_leader_id', '=', 'sluser.id')
         ->select('sets.*',
             'pluser.first_name as pl_first_name',  'pluser.last_name as pl_last_name',
             'wluser.first_name as wl_first_name',  'wluser.last_name as wl_last_name',
@@ -201,30 +202,53 @@ class WallPdfController extends Controller
         asort($schedLines);
         return array_unique($schedLines);
     }
-    
+
     public function modSchedLines($setTime, $schedule) {
         // If schedule has 60min or more in a set, the staff name is added to array
+        // if these numbers change, put in a setup or env
+        // 60 min after the beginning
         $setTimeStartM = Carbon::parse($setTime)->addMinutes(60); //->format('h:i a');
+        /// 60 minuts before the ending
         $setTimeEndM = Carbon::parse($setTime)->addMinutes(60); //->format('h:i a');
 
         $scheduleStartM = Carbon::parse($schedule->start); //->format('h:i a');
         $scheduleEndM = Carbon::parse($schedule->end); //->format('h:i a');
-
+        if ( substr( $scheduleEndM, 11) == '00:00:00') {
+            // logger(trim($schedule->user->first_name). ' ' . trim($schedule->user->last_name));
+            // logger( $this->dateTime);
+            // logger('E '. $scheduleEndM);
+            $scheduleEndM->subSeconds(5);
+            // logger('E '. $scheduleEndM);
+        }
         $isStart = $scheduleStartM->lte($setTimeStartM );
         $isEnd   = $scheduleEndM->gte($setTimeEndM);
-
+        // if (Carbon::parse($schedule->end) == '00:00:00') {
+        // if ($isStart
+        //     && $setTime == '10pm'
+        //     && substr( $scheduleEndM, 11) == '00:00:00')
+        // {
+        //     logger(trim($schedule->user->first_name). ' ' . trim($schedule->user->last_name));
+        //     logger($setTime);
+        //     logger(Carbon::parse($schedule->end)->format('h:i a'));
+        //     logger($setTimeStartM);
+        //     logger($setTimeEndM);
+        //     logger($scheduleStartM);
+        //     logger('E '. substr( $scheduleEndM, 11));
+        //     // logger('E '. $scheduleEndM);
+        //     logger( $this->dateTime);
+        // }
         $schedDuration = $scheduleStartM->diffInMinutes($schedule->end);
         // logger($schedule->user->exit_date );
-        // logger( $this->dateTime);
         // check for duration >= 60 min
-        if ($isStart && $isEnd 
+        if ($isStart && $isEnd
             && $schedDuration >= 60
             && ( ($schedule->user && $schedule->user->exit_date == null )
                 ||
                 Carbon::parse($schedule->user->exit_date) > Carbon::parse($this->dateTime)
             )
          ) {
-            return trim($schedule->user->first_name). ' ' . trim($schedule->user->last_name); 
+            // logger($setTime . ': ' .trim($schedule->user->first_name). ' ' . trim($schedule->user->last_name));
+            return trim($schedule->user->first_name). ' ' . trim($schedule->user->last_name);
         } else {
             return ;
         }
