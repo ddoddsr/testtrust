@@ -21,12 +21,12 @@ use App\Http\Controllers\SchedPdfController;
 class Tools extends Page
 {
     // TODO Hmmm protected static ?string $model = Tools::class;
-    public array $duplicateNames = []; 
+    public array $duplicateNames = [];
     public array $ownSuperNames = [];
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
     protected static string $view = 'filament.pages.tools';
-    
+
     public static function shouldRegisterNavigation(): bool
     {
         return (Auth::user() && Auth::user()->can('access tools'));
@@ -52,7 +52,7 @@ class Tools extends Page
                 return $this->genWallPdf($data['location']);
             });
     }
-    
+
     public function genSched(): Action
     {
         return Action::make('genSched')
@@ -70,13 +70,13 @@ class Tools extends Page
     }
 
     public function checkName(): Action {
-        return             
+        return
         Action::make('duplicateNameChecker')
         ->label('Duplicate Name Check')
         ->action('duplicateNameCheck');
     }
     public function checkSuper(): Action {
-        return  
+        return
         Action::make('ownSuperChecker')
         ->label('Own Supervisor Check')
         ->action('ownSuperCheck');
@@ -119,53 +119,54 @@ class Tools extends Page
     {
         $formSite = new FormsiteController;
         // get highest result_id in schedules table
-        $latest = User::max('result_id'); 
+        $latest = User::max('result_id');
         $formSite->storeForms($latest);
-        
-        Notification::make() 
+
+        Notification::make()
             ->title('New download request completed.')
             ->success()
-            ->send(); 
+            ->send();
     }
-    
-    public function allResults() 
+
+    public function allResults()
     {
         Schedule::truncate();
         $formSite = new FormsiteController;
-        
+
         $formSite->storeForms();
-        Notification::make() 
+        Notification::make()
         ->title('All results import  complete.')
         ->success()
-        ->send(); 
+        ->send();
         return $this->redirect('/admin/tools');
     }
 
-    public function allSupers() 
+    public function allSupers()
     {
         Schedule::truncate();
         $formSite = new FormsiteController;
-        
+
         $formSite->storeSupers();
-        Notification::make() 
+        Notification::make()
         ->title('All supervisors import  complete.')
         ->success()
-        ->send(); 
+        ->send();
         return $this->redirect('/admin/tools');
     }
 
     public function genWallPdf($location)
     {
         $filePath = 'storage/sacred_trust_wall.pdf';
+        // $filePath = '/Users/dandodd/Sites/testtrust/storage/sacred_trust_wall.pdf';
         $pdf = new WallPdfController;
-        
+
         $pdf->generatePdf($filePath, $location);
 
-        Notification::make() 
+        Notification::make()
             ->title('Generation complete.')
             ->success()
-            ->send(); 
-        
+            ->send();
+
         return response()->download($filePath);
     }
 
@@ -175,20 +176,20 @@ class Tools extends Page
         $pdf = new SchedPdfController;
         $pdf->generatePdf($filePath, $location);
 
-        Notification::make() 
+        Notification::make()
             ->title('Generation complete.')
             ->success()
-            ->send(); 
-        
+            ->send();
+
         return response()->download($filePath);
     }
 
     public function testMe($name = 'testMe')
     {
-        Notification::make() 
+        Notification::make()
             ->title('TestMe complete')
             ->success()
-            ->send(); 
+            ->send();
     }
     public function testWallPdf($name = 'testMe')
     {
@@ -196,18 +197,18 @@ class Tools extends Page
         $pdf = new WallPdfController;
         $pdf->generatePdf($filePath, 6);
 
-        Notification::make() 
+        Notification::make()
             ->title('Generation complete.')
             ->success()
-            ->send(); 
-        
+            ->send();
+
         return response()->download($filePath);
     }
     public function duplicateNameCheck()
     {
         $this->duplicateNames = [];
         $collection = \App\Models\User::all();
-        
+
         // Group models by sub_id and name
         $collection
         ->groupBy(function ($item) { return $item->first_name.'_'.$item->last_name; })
@@ -217,9 +218,9 @@ class Tools extends Page
         ->each(function ($arr) {
             $arr->each(function ($model) {
                 $this->duplicateNames[] = [
-                    'user_id' => $model->id, 
+                    'user_id' => $model->id,
                     'user_name' => $model->full_name,
-                    'email' => $model->email, 
+                    'email' => $model->email,
                     'super' => $model->supervisor,
                     'effective' => $model->effective_date,
                 ];
@@ -236,9 +237,9 @@ class Tools extends Page
         ->get();
         foreach($staff as $own) {
             $this->ownSuperNames[] =  [
-                'user_id' => $own->id, 
+                'user_id' => $own->id,
                 'user_name' => $own->first_name . ' ' . $own->last_name,
-                'email' => $own->email, 
+                'email' => $own->email,
                 'super' => $own->super_email1,
                 'effective' => $own->effective_date,
             ];
