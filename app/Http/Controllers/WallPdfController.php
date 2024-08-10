@@ -214,11 +214,11 @@ class WallPdfController extends Controller
         $scheduleStartM = Carbon::parse($schedule->start); //->format('h:i a');
         $scheduleEndM = Carbon::parse($schedule->end); //->format('h:i a');
         if ( substr( $scheduleEndM, 11) == '00:00:00') {
-            // logger(trim($schedule->user->first_name). ' ' . trim($schedule->user->last_name));
-            // logger( $this->dateTime);
-            // logger('E '. $scheduleEndM);
+            logger(trim($schedule->user->first_name). ' ' . trim($schedule->user->last_name));
+            logger( $this->dateTime);
+            logger('E '. $scheduleEndM);
             $scheduleEndM->subSeconds(5);
-            // logger('E '. $scheduleEndM);
+            logger('E '. $scheduleEndM);
         }
         $isStart = $scheduleStartM->lte($setTimeStartM );
         $isEnd   = $scheduleEndM->gte($setTimeEndM);
