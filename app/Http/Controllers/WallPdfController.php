@@ -187,8 +187,9 @@ class WallPdfController extends Controller
     }
 
     public function collectSchedSets($day, $set, $location) {
-        $schedLines = [];
+        logger('Day: ' . $day .' ' . $set.' ' . $location);
 
+        $schedLines = [];
         foreach(Schedule::where('location_id', $location)
                 ->join('users', 'users.id', '=', 'schedules.user_id')
                 ->where('day' , $day)
