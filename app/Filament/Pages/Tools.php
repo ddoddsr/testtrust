@@ -156,8 +156,8 @@ class Tools extends Page
 
     public function genWallPdf($location)
     {
-        $filePath = 'storage/sacred_trust_wall.pdf';
-        // $filePath = '/Users/dandodd/Sites/testtrust/storage/sacred_trust_wall.pdf';
+        $filePath = storage_path('sacred_trust_wall.pdf');
+
         $pdf = new WallPdfController;
 
         $pdf->generatePdf($filePath, $location);
