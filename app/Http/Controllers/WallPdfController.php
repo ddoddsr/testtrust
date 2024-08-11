@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use App\Models\Schedule;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class WallPdfController extends Controller
 {
@@ -13,7 +14,7 @@ class WallPdfController extends Controller
     public function generatePdf(string $filePath, int $location = 1)
     {
         $setWithScheds = $this->setSchedule($location);
-// dd($setWithScheds);
+        // dd($setWithScheds);
         $fpdf = new \Codedge\Fpdf\Fpdf\Fpdf('L','pt','Letter') ;
 
         // get todays date time
@@ -149,7 +150,7 @@ class WallPdfController extends Controller
             $fpdf->Cell( $leaderWidth ,0, $this->dateTime, 0, 1, 'R');
         }
 
-        //$fpdf->Output('F', $filePath);
+        $fpdf->Output('F', $filePath);
         return;
     }
 
@@ -187,14 +188,18 @@ class WallPdfController extends Controller
     }
 
     public function collectSchedSets($day, $set, $location) {
-        logger('Day: ' . $day .' ' . $set.' ' . $location);
+        // logger('Day: ' . $day .' ' . $set.' ' . $location);
 
         $schedLines = [];
         foreach(Schedule::where('location_id', $location)
                 ->join('users', 'users.id', '=', 'schedules.user_id')
                 ->where('day' , $day)
                 ->where('deleted_at' , null)
+                //->where('start' ,, null)
                 ->whereIn('users.designation_id', [1,2,5,7])
+                ->select('location_id', 'day', 'start', 'end',
+                'users.first_name as first_name', 'users.last_name as last_name',
+                'users.effective_date as effective_date', 'users.exit_date as exit_date')
                 ->get() as $schedule
             ) {
             $schedLines[] = $this->modSchedLines($set, $schedule);
@@ -205,54 +210,59 @@ class WallPdfController extends Controller
     }
 
     public function modSchedLines($setTime, $schedule) {
-        // If schedule has 60min or more in a set, the staff name is added to array
-        // if these numbers change, put in a setup or env
-        // 60 min after the beginning
-        $setTimeStartM = Carbon::parse($setTime)->addMinutes(60); //->format('h:i a');
-        /// 60 minuts before the ending
-        $setTimeEndM = Carbon::parse($setTime)->addMinutes(60); //->format('h:i a');
+        // 60min or more in a set is time given for sched to be considered
+        // If schedule starts =/ before set time + 60
+        // OR
+        // If schedule ends  =/ after set time  + 60
+        // 10:00 S-------60-------E 12:00
 
-        $scheduleStartM = Carbon::parse($schedule->start); //->format('h:i a');
-        $scheduleEndM = Carbon::parse($schedule->end); //->format('h:i a');
-        if ( substr( $scheduleEndM, 11) == '00:00:00') {
-            logger(trim($schedule->user->first_name). ' ' . trim($schedule->user->last_name));
-            logger( $this->dateTime);
-            logger('E '. $scheduleEndM);
-            $scheduleEndM->subSeconds(5);
-            logger('E '. $scheduleEndM);
+        $setTimeStartBy = Carbon::parse($setTime)->addMinutes(60);
+        $setTimeEndBy   = Carbon::parse($setTime)->addMinutes(60);
+        $schedTimeStart = Carbon::parse($schedule->start);
+        $schedTimeEnd   = Carbon::parse($schedule->end);
+        $schedDuration = $schedTimeStart->diffInMinutes($schedule->end);
+        if ( substr( $schedTimeEnd, 11) == '00:00:00') {
+            $schedTimeEnd->subSeconds(1)->addDays(1);
         }
-        $isStart = $scheduleStartM->lte($setTimeStartM );
-        $isEnd   = $scheduleEndM->gte($setTimeEndM);
-        // if (Carbon::parse($schedule->end) == '00:00:00') {
-        // if ($isStart
-        //     && $setTime == '10pm'
-        //     && substr( $scheduleEndM, 11) == '00:00:00')
-        // {
-        //     logger(trim($schedule->user->first_name). ' ' . trim($schedule->user->last_name));
-        //     logger($setTime);
-        //     logger(Carbon::parse($schedule->end)->format('h:i a'));
-        //     logger($setTimeStartM);
-        //     logger($setTimeEndM);
-        //     logger($scheduleStartM);
-        //     logger('E '. substr( $scheduleEndM, 11));
-        //     // logger('E '. $scheduleEndM);
-        //     logger( $this->dateTime);
-        // }
-        $schedDuration = $scheduleStartM->diffInMinutes($schedule->end);
-        // logger($schedule->user->exit_date );
-        // check for duration >= 60 min
-        if ($isStart && $isEnd
-            && $schedDuration >= 60
-            && ( ($schedule->user && $schedule->user->exit_date == null )
-                ||
-                Carbon::parse($schedule->user->exit_date) > Carbon::parse($this->dateTime)
-            )
-         ) {
-            // logger($setTime . ': ' .trim($schedule->user->first_name). ' ' . trim($schedule->user->last_name));
-            return trim($schedule->user->first_name). ' ' . trim($schedule->user->last_name);
-        } else {
+        if (
+            // false &&
+            $schedTimeStart->lte($setTimeStartBy )  &&
+            $schedTimeEnd->gte($setTimeEndBy ) &&
+            $schedDuration >= 59
+            // && trim($schedule->first_name) == 'Joseph'
+            // && trim($schedule->first_name) == 'Ezrela'
+            // && trim($schedule->last_name) == 'Ritchie'
+        ) {
+            // logger('YES    +++++++++++');
+            // logger($schedule->day . ' ' . $setTime  .' '. trim($schedule->first_name). ' ' . trim($schedule->last_name));
+            // logger($schedule->day);
+            // logger($setTime );
+            // logger($setTimeStartBy );
+            // logger($setTimeEndBy );
+            // logger($schedTimeStart);
+            // logger($schedTimeEnd);
+            // logger($schedDuration);
+            // logger($schedule->effective_date);
+            // logger($schedule->exit_date ?? "No Exit");
+            // logger(trim($schedule->first_name). ' ' . trim($schedule->last_name));
+
+            // dd($schedule);
+            // dd($schedule);
+
+            return trim($schedule->first_name). ' ' . trim($schedule->last_name);
+        } elseif (
+            trim($schedule->first_name) == 'Joseph'
+            //  && trim($schedule->first_name) == 'Ezrela'
+            && trim($schedule->last_name) == 'Ritchie'
+        ) {
+            // logger($schedule->day . ' ' . $setTime  .' '. trim($schedule->first_name). ' ' . trim($schedule->last_name));
+            // logger($setTimeStartBy );
+            // logger($setTimeEndBy );
+            // logger($schedTimeStart);
+            // logger($schedTimeEnd);
             return ;
         }
+        return;
     }
 
     //TEST
