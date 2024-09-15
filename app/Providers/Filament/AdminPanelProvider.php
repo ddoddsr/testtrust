@@ -21,6 +21,7 @@ use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
+use Tapp\FilamentWebhookClient\FilamentWebhookClientPlugin;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 
 class AdminPanelProvider extends PanelProvider
@@ -62,7 +63,7 @@ class AdminPanelProvider extends PanelProvider
             ->authMiddleware([
                 Authenticate::class,
             ])
-            ->plugin(
+            ->plugins([
                 BreezyCore::make()
                 ->myProfile(
                     shouldRegisterUserMenu: true, // Sets the 'account' link in the panel User Menu (default = true)
@@ -76,10 +77,10 @@ class AdminPanelProvider extends PanelProvider
                 ->disableLabel()
                 ->disk('public')
                 ->directory('app/user/profile-photos')
-                ), 
+                ),
+                FilamentWebhookClientPlugin::make(),
                 \BezhanSalleh\FilamentShield\FilamentShieldPlugin::make()
-
-            )
+            ])
             ->sidebarFullyCollapsibleOnDesktop()
             ->maxContentWidth(MaxWidth::Full);
     }

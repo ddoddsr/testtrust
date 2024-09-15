@@ -28,44 +28,35 @@ class StaffController extends Controller
     public function storeRecord($formData)
     {
         foreach($formData as $form) {
-
-           if( $form->result_status == 'Complete') {
-
-                $staffRecord = User::withTrashed()->firstOrCreate(
-                        [  'email' => $form->email  ],
-                        $this->formPrep($form)
-                    );
-
-                // was not RecentlyCreated
-                if( ! $staffRecord->wasRecentlyCreated ) {
-
-                // We found an existing record
-                    if ( $staffRecord->result_id < (int)$form->result_id ) {
-                        // replace data in DB with new record
-                        $staffRecord->first_name = $form->first_name;
-                        $staffRecord->last_name = $form->last_name;
-                        $staffRecord->result_id = $form->result_id ;
-                        $staffRecord->start_date = \Carbon\Carbon::parse($form->start_date)->format('Y-m-d H:i:s');
-                        $staffRecord->finish_date = \Carbon\Carbon::parse($form->finish_date) ->format('Y-m-d H:i:s');
-                        $staffRecord->update_date = \Carbon\Carbon::parse($form->update_date)->format('Y-m-d H:i:s');
-                        $staffRecord->result_status = $form->result_status;
-                        $staffRecord->designation = $form->designation;
-                        $staffRecord->designation_id = $this->designations[strtolower(substr($form->designation, 0, 4))]  ?? null;
-                        $staffRecord->supervisor = $form->supervisor;
-                        $staffRecord->super_email1 = $form->super_email1;
-                        $staffRecord->supervisor_id = $this->superFromAlias($form->super_email1 ) ?? null;
-                        $staffRecord->effective_date = \Carbon\Carbon::parse($form->effective_date)->format('Y-m-d');
-                        $staffRecord->exit_date = null;
-                        $staffRecord->save();
-                    }
-                }
-                // remove schedule info
-                $staffRecord->schedules()->delete();
-                // add new schedule info
-                $this->saveSched($staffRecord, $form->sched);
+            $staffRecord = User::withTrashed()->firstOrCreate(
+                [  'email' => $form->email  ],
+                $this->formPrep($form)
+            );
+            // was not RecentlyCreated
+            if( ! $staffRecord->wasRecentlyCreated ) {
+                $staffRecord->first_name = $form->first_name;
+                $staffRecord->last_name = $form->last_name;
+                $staffRecord->result_id = $form->result_id ;
+                $staffRecord->start_date = \Carbon\Carbon::parse($form->start_date)->format('Y-m-d H:i:s');
+                $staffRecord->finish_date = \Carbon\Carbon::parse($form->finish_date) ->format('Y-m-d H:i:s');
+                $staffRecord->update_date = \Carbon\Carbon::parse($form->update_date)->format('Y-m-d H:i:s');
+                $staffRecord->result_status = $form->result_status;
+                $staffRecord->designation = $form->designation;
+                $staffRecord->designation_id = $this->designations[strtolower(substr($form->designation, 0, 4))]  ?? null;
+                $staffRecord->supervisor = $form->supervisor;
+                $staffRecord->super_email1 = $form->super_email1;
+                $staffRecord->supervisor_id = $this->superFromAlias($form->super_email1 ) ?? null;
+                $staffRecord->effective_date = \Carbon\Carbon::parse($form->effective_date)->format('Y-m-d');
+                $staffRecord->exit_date = null;
+                $staffRecord->save();
             }
+            // remove schedule info
+            $staffRecord->schedules()->delete();
+            // add new schedule info
+            $this->saveSched($staffRecord, $form->sched);
         }
     }
+
     public function storeSuperRecord($formData)
     {
         foreach($formData as $form) {
@@ -94,8 +85,6 @@ class StaffController extends Controller
     }
 
     public function formPrep($form) {
-        // $this->superAlias = $this->superFromAlias($form->super_email1 ) ;
-        // logger(['super create' => $this->superAlias]);
         return [
             'first_name' => $form->first_name,
             'last_name' => $form->last_name,

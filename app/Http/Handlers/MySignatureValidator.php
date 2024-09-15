@@ -10,8 +10,11 @@ class MySignatureValidator implements SignatureValidator
 {
     public function isValid(Request $request, WebhookConfig $config): bool
     {
+        // TODO run thru a webhook profile first namespace Spatie\WebhookClient\WebhookProfile;?
+        // TODO better validation  the content length?
+        return true;
         $signature = $request->header($config->signatureHeaderName);
-
+        // logger('Sig: '. $signature);
         if (! $signature) {
             return false;
         }
