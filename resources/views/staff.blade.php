@@ -33,26 +33,26 @@
                     {{-- <div class="rounded-lg h-64 overflow-hidden">
                         <img alt="content" class="object-cover object-center h-full w-full" src="https://dummyimage.com/1203x503">
                     </div> --}}
-                    <h2 class="text-xl font-medium title-font text-gray-900 mt-5">Current Sacred Trust entry</h2>
-                    <p class="text-base leading-relaxed mt-2">Enter your Sacred trust as before.</p>
+                    <h2 class="text-xl font-medium title-font text-gray-900 mt-5">Sacred Trust entry</h2>
+                    {{-- <p class="text-base leading-relaxed mt-2">Enter your Sacred trust as before.</p> --}}
                 </a>
 
-                <div class="p-4 md:w-1/3 sm:mb-0 mb-6">
+                {{-- <div class="p-4 md:w-1/3 sm:mb-0 mb-6">
                     {{-- <div class="rounded-lg h-64 overflow-hidden">
                         <img alt="content" class="object-cover object-center h-full w-full" src="https://dummyimage.com/1099x904">
                     </div> --}}
-                    <h2 class="text-xl font-medium title-font text-gray-900 mt-5">Sacred Trust Wall account method.</h2>
+                    {{-- <h2 class="text-xl font-medium title-font text-gray-900 mt-5">Sacred Trust Wall account method.</h2>
                     <p class="text-base leading-relaxed mt-2">Sacred Trust is rigiourious enough without have difficult computers to deal with. Learn more how to login and maintain your Sacred trust online</p>
                     <x-learn-more />
                 </div>
-                <div class="p-4 md:w-1/3 sm:mb-0 mb-6">
+                <div class="p-4 md:w-1/3 sm:mb-0 mb-6"> --}}
                     {{-- <div class="rounded-lg h-64 overflow-hidden">
                         <img alt="content" class="object-cover object-center h-full w-full" src="https://dummyimage.com/1205x505">
                     </div> --}}
-                    <h2 class="text-xl font-medium title-font text-gray-900 mt-5">Future access</h2>
+                    {{-- <h2 class="text-xl font-medium title-font text-gray-900 mt-5">Future access</h2>
                     <p class="text-base leading-relaxed mt-2">Something new </p>
                     <x-learn-more />
-                </div>
+                </div> --}}
             </div>
         </div>
     </section>
