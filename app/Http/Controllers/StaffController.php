@@ -48,8 +48,16 @@ class StaffController extends Controller
                 $staffRecord->supervisor_id = $this->superFromAlias($form->super_email1 ) ?? null;
                 $staffRecord->effective_date = \Carbon\Carbon::parse($form->effective_date)->format('Y-m-d');
                 $staffRecord->exit_date = null;
+                $staffRecord->deleted_at = null;
+                // Important? 
+                //$staffRecord->start_date =
+                //$staffRecord->finish_date =
+                //$staffRecord->
+                // How / where are these used
+
                 $staffRecord->save();
             }
+
             // remove schedule info
             $staffRecord->schedules()->delete();
             // add new schedule info
