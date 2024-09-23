@@ -27,7 +27,7 @@ class FormsiteController
         if ($formData)  {
             // $super = (new StaffController)->storeSuperRecord($formData);
             $staff = (new StaffController)->storeRecord($formData);
-        } 
+        }
         if ($formData  && $staff) {
             return 'Success';
         } else {
@@ -40,7 +40,7 @@ class FormsiteController
         $formData = $this->getFormData($newest);
         if ($formData)  {
             $super = (new StaffController)->storeSuperRecord($formData);
-        } 
+        }
         if ($formData && $super) {
             return 'Success';
         } else {
@@ -81,7 +81,7 @@ class FormsiteController
         $formData = [];
 
         do {
-            
+
             $response =  $this->client->request(
                 'GET',
                 env('FORMSITE_API_URL' ) . '/results',
@@ -109,7 +109,7 @@ class FormsiteController
                 $lastPageStr = $response->getHeader('Pagination-Page-Last')[0];
                 $lastPage = (int)$lastPageStr;
             }
-           
+
             // if ($lastPage == 0 ) {
             //     break;
             // }
@@ -128,7 +128,7 @@ class FormsiteController
                     {
                         // set a Variable variable for the fieldName
                         $fieldName = $fieldNames[(int)$item->id];
-                        
+
                         $$fieldName = $item->value ?? 'n_a' ;
                         $fieldName  = ${$fieldName} ;
                         if ( in_array((int)$item->id, array_keys($fieldNames, 'day' ))) {
@@ -153,7 +153,7 @@ class FormsiteController
                                 $sched->location = $item->values[0]->value ?? 1 ;  // GPR = 1
                                 // $scheds will be stored
                                 $scheds[] = $sched;
-                           
+
                             }
                             // resest $sched
                             $sched = (object)[];
@@ -195,7 +195,7 @@ class FormsiteController
         return $formData;
     }
 
-    private function fieldNames() {
+    public function fieldNames() {
         return [
             92 => 'firstName',
             93 => 'lastName',

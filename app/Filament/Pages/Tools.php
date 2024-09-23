@@ -7,6 +7,7 @@ use App\Models\Location;
 use App\Models\Schedule;
 use Filament\Pages\Page;
 use Filament\Actions\Action;
+use Illuminate\Support\Carbon;
 use Filament\Actions\ActionGroup;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\HtmlString;
@@ -23,6 +24,7 @@ class Tools extends Page
     // TODO Hmmm protected static ?string $model = Tools::class;
     public array $duplicateNames = [];
     public array $ownSuperNames = [];
+    public array $unkSuperNames = [];
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
     protected static string $view = 'filament.pages.tools';
@@ -32,11 +34,11 @@ class Tools extends Page
         return (Auth::user() && Auth::user()->can('access tools'));
     }
 
-    public function newestAction(): Action
-    {
-        return      Action::make('newest')
-        ->action('newResults');
-    }
+    // public function newestAction(): Action
+    // {
+    //     return      Action::make('newest')
+    //     ->action('newResults');
+    // }
 
     public function genWall(): Action
     {
@@ -80,8 +82,14 @@ class Tools extends Page
         Action::make('ownSuperChecker')
         ->label('Own Supervisor Check')
         ->action('ownSuperCheck');
-
     }
+    public function checkUnkSuper(): Action {
+        return
+            Action::make('unkSuperChecker')
+            ->label('Unknown Supervisor Check')
+            ->action('unkSuperCheck');
+    }
+
     public function closeChecker(): Action {
         return Action::make('closeChecker')
         ->label('Close Checker')
@@ -94,17 +102,20 @@ class Tools extends Page
     {
         return [
             ActionGroup::make([
-                Action::make('Re-import all Results')
-                    ->action('allResults')
-                    ->requiresConfirmation()
-                        ->modalHeading('Re-import all Results')
-                        ->modalDescription('Are you sure you want to Drop Schedule data and re-import?')
-                        ->modalContent(new HtmlString('<div class="text-center">FormSite Data.<br>from {date} .</div>'))
-                        ->modalSubmitActionLabel('Get All Results'),
-                //
-                Action::make('Re-import supers')
-                    ->action('allSupers'),
-                    //->visible(fn (Post $record): bool => auth()->user()->can('update', $record)),
+                // Action::make('Re-import all Results')
+                //     ->action('allResults')
+                //     ->requiresConfirmation()
+                //         ->modalHeading('Re-import all Results')
+                //         ->modalDescription('Are you sure you want to Drop Schedule data and re-import?')
+                //         ->modalContent(new HtmlString('<div class="text-center">FormSite Data.<br>from {date} .</div>'))
+                //         ->modalSubmitActionLabel('Get All Results'),
+                // //
+                // Action::make('Re-import supers')
+                //     ->action('allSupers'),
+                //     //->visible(fn (Post $record): bool => auth()->user()->can('update', $record)),
+                Action::make('unk_supers')
+                    ->label('Check for Unk Supers')
+                    ->action('unkSuperCheck'),
                 Action::make('testme')
                     ->label('Test Me')
                     ->action('testMe'),
@@ -207,6 +218,9 @@ class Tools extends Page
     public function duplicateNameCheck()
     {
         $this->duplicateNames = [];
+        $this->ownSuperNames = [];  // resets to empty
+        $this->unkSuperNames = [];  // resets to empty
+
         $collection = \App\Models\User::all();
 
         // Group models by sub_id and name
@@ -232,11 +246,39 @@ class Tools extends Page
     {
         $this->duplicateNames = []; //clears out existing
         $this->ownSuperNames = [];  // resets to empty
+        $this->ownSuperNames = [];  // resets to empty
         $staff = DB::table('users')
         ->whereColumn('email', '=', 'super_email1')
         ->get();
         foreach($staff as $own) {
             $this->ownSuperNames[] =  [
+                'user_id' => $own->id,
+                'user_name' => $own->first_name . ' ' . $own->last_name,
+                'email' => $own->email,
+                'super' => $own->super_email1,
+                'effective' => $own->effective_date,
+            ];
+        }
+    }
+    public function unkSuperCheck()
+    {
+        $this->duplicateNames = []; //clears out existing
+        $this->ownSuperNames = [];  // resets to empty
+        $this->unkSuperNames = [];  // resets to empty
+        //
+        // $supers = DB::table('users')
+        // ->where('is_supervisor', true)
+        // ->pluck('id', 'last_name')
+        // ->get();
+        // logger(['supers' => $supers]);
+        $staff = DB::table('users')
+        ->where('is_supervisor', true)
+        ->where('effective_date', '>', '2023-09-01')
+        ->where('exit_date', null)
+        ->get();
+        logger($staff ->count());
+        foreach($staff as $own) {
+            $this->unkSuperNames[] =  [
                 'user_id' => $own->id,
                 'user_name' => $own->first_name . ' ' . $own->last_name,
                 'email' => $own->email,

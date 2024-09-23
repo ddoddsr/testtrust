@@ -61,7 +61,7 @@ class UserResource extends Resource
             Select::make('designation_id')
                 ->label('Designation')
                 ->options(User::designations()),
-                
+
             Select::make('department_id')
                 ->label('Department')
                 ->options(Department::all()
@@ -73,7 +73,7 @@ class UserResource extends Resource
                 ->options(User::all()
                 ->pluck('name_and_email', 'id'))
                 ->searchable(),
-            
+
             Forms\Components\FileUpload::make('profile_photo_path')
                 // ->label(__('fields.images.src'))
                 // ->helperText(__('fields.images.src.helper'))
@@ -86,7 +86,7 @@ class UserResource extends Resource
                 ->tabs([
                     Tabs\Tab::make('Staff Data')
                     ->schema([
-                        // photo 
+                        // photo
                         // Forms\Components\Toggle::make('active')
                         //     ->required(),
                         Forms\Components\DatePicker::make('effective_date'),
@@ -151,7 +151,7 @@ class UserResource extends Resource
                             ->relationship('permissions', 'name')
                             ->preload(),
                     ]),
-                
+
                 ])->columns(2),
 
             // Forms\Components\Section::make('Roles')->schema([
@@ -163,10 +163,11 @@ class UserResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+        ->poll(4)
             ->persistFiltersInSession()
             ->filtersTriggerAction( function ($action) {
                 return $action->button()->label('Filters');
-            })    
+            })
             ->columns([
                 Tables\Columns\TextColumn::make('first_name')->sortable()->searchable(isIndividual: true),
                 Tables\Columns\TextColumn::make('last_name')->sortable()->searchable(isIndividual: true),
@@ -189,7 +190,7 @@ class UserResource extends Resource
                 ->boolean(),
                 Tables\Columns\IconColumn::make('review')
                 ->boolean(),
-                    
+
                     // Tables\Columns\IconColumn::make('isSectionLeader')
                     // ->boolean(),
                     // Tables\Columns\IconColumn::make('isWorshipLeader')
@@ -241,8 +242,8 @@ class UserResource extends Resource
 
                 Tables\Filters\Filter::make('effective_date')
                 ->label(trans('Old Effective Date'))
-            
-                ->query(fn (Builder $query, array $data): Builder => 
+
+                ->query(fn (Builder $query, array $data): Builder =>
                     $query->where('effective_date', '<', Carbon::today()->addYears(-1))
                     // $query->where('effective_date', '<', Carbon::createFromFormat('d-m-Y', $data['effective_from']))
                     ->where('exit_date', null)
@@ -251,15 +252,15 @@ class UserResource extends Resource
                 Tables\Filters\Filter::make('review')
                 ->label(trans('To Be Reviewed'))
                 ->query(fn (Builder $query): Builder => $query->where('review', true)),
-                
+
                 Tables\Filters\Filter::make('is_approved')
                 ->label(trans('Not Supervisor Approved'))
                 ->query(fn (Builder $query): Builder => $query->where('is_approved', false)),
-                
+
                 Tables\Filters\Filter::make('is_supervisor')
                 ->label(trans('Is supervisor'))
                 ->query(fn (Builder $query): Builder => $query->where('is_supervisor', true)),
-                
+
                 Tables\Filters\Filter::make('not_supervisor')
                 ->label(trans('Not supervisor'))
                 ->query(fn (Builder $query): Builder => $query->where('is_supervisor', false)),
@@ -280,7 +281,7 @@ class UserResource extends Resource
                 Tables\Actions\RestoreBulkAction::make(),
             ]);
     }
-    
+
     public static function getRelations(): array
     {
         return [
@@ -292,7 +293,7 @@ class UserResource extends Resource
             AuditsRelationManager::class,
         ];
     }
-    
+
     public static function getPages(): array
     {
         return [
@@ -300,7 +301,7 @@ class UserResource extends Resource
             'create' => Pages\CreateUser::route('/create'),
             'edit' => Pages\EditUser::route('/{record}/edit'),
         ];
-    }    
+    }
 
     public static function getEloquentQuery(): Builder
     {
