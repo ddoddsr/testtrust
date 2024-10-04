@@ -34,11 +34,11 @@ class Tools extends Page
         return (Auth::user() && Auth::user()->can('access tools'));
     }
 
-    // public function newestAction(): Action
-    // {
-    //     return      Action::make('newest')
-    //     ->action('newResults');
-    // }
+    public function newestAction(): Action
+    {
+        return      Action::make('newest')
+        ->action('newResults');
+    }
 
     public function genWall(): Action
     {

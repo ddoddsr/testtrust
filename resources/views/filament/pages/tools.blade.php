@@ -1,6 +1,6 @@
 <x-filament::page>
     <div>
-        {{-- {{ $this->newestAction }} --}}
+        {{ $this->newestAction }}
     </div>
     <p> {{ $this->checkName }}</p>
     <p> {{ $this->checkSuper }}</p>
