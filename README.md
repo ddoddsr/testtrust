@@ -168,3 +168,14 @@ see https://golangexample.com/an-email-testing-tool-for-developers/
 
   ## bug in fpdf look at font name 39335_UniversCondensed.php
   - in resources/fonts/UniversCondensed.php
+
+cd /var/www/html/testtrust
+sudo -u www-data git switch main
+sudo -u www-data git pull
+
+sudo chown -R www-data:www-data vendor 
+sudo -u www-data composer update
+
+sudo chown -R www-data:www-data /var/www/html/testtrust/public
+sudo -u www-data npm run build
+
