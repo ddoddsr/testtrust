@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use App\Policies\RolePolicy;
-use App\Policies\PermissionPolicy;
+// use App\Policies\PermissionPolicy;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Support\Facades\Gate;
@@ -17,8 +17,8 @@ class AuthServiceProvider extends ServiceProvider
      * @var array<class-string, class-string>
      */
     protected $policies = [
-        Role::class => RolePolicy::class,
-        Permission::class => PermissionPolicy::class,
+        // Role::class => RolePolicy::class,
+        // Permission::class => PermissionPolicy::class,
     ];
 
     /**

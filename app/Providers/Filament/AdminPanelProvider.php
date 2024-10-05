@@ -76,8 +76,8 @@ class AdminPanelProvider extends PanelProvider
                 ->disableLabel()
                 ->disk('public')
                 ->directory('app/user/profile-photos')
-                ), 
-                \BezhanSalleh\FilamentShield\FilamentShieldPlugin::make()
+                ),
+                // \BezhanSalleh\FilamentShield\FilamentShieldPlugin::make()
 
             )
             ->sidebarFullyCollapsibleOnDesktop()

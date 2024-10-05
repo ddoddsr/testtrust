@@ -9,7 +9,7 @@ use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Support\Facades\Storage;
 use Filament\Models\Contracts\HasAvatar;
 use Illuminate\Notifications\Notifiable;
-use OwenIt\Auditing\Contracts\Auditable;
+// use OwenIt\Auditing\Contracts\Auditable;
 use Filament\Models\Contracts\FilamentUser;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Fortify\TwoFactorAuthenticatable;
@@ -21,7 +21,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
-class User extends Authenticatable implements FilamentUser, HasAvatar, HasName, Auditable
+class User extends Authenticatable implements FilamentUser, HasAvatar, HasName
 {
     use HasRoles;
     use HasFactory;
@@ -29,7 +29,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName, 
     use softDeletes;
     use HasApiTokens;
     use TwoFactorAuthenticatable;
-    use \OwenIt\Auditing\Auditable;
+    // use \OwenIt\Auditing\Auditable;
 
     public function canAccessPanel(Panel $panel): bool
     {
@@ -97,27 +97,27 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName, 
     {
         return $this->hasMany(EmailAlias::class);
     }
-    
+
     protected function fullName(): Attribute
     {
         return Attribute::make(
-            get: fn (mixed $value, array $attributes) => 
+            get: fn (mixed $value, array $attributes) =>
                 $attributes['first_name'] . ' ' .
                 $attributes['last_name']
         );
     }
-    
+
     protected function name(): Attribute
     {
         return Attribute::make(
-            get: fn (mixed $value, array $attributes) => 
+            get: fn (mixed $value, array $attributes) =>
                 $attributes['first_name'] . ' ' .
                 $attributes['last_name']
         );
     }protected function nameAndEmail(): Attribute
     {
         return Attribute::make(
-            get: fn (mixed $value, array $attributes) => 
+            get: fn (mixed $value, array $attributes) =>
                 $attributes['first_name'] . ' ' .
                 $attributes['last_name'] . ' ' .
                 $attributes['email']
@@ -137,7 +137,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName, 
     {
         return $this->belongsTo(Department::class);
     }
-    
+
     public function supervising()
     {
         return $this->hasMany(User::class, 'supervisor_id');
@@ -148,20 +148,20 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName, 
      */
     public function serviceHours(): HasMany
     {
-        // return $this->hasManyThrough(User::class, ServiceHours::class, 'direct_report_id'); 
-        return $this->hasMany(ServiceHours::class, 'direct_report_id'); 
-        
+        // return $this->hasManyThrough(User::class, ServiceHours::class, 'direct_report_id');
+        return $this->hasMany(ServiceHours::class, 'direct_report_id');
+
     }
      /**
      * The users that belong to the serviceHour .
      */
     public function directReports(): HasMany // BelongsToMany
     {
-        // return $this->belongsToMany(DirectReport::class, 'service_hours', 'direct_report_id', 'supervisor_id'); 
-        return $this->hasMany(ServiceHours::class,  'supervisor_id'); 
+        // return $this->belongsToMany(DirectReport::class, 'service_hours', 'direct_report_id', 'supervisor_id');
+        return $this->hasMany(ServiceHours::class,  'supervisor_id');
     }
-    
-    
+
+
     public static function designations() {
         // If you change ther order, keep the keys with the line they are on
         return [
@@ -181,7 +181,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName, 
         }
         return $short;
     }
-    
+
     public static function designations_short() {
         $short = [];
         foreach (User::designations() as $key => $value ) {
