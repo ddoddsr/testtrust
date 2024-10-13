@@ -12,7 +12,7 @@ use Illuminate\Notifications\Notifiable;
 // use OwenIt\Auditing\Contracts\Auditable;
 use Filament\Models\Contracts\FilamentUser;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Laravel\Fortify\TwoFactorAuthenticatable;
+// use Laravel\Fortify\TwoFactorAuthenticatable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -28,7 +28,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName
     use Notifiable;
     use softDeletes;
     use HasApiTokens;
-    use TwoFactorAuthenticatable;
+    // use TwoFactorAuthenticatable;
     // use \OwenIt\Auditing\Auditable;
 
     public function canAccessPanel(Panel $panel): bool

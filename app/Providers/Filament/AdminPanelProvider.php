@@ -62,24 +62,24 @@ class AdminPanelProvider extends PanelProvider
             ->authMiddleware([
                 Authenticate::class,
             ])
-            ->plugin(
-                BreezyCore::make()
-                ->myProfile(
-                    shouldRegisterUserMenu: true, // Sets the 'account' link in the panel User Menu (default = true)
-                    shouldRegisterNavigation: false, // Adds a main navigation item for the My Profile page (default = false)
-                    hasAvatars: true, // Enables the avatar upload form component (default = false)
-                    slug: 'my-profile' // Sets the slug for the profile page (default = 'my-profile')
-                )
-                ->myProfileComponents([
-                    'personal_info' => PersonalInfoComponent::class])
-                ->avatarUploadComponent(fn($fileUpload) => $fileUpload
-                ->disableLabel()
-                ->disk('public')
-                ->directory('app/user/profile-photos')
-                ),
+            // ->plugin(
+                // BreezyCore::make()
+                // ->myProfile(
+                //     shouldRegisterUserMenu: true, // Sets the 'account' link in the panel User Menu (default = true)
+                //     shouldRegisterNavigation: false, // Adds a main navigation item for the My Profile page (default = false)
+                //     hasAvatars: true, // Enables the avatar upload form component (default = false)
+                //     slug: 'my-profile' // Sets the slug for the profile page (default = 'my-profile')
+                // )
+                // ->myProfileComponents([
+                //     'personal_info' => PersonalInfoComponent::class])
+                // ->avatarUploadComponent(fn($fileUpload) => $fileUpload
+                // ->disableLabel()
+                // ->disk('public')
+                // ->directory('app/user/profile-photos')
+                // ),
                 // \BezhanSalleh\FilamentShield\FilamentShieldPlugin::make()
 
-            )
+            // )
             ->sidebarFullyCollapsibleOnDesktop()
             ->maxContentWidth(MaxWidth::Full);
     }
