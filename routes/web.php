@@ -22,6 +22,6 @@ Route::get('/', function () {
 
 // Route::redirect('/admin/login', '/login')->name('filament.auth.login');
 
-Route::redirect('/login', '/admin/login')->name('login');
+// Route::redirect('/login', '/admin/login')->name('login');
 // Route::redirect('/register', '/admin/register')->name('register');
 

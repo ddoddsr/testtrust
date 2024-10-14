@@ -3,7 +3,7 @@
 namespace App\Models;
 use Filament\Panel;
 use App\Events\UserDeleting;
-use Laravel\Sanctum\HasApiTokens;
+// use Laravel\Sanctum\HasApiTokens;
 use Filament\Models\Contracts\HasName;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Support\Facades\Storage;
@@ -23,11 +23,11 @@ use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class User extends Authenticatable implements FilamentUser, HasAvatar, HasName
 {
-    use HasRoles;
+    // use HasRoles;
     use HasFactory;
     use Notifiable;
     use softDeletes;
-    use HasApiTokens;
+    // use HasApiTokens;
     // use TwoFactorAuthenticatable;
     // use \OwenIt\Auditing\Auditable;
 

@@ -2,10 +2,10 @@
 
 namespace App\Providers;
 
-use App\Policies\RolePolicy;
+// use App\Policies\RolePolicy;
 // use App\Policies\PermissionPolicy;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
+// use Spatie\Permission\Models\Role;
+// use Spatie\Permission\Models\Permission;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
@@ -26,9 +26,9 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $this->registerPolicies();
+        // $this->registerPolicies();
         Gate::before(function ($user, $ability) {
-            return $user->hasRole('Super-Admin') ? true : null;
+            return true; //$user->hasRole('Super-Admin') ? true : null;
         });
         //
     }
