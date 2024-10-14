@@ -14,10 +14,10 @@ use App\Http\Livewire\SacredTrustEntry;
 |
 */
 
-Route::get('/', function () {
-    // return view('welcome');
-    return view('staff');
-});
+// Route::get('/', function () {
+//     // return view('welcome');
+//     return view('staff');
+// });
 // Route::get('/st_entry', SacredTrustEntry::class);
 
 // Route::redirect('/admin/login', '/login')->name('filament.auth.login');
