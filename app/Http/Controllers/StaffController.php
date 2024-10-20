@@ -30,12 +30,14 @@ class StaffController extends Controller
         foreach($formData as $form) {
 
            if( $form->result_status == 'Complete') {
-            
-                $staffRecord = User::firstOrCreate(
+            // Post::withTrashed()->find($post_id)->restore();
+                $staffRecord = User::withTrashed()->firstOrCreate(
                         [  'email' => $form->email  ], 
                         $this->formPrep($form)
                     );
-                
+                if ($staffRecord->trashed()) {
+                    $staffRecord->restore();
+                }
                 // was not RecentlyCreated
                 if( ! $staffRecord->wasRecentlyCreated ) {
                 
