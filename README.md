@@ -1,3 +1,6 @@
+alias pbcopy='xclip -selection clipboard'
+alias pbpaste='xclip -selection clipboard -o'
+
 ## GoLive
 sltrust01.internal.ihopkc.org
 SMTP 172.17.121.38
@@ -178,4 +181,5 @@ sudo -u www-data composer update
 
 sudo chown -R www-data:www-data /var/www/html/testtrust/public
 sudo -u www-data npm run build
+
 
